@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:DBViewer"
@@ -14,15 +15,17 @@
         <ControlTemplate x:Key="GroupNodeTemplate">
             <treeview:TreeViewNode>
                 <treeview:TreeViewNode.Content>
-                    <Label Text="{Binding GroupName}" VerticalTextAlignment="Center" VerticalOptions="Center" TextColor="Black"/>
-                </treeview:TreeViewNode.Content> 
+                    <Label Text="{Binding GroupName}" VerticalTextAlignment="Center" VerticalOptions="Center"
+                           TextColor="Black" />
+                </treeview:TreeViewNode.Content>
             </treeview:TreeViewNode>
         </ControlTemplate>
         <ControlTemplate x:Key="DocumentNodeTemplate">
             <treeview:TreeViewNode>
                 <treeview:TreeViewNode.Content>
-                    <Label Text="{Binding DocumentId}" VerticalTextAlignment="Center" VerticalOptions="Center" TextColor="Black"/>
-                </treeview:TreeViewNode.Content> 
+                    <Label Text="{Binding DocumentId}" VerticalTextAlignment="Center" VerticalOptions="Center"
+                           TextColor="Black" />
+                </treeview:TreeViewNode.Content>
             </treeview:TreeViewNode>
         </ControlTemplate>
     </ContentPage.Resources>
@@ -39,8 +42,7 @@
         <treeview:TreeView x:Name="DocTreeView"
                            HorizontalOptions="FillAndExpand"
                            VerticalOptions="FillAndExpand"
-                           BackgroundColor="White">
-        </treeview:TreeView>
+                           BackgroundColor="White" />
         <!--<CollectionView ItemsSource="{Binding Documents}"
                         SelectionMode="Single"
                         BackgroundColor="White"
@@ -87,8 +89,7 @@
                 IsReadOnly="True"
                 Text="{Binding JsonText}"
                 HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand">
-        </Editor>
+                VerticalOptions="FillAndExpand" />
         <StackLayout Orientation="Horizontal"
                      Grid.Row="1"
                      Grid.ColumnSpan="2"
@@ -102,9 +103,7 @@
                    TextColor="Gray"
                    IsReadOnly="True"
                    Text="{Binding DatabaseDirectory}"
-                   BackgroundColor="White">
-
-            </Entry>
+                   BackgroundColor="White" />
             <Label Text="DB Name"
                    HorizontalOptions="Start"
                    TextColor="Black"
@@ -114,16 +113,13 @@
                    TextColor="Gray"
                    WidthRequest="100"
                    Text="{Binding DatabaseName}"
-                   BackgroundColor="White">
-            </Entry>
+                   BackgroundColor="White" />
             <Button Command="{Binding LoadDatabase}"
                     HorizontalOptions="End"
                     WidthRequest="50"
                     Text="Load DB"
                     TextColor="Black"
-                    BorderColor="Black">
-
-            </Button>
+                    BorderColor="Black" />
         </StackLayout>
     </Grid>
 </ContentPage>

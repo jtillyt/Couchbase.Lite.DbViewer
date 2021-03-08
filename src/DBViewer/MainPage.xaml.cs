@@ -1,12 +1,9 @@
-﻿using DBViewer.TreeView;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
+using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DBViewer.TreeView;
 using Xamarin.Forms;
 
 namespace DBViewer
@@ -28,7 +25,7 @@ namespace DBViewer
 
         public MainViewModel ViewModel { get; }
 
-        private void RootNodes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void RootNodes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var groupVm = e.NewItems[0] as DocumentGroupViewModel;
 
@@ -47,10 +44,10 @@ namespace DBViewer
             if (!(groupTreeViewNode?.BindingContext is DocumentGroupViewModel groupVm))
                 return;
 
-            if (groupTreeViewNode.Children.Count >0)
+            if (groupTreeViewNode.Children.Count > 0)
                 return;
 
-            List<TreeViewNode> documentTreeNodes = new List<TreeViewNode>();
+            var documentTreeNodes = new List<TreeViewNode>();
 
             foreach (var docVm in groupVm.Documents)
             {

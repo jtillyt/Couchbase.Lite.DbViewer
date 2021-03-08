@@ -1,30 +1,46 @@
-﻿using Adapt.Presentation.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace DBViewer.TreeView
 {
     public class TreeViewNode : StackLayout
     {
+        #region Internal Fields
+
+        internal readonly BoxView SelectionBoxView = new BoxView {Color = Color.Blue, Opacity = .5, IsVisible = false};
+
+        #endregion
+
         #region Image source for icons
-        private DataTemplate _ExpandButtonTemplate = null;
+
+        #endregion
+
+        #region Protected Overrides
+
+        protected override void OnParentSet()
+        {
+            base.OnParentSet();
+            Render();
+        }
 
         #endregion
 
         #region Fields
+
         private TreeViewNode _ParentTreeViewItem;
 
         private DateTime _ExpandButtonClickedTime;
 
         private readonly BoxView _SpacerBoxView = new BoxView();
-        private readonly BoxView _EmptyBox = new BoxView { BackgroundColor = Color.Blue, Opacity = .5 };
+        private readonly BoxView _EmptyBox = new BoxView {BackgroundColor = Color.Blue, Opacity = .5};
 
 
         private const int ExpandButtonWidth = 32;
-        private ContentView _ExpandButtonContent = new ContentView();
+        private readonly ContentView _ExpandButtonContent = new ContentView();
 
         private readonly Grid _MainGrid = new Grid
         {
@@ -33,7 +49,7 @@ namespace DBViewer.TreeView
             RowSpacing = 2
         };
 
-        private readonly StackLayout _ContentStackLayout = new StackLayout { Orientation = StackOrientation.Horizontal };
+        private readonly StackLayout _ContentStackLayout = new StackLayout {Orientation = StackOrientation.Horizontal};
 
         private readonly ContentView _ContentView = new ContentView
         {
@@ -52,38 +68,27 @@ namespace DBViewer.TreeView
         private readonly TapGestureRecognizer _ExpandButtonGestureRecognizer = new TapGestureRecognizer();
 
         private readonly TapGestureRecognizer _DoubleClickGestureRecognizer = new TapGestureRecognizer();
-        #endregion
 
-        #region Internal Fields
-        internal readonly BoxView SelectionBoxView = new BoxView { Color = Color.Blue, Opacity = .5, IsVisible = false };
         #endregion
 
         #region Private Properties
+
         private TreeView ParentTreeView => Parent?.Parent as TreeView;
         private double IndentWidth => Depth * SpacerWidth;
         private int SpacerWidth { get; } = 30;
         private int Depth => ParentTreeViewItem?.Depth + 1 ?? 0;
 
-        private bool _ShowExpandButtonIfEmpty = false;
-        private Color _SelectedBackgroundColor = Color.Blue;
-        private double _SelectedBackgroundOpacity = .3;
         #endregion
 
         #region Events
+
         public event EventHandler Expanded;
 
         /// <summary>
-        /// Occurs when the user double clicks on the node
+        ///     Occurs when the user double clicks on the node
         /// </summary>
         public event EventHandler DoubleClicked;
-        #endregion
 
-        #region Protected Overrides
-        protected override void OnParentSet()
-        {
-            base.OnParentSet();
-            Render();
-        }
         #endregion
 
         #region Public Properties
@@ -93,6 +98,7 @@ namespace DBViewer.TreeView
             get => SelectionBoxView.IsVisible;
             set => SelectionBoxView.IsVisible = value;
         }
+
         public bool IsExpanded
         {
             get => _ChildrenStackLayout.IsVisible;
@@ -109,40 +115,24 @@ namespace DBViewer.TreeView
         }
 
         /// <summary>
-        /// set to true to show the expand button in case we need to poulate the child nodes on demand
+        ///     set to true to show the expand button in case we need to poulate the child nodes on demand
         /// </summary>
-        public bool ShowExpandButtonIfEmpty
-        {
-            get { return _ShowExpandButtonIfEmpty; }
-            set { _ShowExpandButtonIfEmpty = value; }
-        }
+        public bool ShowExpandButtonIfEmpty { get; set; } = false;
 
         /// <summary>
-        /// set BackgroundColor when node is tapped/selected
+        ///     set BackgroundColor when node is tapped/selected
         /// </summary>
-        public Color SelectedBackgroundColor
-        {
-            get { return _SelectedBackgroundColor; }
-            set { _SelectedBackgroundColor = value; }
-        }
+        public Color SelectedBackgroundColor { get; set; } = Color.Blue;
 
         /// <summary>
-        /// SelectedBackgroundOpacity when node is tapped/selected
+        ///     SelectedBackgroundOpacity when node is tapped/selected
         /// </summary>
-        public double SelectedBackgroundOpacity
-        {
-            get { return _SelectedBackgroundOpacity; }
-            set { _SelectedBackgroundOpacity = value; }
-        }
+        public double SelectedBackgroundOpacity { get; set; } = .3;
 
         /// <summary>
-        /// customize expand icon based on isExpanded property and or data 
+        ///     customize expand icon based on isExpanded property and or data
         /// </summary>
-        public DataTemplate ExpandButtonTemplate
-        {
-            get { return _ExpandButtonTemplate; }
-            set { _ExpandButtonTemplate = value; }
-        }
+        public DataTemplate ExpandButtonTemplate { get; set; } = null;
 
         public View Content
         {
@@ -167,14 +157,16 @@ namespace DBViewer.TreeView
                     notifyCollectionChanged2.CollectionChanged += ItemsSource_CollectionChanged;
                 }
 
-                TreeView.RenderNodes(_Children, _ChildrenStackLayout, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset), this);
+                TreeView.RenderNodes(_Children, _ChildrenStackLayout,
+                    new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset), this);
 
                 Render();
             }
         }
 
         /// <summary>
-        /// TODO: Remove this. We should be able to get the ParentTreeViewNode by traversing up through the Visual Tree by 'Parent', but this not working for some reason.
+        ///     TODO: Remove this. We should be able to get the ParentTreeViewNode by traversing up through the Visual Tree by
+        ///     'Parent', but this not working for some reason.
         /// </summary>
         public TreeViewNode ParentTreeViewItem
         {
@@ -189,20 +181,21 @@ namespace DBViewer.TreeView
         #endregion
 
         #region Constructor
+
         /// <summary>
-        /// Constructs a new TreeViewItem
+        ///     Constructs a new TreeViewItem
         /// </summary>
         public TreeViewNode()
         {
-            var itemsSource = (ObservableCollection<TreeViewNode>)_Children;
+            var itemsSource = (ObservableCollection<TreeViewNode>) _Children;
             itemsSource.CollectionChanged += ItemsSource_CollectionChanged;
 
             _TapGestureRecognizer.Tapped += TapGestureRecognizer_Tapped;
             GestureRecognizers.Add(_TapGestureRecognizer);
 
-            _MainGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            _MainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            _MainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            _MainGrid.ColumnDefinitions.Add(new ColumnDefinition {Width = new GridLength(1, GridUnitType.Star)});
+            _MainGrid.RowDefinitions.Add(new RowDefinition {Height = GridLength.Auto});
+            _MainGrid.RowDefinitions.Add(new RowDefinition {Height = GridLength.Auto});
 
             _MainGrid.Children.Add(SelectionBoxView);
 
@@ -210,7 +203,7 @@ namespace DBViewer.TreeView
             _ContentStackLayout.Children.Add(_ExpandButtonContent);
             _ContentStackLayout.Children.Add(_ContentView);
 
-            SetExpandButtonContent(_ExpandButtonTemplate);
+            SetExpandButtonContent(ExpandButtonTemplate);
 
             _ExpandButtonGestureRecognizer.Tapped += ExpandButton_Tapped;
             _ExpandButtonContent.GestureRecognizers.Add(_ExpandButtonGestureRecognizer);
@@ -231,16 +224,16 @@ namespace DBViewer.TreeView
             Render();
         }
 
-        void _DoubleClickGestureRecognizer_Tapped(object sender, EventArgs e)
+        private void _DoubleClickGestureRecognizer_Tapped(object sender, EventArgs e)
         {
         }
-
 
         #endregion
 
         #region Private Methods
+
         /// <summary>
-        /// TODO: This is a little stinky...
+        ///     TODO: This is a little stinky...
         /// </summary>
         private void ChildSelected(TreeViewNode child)
         {
@@ -255,11 +248,11 @@ namespace DBViewer.TreeView
 
             if ((Children == null || Children.Count == 0) && !ShowExpandButtonIfEmpty)
             {
-                SetExpandButtonContent(_ExpandButtonTemplate);
+                SetExpandButtonContent(ExpandButtonTemplate);
                 return;
             }
 
-            SetExpandButtonContent(_ExpandButtonTemplate);
+            SetExpandButtonContent(ExpandButtonTemplate);
 
             foreach (var item in Children)
             {
@@ -268,22 +261,24 @@ namespace DBViewer.TreeView
         }
 
         /// <summary>
-        /// Use DataTemplae 
+        ///     Use DataTemplae
         /// </summary>
         private void SetExpandButtonContent(DataTemplate expandButtonTemplate)
         {
             if (expandButtonTemplate != null)
             {
-                _ExpandButtonContent.Content = (View)expandButtonTemplate.CreateContent();
+                _ExpandButtonContent.Content = (View) expandButtonTemplate.CreateContent();
             }
             else
             {
-                _ExpandButtonContent.Content = new ContentView { Content = _EmptyBox };
+                _ExpandButtonContent.Content = new ContentView {Content = _EmptyBox};
             }
         }
+
         #endregion
 
         #region Event Handlers
+
         private void ExpandButton_Tapped(object sender, EventArgs e)
         {
             _ExpandButtonClickedTime = DateTime.Now;

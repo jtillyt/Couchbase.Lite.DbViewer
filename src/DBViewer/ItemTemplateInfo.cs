@@ -1,9 +1,9 @@
-﻿
-#if(WPFSILVERLIGHT)
+﻿#if(WPFSILVERLIGHT)
 using System.Windows;
 #else
 using Xamarin.Forms;
 #endif
+using System.Linq;
 
 namespace Adapt.Presentation.Controls
 {

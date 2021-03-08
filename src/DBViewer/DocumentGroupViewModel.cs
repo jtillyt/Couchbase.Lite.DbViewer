@@ -1,13 +1,18 @@
-﻿using DBViewer.Data;
-using ReactiveUI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using DBViewer.Data;
+using ReactiveUI;
 
 namespace DBViewer
 {
     public class DocumentGroupViewModel : ReactiveObject
     {
         private readonly DataService _dataService;
+
+        private ObservableCollection<DocumentViewModel> _documents = new ObservableCollection<DocumentViewModel>();
+
+        private string _groupName;
 
         public DocumentGroupViewModel(DataService dataService, string groupName, List<string> documentIds)
         {
@@ -18,15 +23,11 @@ namespace DBViewer
             LoadDocuments(documentIds);
         }
 
-        private string _groupName;
-
         public string GroupName
         {
-            get { return _groupName; }
-            set { this.RaiseAndSetIfChanged(ref _groupName, value, nameof(GroupName)); }
+            get => _groupName;
+            set => this.RaiseAndSetIfChanged(ref _groupName, value, nameof(GroupName));
         }
-
-        private ObservableCollection<DocumentViewModel> _documents = new ObservableCollection<DocumentViewModel>();
 
         public ObservableCollection<DocumentViewModel> Documents
         {

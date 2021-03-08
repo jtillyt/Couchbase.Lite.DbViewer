@@ -1,27 +1,30 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 
 //Taken from https://github.com/AdaptSolutions/Xamarin.Forms-TreeView
 namespace DBViewer.TreeModel
 {
     public class ItemModel : INotifyPropertyChanged
     {
-        #region Fields
-        private int _Name;
-        private string _Description;
+        #region Events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         #endregion
 
-        #region Events
-        public event PropertyChangedEventHandler PropertyChanged;
+        #region Fields
+
+        private int _Name;
+        private string _Description;
+
         #endregion
 
         #region Public Properties
+
         public int Name
         {
-            get
-            {
-                return _Name;
-            }
+            get => _Name;
 
             set
             {
@@ -32,10 +35,7 @@ namespace DBViewer.TreeModel
 
         public string Description
         {
-            get
-            {
-                return _Description;
-            }
+            get => _Description;
 
             set
             {
@@ -43,9 +43,11 @@ namespace DBViewer.TreeModel
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Description)));
             }
         }
+
         #endregion
 
         #region Public Methods
+
         public override bool Equals(object obj)
         {
             var itemModel = obj as ItemModel;

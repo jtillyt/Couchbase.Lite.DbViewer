@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using DBViewer.Configuration;
+using DBViewer.Services;
 using Xamarin.Forms;
 
 namespace DBViewer
@@ -9,6 +9,8 @@ namespace DBViewer
         public App()
         {
             InitializeComponent();
+
+            LoadServices();
 
             MainPage = new MainPage();
         }
@@ -23,6 +25,12 @@ namespace DBViewer
 
         protected override void OnResume()
         {
+        }
+
+        private void LoadServices()
+        {
+            DependencyService.Register<IConfigurationService,ConfigurationService>();
+            DependencyService.Register<IDbFetchService, SshIosSimulatorDbFetchService>();
         }
     }
 }

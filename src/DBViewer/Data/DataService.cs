@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Couchbase.Lite;
 using Couchbase.Lite.Query;
+using Dawn;
 
 namespace DBViewer.Data
 {
@@ -13,22 +14,19 @@ namespace DBViewer.Data
 
         public bool Connect(string dbDirectory, string dbName)
         {
-            try
-            {
-                if (!Directory.Exists(dbDirectory))
-                {
-                    throw new DirectoryNotFoundException(dbDirectory);
-                }
+            Guard.Argument(dbDirectory, nameof(dbDirectory))
+                 .NotNull()
+                 .NotEmpty();
 
-                var dbConfig = new DatabaseConfiguration();
-                dbConfig.Directory = dbDirectory;
-
-                _database = new Database(dbName, dbConfig);
-            }
-            catch (Exception ex)
+            if (!Directory.Exists(dbDirectory))
             {
-                return false;
+                throw new DirectoryNotFoundException(dbDirectory);
             }
+
+            var dbConfig = new DatabaseConfiguration();
+            dbConfig.Directory = dbDirectory;
+
+            _database = new Database(dbName, dbConfig);
 
             return true;
         }
@@ -71,8 +69,8 @@ namespace DBViewer.Data
         private IEnumerable<string> GetAllDocumentsIds(Database db)
         {
             return QueryBuilder
-                .Select((ISelectResult) SelectResult.Expression(Meta.ID),
-                    (ISelectResult) SelectResult.Property("Type")).From(DataSource.Database(db)).Execute()
+                .Select((ISelectResult)SelectResult.Expression(Meta.ID),
+                    (ISelectResult)SelectResult.Property("Type")).From(DataSource.Database(db)).Execute()
                 .Select(i => i.GetString("id"))
                 .Where(docId => docId != null).ToList();
         }

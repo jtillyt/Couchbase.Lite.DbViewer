@@ -120,6 +120,12 @@
                     Text="Load DB"
                     TextColor="Black"
                     BorderColor="Black" />
+            <Button Command="{Binding FetchDatabases}"
+                    HorizontalOptions="End"
+                    WidthRequest="50"
+                    Text="Fetch DBs"
+                    TextColor="Black"
+                    BorderColor="Black" />
         </StackLayout>
     </Grid>
 </ContentPage>

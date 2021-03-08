@@ -2,7 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using Dawn;
 using DBViewer.Data;
+using DBViewer.Services;
 using Newtonsoft.Json;
 using ReactiveUI;
 using Xamarin.Essentials;
@@ -12,7 +14,10 @@ namespace DBViewer
 {
     public class MainViewModel : ReactiveObject
     {
+        private const string LastDbNameKey = "LastDbName";
+
         private readonly DataService _dataService;
+        private readonly IDbFetchService _dbFetchService;
 
         private string _databaseDirectory;
 
@@ -25,17 +30,21 @@ namespace DBViewer
 
         private string _selectedDocumentId;
 
-        public MainViewModel()
+        public MainViewModel(IDbFetchService dbFetchService)
         {
             _dataService = new DataService();
+            _dbFetchService = Guard.Argument(dbFetchService, nameof(dbFetchService))
+                  .NotNull()
+                  .Value;
 
-            LoadDatabase = ReactiveCommand.Create(Load);
-            DocumentSelected = ReactiveCommand.Create(OnDocumentSelected);
+            LoadDatabase = ReactiveCommand.Create(ExecuteLoad);
+            DocumentSelected = ReactiveCommand.Create(ExecuteDocumentSelected);
+            FetchDatabases = ReactiveCommand.Create(ExecuteFetchDatabases);
 
             ThrownExceptions.Subscribe(OnException);
 
             DatabaseDirectory = FileSystem.AppDataDirectory;
-            DatabaseName = "DbName";
+            DatabaseName = Preferences.Get(LastDbNameKey, "DbName");
         }
 
         public ObservableCollection<DocumentGroupViewModel> RootNodes
@@ -45,6 +54,9 @@ namespace DBViewer
         }
 
         public ReactiveCommand<Unit, Unit> LoadDatabase { get; }
+
+        public ReactiveCommand<Unit, Unit> FetchDatabases { get; }
+
         public ReactiveCommand<Unit, Unit> DocumentSelected { get; }
 
         public string DatabaseDirectory
@@ -53,10 +65,17 @@ namespace DBViewer
             set => this.RaiseAndSetIfChanged(ref _databaseDirectory, value, nameof(DatabaseDirectory));
         }
 
+
         public string DatabaseName
         {
-            get => _databaseName;
-            set => this.RaiseAndSetIfChanged(ref _databaseName, value, nameof(DatabaseName));
+            get
+            {
+                return _databaseName;
+            }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _databaseName, value, nameof(DatabaseName));
+            }
         }
 
         public string JsonText
@@ -75,12 +94,15 @@ namespace DBViewer
         {
         }
 
-        public void Load()
+        public void ExecuteLoad()
         {
             var result = _dataService.Connect(DatabaseDirectory, DatabaseName);
 
             if (!result)
                 return;
+
+
+            Preferences.Set(LastDbNameKey, DatabaseName);
 
             var documentIds = _dataService.ListAllDocumentIds();
 
@@ -96,13 +118,18 @@ namespace DBViewer
             }
         }
 
-        private void OnDocumentSelected()
+        private void ExecuteDocumentSelected()
         {
             var document = _dataService.GetDocumentById(SelectedDocumentId);
 
             var json = JsonConvert.SerializeObject(document, Formatting.Indented);
 
             JsonText = json;
+        }
+
+        private void ExecuteFetchDatabases()
+        {
+            _dbFetchService.FetchDbToLocalPath(DatabaseDirectory);
         }
     }
 }

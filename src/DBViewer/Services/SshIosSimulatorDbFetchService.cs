@@ -1,22 +1,24 @@
 ﻿using Dawn;
 using DBViewer.Configuration;
+using System.IO;
 
 namespace DBViewer.Services
 {
     public interface IDbFetchService
     {
-        void CopyRemoteDbToLocalPath();
+        bool FetchDbToLocalPath(string localDirectory);
     }
 
     public class SshIosSimulatorDbFetchService : IDbFetchService
     {
         private readonly ConfigurationRoot _configuration;
         private Renci.SshNet.SshClient _sshClient;
+        private Renci.SshNet.ScpClient _scpClient;
 
         public SshIosSimulatorDbFetchService(IConfigurationService configurationService)
         {
-             Guard.Argument(configurationService, nameof(configurationService))
-                                         .NotNull();
+            Guard.Argument(configurationService, nameof(configurationService))
+                                        .NotNull();
 
             _configuration = configurationService.GetConfigRoot();
         }
@@ -44,9 +46,17 @@ namespace DBViewer.Services
             return results.CommandText;
         }
 
-        public void CopyRemoteDbToLocalPath()
+        public bool FetchDbToLocalPath(string localDirectory)
         {
-            
+            EnsureSshClientConnected();
+
+            var dirInfo = new DirectoryInfo(localDirectory);
+            var remotePath = Path.Combine(GetActiveSimulatorPath(),_configuration.SshRemoteSettings.DevicePathToDbDir);
+
+            _scpClient = new Renci.SshNet.ScpClient(_sshClient.ConnectionInfo);
+            _scpClient.Download(remotePath, dirInfo);
+
+            return true;
         }
 
         private void EnsureSshClientConnected()
@@ -55,6 +65,9 @@ namespace DBViewer.Services
             {
                 Connect(_configuration.SshRemoteSettings.SSHHostAddress, _configuration.SshRemoteSettings.Username, _configuration.SshRemoteSettings.Password);
             }
+
+            if (!_sshClient.IsConnected)
+                throw new System.InvalidOperationException("SSH Connection could not be established");
         }
     }
 }

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DBViewer"
+             xmlns:treeview="clr-namespace:DBViewer.TreeView"
+             x:DataType="local:MainViewModel"
+             BackgroundColor="White"
+             x:Class="DBViewer.MainPage">
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="TextColor"
+                    Value="#ff777777" />
+        </Style>
+        <ControlTemplate x:Key="GroupNodeTemplate">
+            <treeview:TreeViewNode>
+                <treeview:TreeViewNode.Content>
+                    <Label Text="{Binding GroupName}" VerticalTextAlignment="Center" VerticalOptions="Center" TextColor="Black"/>
+                </treeview:TreeViewNode.Content> 
+            </treeview:TreeViewNode>
+        </ControlTemplate>
+        <ControlTemplate x:Key="DocumentNodeTemplate">
+            <treeview:TreeViewNode>
+                <treeview:TreeViewNode.Content>
+                    <Label Text="{Binding DocumentId}" VerticalTextAlignment="Center" VerticalOptions="Center" TextColor="Black"/>
+                </treeview:TreeViewNode.Content> 
+            </treeview:TreeViewNode>
+        </ControlTemplate>
+    </ContentPage.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <treeview:TreeView x:Name="DocTreeView"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="FillAndExpand"
+                           BackgroundColor="White">
+        </treeview:TreeView>
+        <!--<CollectionView ItemsSource="{Binding Documents}"
+                        SelectionMode="Single"
+                        BackgroundColor="White"
+                        ItemSizingStrategy="MeasureAllItems"
+                        SelectionChangedCommand="{Binding DocumentSelected}"
+                        SelectedItem="{Binding SelectedDocumentId}"
+                        IsGrouped="True">
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="local:DocumentIdGroupViewModel">
+                    <Label Text="{Binding GroupName}"
+                           FontSize="Medium"
+                           Margin="0"
+                           TextColor="Black" />
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+            <CollectionView.HeaderTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding .}"
+                           TextColor="Black"
+                           FontSize="Medium" />
+                </DataTemplate>
+            </CollectionView.HeaderTemplate>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                        <Label Text="{Binding .}"
+                               TextColor="Black"
+                               FontSize="Small" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyViewTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding .}"
+                           TextColor="Black"
+                           FontSize="Medium" />
+                </DataTemplate>
+            </CollectionView.EmptyViewTemplate>
+        </CollectionView>-->
+        <Editor Grid.Row="0"
+                Grid.Column="1"
+                Opacity="1"
+                BackgroundColor="White"
+                IsEnabled="True"
+                TextColor="Black"
+                IsReadOnly="True"
+                Text="{Binding JsonText}"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+        </Editor>
+        <StackLayout Orientation="Horizontal"
+                     Grid.Row="1"
+                     Grid.ColumnSpan="2"
+                     HorizontalOptions="FillAndExpand">
+            <Label Text="DB Path"
+                   HorizontalOptions="Start"
+                   TextColor="Black"
+                   VerticalOptions="Center"
+                   VerticalTextAlignment="Center" />
+            <Entry HorizontalOptions="FillAndExpand"
+                   TextColor="Gray"
+                   IsReadOnly="True"
+                   Text="{Binding DatabaseDirectory}"
+                   BackgroundColor="White">
+
+            </Entry>
+            <Label Text="DB Name"
+                   HorizontalOptions="Start"
+                   TextColor="Black"
+                   VerticalOptions="Center"
+                   VerticalTextAlignment="Center" />
+            <Entry HorizontalOptions="FillAndExpand"
+                   TextColor="Gray"
+                   WidthRequest="100"
+                   Text="{Binding DatabaseName}"
+                   BackgroundColor="White">
+            </Entry>
+            <Button Command="{Binding LoadDatabase}"
+                    HorizontalOptions="End"
+                    WidthRequest="50"
+                    Text="Load DB"
+                    TextColor="Black"
+                    BorderColor="Black">
+
+            </Button>
+        </StackLayout>
+    </Grid>
+</ContentPage>

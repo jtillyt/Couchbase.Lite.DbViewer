@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using Dawn;
@@ -17,7 +18,7 @@ namespace DBViewer
         private const string LastDbNameKey = "LastDbName";
 
         private readonly DataService _dataService;
-        private readonly IDbFetchService _dbFetchService;
+        private readonly IDbCopyService _dbCopyService;
 
         private string _databaseDirectory;
 
@@ -30,10 +31,10 @@ namespace DBViewer
 
         private string _selectedDocumentId;
 
-        public MainViewModel(IDbFetchService dbFetchService)
+        public MainViewModel(IDbCopyService dbCopyService)
         {
             _dataService = new DataService();
-            _dbFetchService = Guard.Argument(dbFetchService, nameof(dbFetchService))
+            _dbCopyService = Guard.Argument(dbCopyService, nameof(dbCopyService))
                   .NotNull()
                   .Value;
 
@@ -65,7 +66,6 @@ namespace DBViewer
             set => this.RaiseAndSetIfChanged(ref _databaseDirectory, value, nameof(DatabaseDirectory));
         }
 
-
         public string DatabaseName
         {
             get
@@ -90,8 +90,16 @@ namespace DBViewer
             set => this.RaiseAndSetIfChanged(ref _selectedDocumentId, value, nameof(SelectedDocumentId));
         }
 
+        private string _fetchDirectory;
+        public string FetchDirectory
+        {
+            get => _fetchDirectory;
+            set => this.RaiseAndSetIfChanged(ref _fetchDirectory, value);
+        }
+
         private void OnException(Exception obj)
         {
+            Debug.WriteLine(obj);
         }
 
         public void ExecuteLoad()
@@ -100,7 +108,6 @@ namespace DBViewer
 
             if (!result)
                 return;
-
 
             Preferences.Set(LastDbNameKey, DatabaseName);
 
@@ -129,7 +136,7 @@ namespace DBViewer
 
         private void ExecuteFetchDatabases()
         {
-            _dbFetchService.FetchDbToLocalPath(DatabaseDirectory);
+             _dbCopyService.CopyDbToLocalPath(DatabaseDirectory, FetchDirectory);
         }
     }
 }

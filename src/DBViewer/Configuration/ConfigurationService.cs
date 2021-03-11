@@ -38,7 +38,7 @@ namespace DBViewer.Configuration
         {
             ConfigurationRoot config;
             var rootNamespace = typeof(App).Assembly.GetName();
-            var embeddedConfigurationStream = this.GetType().Assembly.GetManifestResourceStream($"{rootNamespace}.appsettings.json");
+            var embeddedConfigurationStream = this.GetType().Assembly.GetManifestResourceStream($"{rootNamespace.Name}.appsettings.json");
 
             if (embeddedConfigurationStream == null)
             {

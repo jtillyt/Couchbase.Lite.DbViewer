@@ -1,5 +1,6 @@
 ﻿using DBViewer.Configuration;
 using DBViewer.Services;
+using DryIoc;
 using Xamarin.Forms;
 
 namespace DBViewer
@@ -10,9 +11,9 @@ namespace DBViewer
         {
             InitializeComponent();
 
-            LoadServices();
+            var serviceContainer = LoadServices();
 
-            MainPage = new MainPage();
+            MainPage = new MainPage(serviceContainer);
         }
 
         protected override void OnStart()
@@ -27,10 +28,14 @@ namespace DBViewer
         {
         }
 
-        private void LoadServices()
+        private IContainer LoadServices()
         {
-            DependencyService.Register<IConfigurationService,ConfigurationService>();
-            DependencyService.Register<IDbFetchService, SshIosSimulatorDbFetchService>();
+            var iocContaner = new Container();
+
+            iocContaner.Register<IConfigurationService,ConfigurationService>();
+            iocContaner.Register<IDbCopyService, SshDbFetchService>();
+
+            return iocContaner;
         }
     }
 }

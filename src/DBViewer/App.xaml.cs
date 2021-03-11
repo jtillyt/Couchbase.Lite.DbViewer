@@ -1,4 +1,5 @@
-﻿using DBViewer.Configuration;
+﻿using Dawn;
+using DBViewer.Configuration;
 using DBViewer.Services;
 using DryIoc;
 using Xamarin.Forms;
@@ -7,13 +8,20 @@ namespace DBViewer
 {
     public partial class App : Application
     {
-        public App()
+        public IContainer ServiceContaner { get; }
+
+        public App(IContainer serviceContaner)
         {
             InitializeComponent();
 
-            var serviceContainer = LoadServices();
 
-            MainPage = new MainPage(serviceContainer);
+            ServiceContaner = Guard.Argument(serviceContaner, nameof(serviceContaner))
+                              .NotNull()
+                              .Value;
+
+            LoadServices();
+
+            MainPage = new MainPage(ServiceContaner);
         }
 
         protected override void OnStart()
@@ -28,14 +36,9 @@ namespace DBViewer
         {
         }
 
-        private IContainer LoadServices()
+        private void LoadServices()
         {
-            var iocContaner = new Container();
-
-            iocContaner.Register<IConfigurationService,ConfigurationService>();
-            iocContaner.Register<IDbCopyService, SshDbFetchService>();
-
-            return iocContaner;
+            ServiceContaner.Register<IConfigurationService,ConfigurationService>();
         }
     }
 }

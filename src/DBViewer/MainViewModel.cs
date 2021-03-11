@@ -16,6 +16,7 @@ namespace DBViewer
     public class MainViewModel : ReactiveObject
     {
         private const string LastDbNameKey = "LastDbName";
+        private const string LastRemotePathKey = "LastRemotePath";
 
         private readonly DataService _dataService;
         private readonly IDbCopyService _dbCopyService;
@@ -46,6 +47,12 @@ namespace DBViewer
 
             DatabaseDirectory = FileSystem.AppDataDirectory;
             DatabaseName = Preferences.Get(LastDbNameKey, "DbName");
+
+            var previousRemoteFetchPath = Preferences.Get(LastRemotePathKey, null);
+            if (previousRemoteFetchPath != null)
+            {
+                FetchDirectory = previousRemoteFetchPath;
+            }
         }
 
         public ObservableCollection<DocumentGroupViewModel> RootNodes
@@ -136,7 +143,8 @@ namespace DBViewer
 
         private void ExecuteFetchDatabases()
         {
-             _dbCopyService.CopyDbToLocalPath(DatabaseDirectory, FetchDirectory);
+            Preferences.Set(LastRemotePathKey, FetchDirectory);
+            _dbCopyService.CopyDbToLocalPath(DatabaseDirectory, FetchDirectory);
         }
     }
 }

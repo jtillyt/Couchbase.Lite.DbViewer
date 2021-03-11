@@ -116,7 +116,7 @@
                            VerticalTextAlignment="Center" />
                     <Entry HorizontalOptions="FillAndExpand"
                            TextColor="Gray"
-                           IsReadOnly="True"
+                           IsReadOnly="False"
                            Text="{Binding DatabaseDirectory}"
                            BackgroundColor="White" />
                     <Label Text="DB Name"

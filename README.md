@@ -9,7 +9,7 @@ The main goals for alpha are arriving at the bare minimum of functionality with 
 
 - Get the desktop viewer working for local databases on UWP
 - Get the desktop viewer working for local databases on Mac
-- Add services for to extend the local database so that remote access is enabled
+- Add services to extend beyond local database so that remote access is enabled
    - SSH/SCP client for pull from remote machine file system
    - TCP client for push directly from remote device on update
 - Add mobile remove viewer optimized for smaller screen sizes
@@ -18,7 +18,7 @@ The main goals for alpha are arriving at the bare minimum of functionality with 
 
 The main goals for beta are taking the working concepts from alpha, organizing them and introducing extension points for further work.
 
-- Word TBD after working MVP/Alpha complete
+- Work TBD after working MVP/Alpha complete
 
 #### Roadmap to 1.0
 Icons, beautification, documentation etc

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using DBViewer.Services;
+using DryIoc;
 using Foundation;
 using UIKit;
 
@@ -23,7 +24,11 @@ namespace DBViewer.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            LoadApplication(new App());
+
+            var container = new Container();
+            container.Register<IDbCopyService,LocalDbCopyService>();
+
+            LoadApplication(new App(container));
 
             return base.FinishedLaunching(app, options);
         }

@@ -10,10 +10,15 @@ namespace DBViewer
     {
         public IContainer ServiceContaner { get; }
 
+        public App()
+            :this(new Container())
+        {
+            ServiceContaner.Register<IDbCopyService, LocalDbCopyService>();
+        }
+
         public App(IContainer serviceContaner)
         {
             InitializeComponent();
-
 
             ServiceContaner = Guard.Argument(serviceContaner, nameof(serviceContaner))
                               .NotNull()

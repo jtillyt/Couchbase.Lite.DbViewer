@@ -117,6 +117,7 @@
                     <Entry HorizontalOptions="FillAndExpand"
                            TextColor="Gray"
                            IsReadOnly="False"
+                           HeightRequest="30"
                            Text="{Binding DatabaseDirectory}"
                            BackgroundColor="White" />
                     <Label Text="DB Name"

@@ -1,38 +1,23 @@
-﻿using Dawn;
-using DBViewer.Configuration;
-using DBViewer.Services;
+﻿using DBViewer.Configuration;
+using DBViewer.ViewModels;
+using DBViewer.Views;
 using DryIoc;
+using Prism.Ioc;
 using Xamarin.Forms;
 
 namespace DBViewer
 {
-    public partial class App : Application
+    public partial class App
     {
-        public IContainer ServiceContaner { get; }
-
         public App()
-            :this(new Container())
-        {
-            ServiceContaner.Register<IDbCopyService, LocalDbCopyService>();
-        }
-
-        public App(IContainer serviceContaner)
         {
             InitializeComponent();
-
-            ServiceContaner = Guard.Argument(serviceContaner, nameof(serviceContaner))
-                              .NotNull()
-                              .Value;
-
-            LoadServices();
-
-            MainPage = new MainPage(ServiceContaner);
         }
 
         protected override void OnStart()
         {
         }
-
+        
         protected override void OnSleep()
         {
         }
@@ -41,9 +26,23 @@ namespace DBViewer
         {
         }
 
-        private void LoadServices()
+        protected override async void OnInitialized()
         {
-            ServiceContaner.Register<IConfigurationService,ConfigurationService>();
+            var result = await NavigationService.NavigateAsync(nameof(HubDownloadView));
+
+            if (!result.Success)
+            {
+                System.Diagnostics.Debugger.Break();
+            }
         }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<IConfigurationService,ConfigurationService>();
+
+            containerRegistry.RegisterForNavigation<NavigationPage>();
+            containerRegistry.RegisterForNavigation<HubDownloadView,HubDownloadViewModel>();
+        }
+
     }
 }

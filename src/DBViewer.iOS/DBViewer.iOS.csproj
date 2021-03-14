@@ -126,6 +126,15 @@
     <PackageReference Include="Couchbase.Lite.Support.iOS">
       <Version>2.8.4</Version>
     </PackageReference>
+    <PackageReference Include="Prism.Core">
+      <Version>8.0.0.1909</Version>
+    </PackageReference>
+    <PackageReference Include="Prism.DryIoc.Forms">
+      <Version>8.0.0.1909</Version>
+    </PackageReference>
+    <PackageReference Include="Prism.Forms">
+      <Version>8.0.0.1909</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="Xamarin.Forms">
       <Version>5.0.0.2012</Version>

@@ -1,5 +1,6 @@
 ﻿using DBViewer.Services;
-using DryIoc;
+using Windows.Foundation;
+using Windows.UI.ViewManagement;
 
 namespace DBViewer.UWP
 {
@@ -7,18 +8,13 @@ namespace DBViewer.UWP
     {
         public MainPage()
         {
-            this.InitializeComponent();
-            var app = new DBViewer.App(LoadPlatformServiceContainer());
+            InitializeComponent();
+
+            ApplicationView.PreferredLaunchViewSize = new Size(600,1080);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
+            var app = new DBViewer.App();
             LoadApplication(app);
-        }
-
-        private IContainer LoadPlatformServiceContainer()
-        {
-            var container = new Container();
-
-            container.Register<IDbCopyService, SshDbFetchService>(Reuse.Singleton);
-
-            return container;
         }
     }
 }

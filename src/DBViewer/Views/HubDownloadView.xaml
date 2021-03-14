@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DBViewer.Views.HubDownloadView">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+            <Label Text="View Remote Databases"
+            Margin="10"
+                Style="{DynamicResource PageHeaderLabel}"
+                VerticalOptions="Start" 
+                HorizontalOptions="CenterAndExpand" />
+                <Label Style="{DynamicResource MainBodyLabel}" Text="Connect to a DbViewer view remote databases."></Label>
+            <StackLayout  Orientation="Horizontal">
+                <Entry Placeholder="http://192.168.1.1:5020" HeightRequest="50" HorizontalOptions="FillAndExpand" Margin="30,10">
+                </Entry>
+                    <Button Text="List All" Style="{DynamicResource DarkColoredButton}" WidthRequest="100" HeightRequest="50" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,10,0">
+                </Button>
+            </StackLayout>
+            </StackLayout>
+            <CollectionView ItemsSource="{Binding Databases}">
+                
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

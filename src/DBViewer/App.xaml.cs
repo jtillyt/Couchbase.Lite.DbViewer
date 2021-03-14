@@ -1,4 +1,5 @@
 ﻿using DBViewer.Configuration;
+using DBViewer.Services;
 using DBViewer.ViewModels;
 using DBViewer.Views;
 using DryIoc;
@@ -28,7 +29,7 @@ namespace DBViewer
 
         protected override async void OnInitialized()
         {
-            var result = await NavigationService.NavigateAsync(nameof(HubDownloadView));
+            var result = await NavigationService.NavigateAsync(nameof(HubView));
 
             if (!result.Success)
             {
@@ -39,10 +40,10 @@ namespace DBViewer
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IConfigurationService,ConfigurationService>();
+            containerRegistry.Register<IHubService,HubService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<HubDownloadView,HubDownloadViewModel>();
+            containerRegistry.RegisterForNavigation<HubView, HubViewModel>();
         }
-
     }
 }

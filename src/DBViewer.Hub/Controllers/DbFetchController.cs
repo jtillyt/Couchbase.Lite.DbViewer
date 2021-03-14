@@ -1,11 +1,12 @@
-﻿using DBViewer.Hub.Services;
+﻿using DbViewer.Shared;
+using DBViewer.Hub.Services;
+using ImTools;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using ImTools;
 
 namespace DBViewer.Hub.Controllers
 {
@@ -29,12 +30,12 @@ namespace DBViewer.Hub.Controllers
             return _dbScanner.Scan();
         }
 
-        [HttpGet("Name")]
-        public Stream GetDatabase(string displayDbName)
+        [HttpGet("Name/{displayName}")]
+        public Stream GetDatabase([FromRoute] string displayName)
         {
             var listDbs = ListAllDbs();
 
-            var dbInfo = listDbs.FindFirst(db => db.DisplayDatabaseName.Equals(displayDbName, StringComparison.OrdinalIgnoreCase));
+            var dbInfo = listDbs.FindFirst(db => db.DisplayDatabaseName.Equals(displayName, StringComparison.OrdinalIgnoreCase));
 
             if (dbInfo == null)
                 return null;
@@ -42,10 +43,9 @@ namespace DBViewer.Hub.Controllers
             var dbPath = Path.Combine(dbInfo.RemoteRootDirectory, dbInfo.FullDatabaseName);
             var zipPath = dbPath + ".zip";
 
-            ZipFile.CreateFromDirectory(dbPath,zipPath);
+            ZipFile.CreateFromDirectory(dbPath, zipPath);
 
             return !System.IO.File.Exists(zipPath) ? null : new FileStream(zipPath, FileMode.Open);
         }
-        
     }
 }

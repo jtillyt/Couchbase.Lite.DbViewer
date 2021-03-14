@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Couchbase.Lite;
+﻿using Couchbase.Lite;
 using DBViewer.Data;
 using Newtonsoft.Json;
 using ReactiveUI;

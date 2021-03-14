@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DbViewer.Shared;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,12 +17,15 @@ namespace DBViewer.Hub.Services
         private readonly string RelativePathToData;
 
         private readonly IConfigurationSection _configSection;
-        private readonly IConfiguration _configuration;
         private readonly ILogger<IOSSimulatorDbScanner> _logger;
 
         public IOSSimulatorDbScanner(IConfiguration configuration, ILogger<IOSSimulatorDbScanner> logger)
         {
-            _configuration = configuration ?? throw new System.ArgumentNullException(nameof(configuration));
+            if (configuration is null)
+            {
+                throw new System.ArgumentNullException(nameof(configuration));
+            }
+
             _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
 
             _configSection = configuration.GetSection(RootConfig_ConfigKey);

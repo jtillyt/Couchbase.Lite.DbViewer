@@ -43,6 +43,7 @@
     <PackageReference Include="Prism.DryIoc.Forms" Version="8.0.0.1909" />
     <PackageReference Include="Prism.Forms" Version="8.0.0.1909" />
     <PackageReference Include="ReactiveUI" Version="13.2.2" />
+    <PackageReference Include="Refit" Version="6.0.24" />
     <PackageReference Include="sqlite-net" Version="1.6.292" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="1.0.3" />
@@ -51,13 +52,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\HubDownloadView.xaml.cs">
+    <ProjectReference Include="..\DbViewer.Shared\DbViewer.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\HubView.xaml.cs">
       <DependentUpon>HubDownloadView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\HubDownloadView.xaml">
+    <EmbeddedResource Update="Views\HubView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

@@ -19,7 +19,6 @@ namespace DBViewer
         private const string LastRemotePathKey = "LastRemotePath";
 
         private readonly DataService _dataService;
-        private readonly IDbCopyService _dbCopyService;
 
         private string _databaseDirectory;
 
@@ -32,12 +31,9 @@ namespace DBViewer
 
         private string _selectedDocumentId;
 
-        public MainViewModel(IDbCopyService dbCopyService)
+        public MainViewModel()
         {
             _dataService = new DataService();
-            _dbCopyService = Guard.Argument(dbCopyService, nameof(dbCopyService))
-                  .NotNull()
-                  .Value;
 
             LoadDatabase = ReactiveCommand.Create(ExecuteLoad);
             DocumentSelected = ReactiveCommand.Create(ExecuteDocumentSelected);
@@ -144,7 +140,6 @@ namespace DBViewer
         private void ExecuteFetchDatabases()
         {
             Preferences.Set(LastRemotePathKey, FetchDirectory);
-            _dbCopyService.CopyDbToLocalPath(DatabaseDirectory, FetchDirectory);
         }
     }
 }

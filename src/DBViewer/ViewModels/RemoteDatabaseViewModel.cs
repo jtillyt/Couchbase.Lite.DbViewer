@@ -1,26 +1,21 @@
-﻿using DbViewer.Shared;
-using DBViewer.Services;
+﻿using Dawn;
+using DbViewer.Shared;
 using ReactiveUI;
-using System;
-using System.Reactive;
-using System.Threading.Tasks;
 
 namespace DBViewer.ViewModels
 {
     public class RemoteDatabaseViewModel : ViewModelBase
     {
-        private readonly IHubService _hubService;
-
-        public RemoteDatabaseViewModel(IHubService hubService, DatabaseInfo dbInfo)
+        public RemoteDatabaseViewModel(DatabaseInfo databaseInfo)
         {
-            _hubService = hubService ?? throw new ArgumentNullException(nameof(hubService));
+            DatabaseInfo = Guard.Argument(databaseInfo, nameof(databaseInfo))
+                  .NotNull()
+                  .Value;
 
-            DisplayName = dbInfo.DisplayDatabaseName;
-
-            DownloadCommand = ReactiveCommand.CreateFromTask(ExecuteDownload);
+            DisplayName = DatabaseInfo.DisplayDatabaseName;
         }
 
-        public ReactiveCommand<Unit, Unit> DownloadCommand { get; }
+        public DatabaseInfo DatabaseInfo { get; set; }
 
         private string _displayName;
         public string DisplayName
@@ -29,9 +24,11 @@ namespace DBViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _displayName, value);
         }
 
-        private async Task<Unit> ExecuteDownload()
+        private bool _shouldDownload;
+        public bool ShouldDownload
         {
-            return Unit.Default;
+            get => _shouldDownload;
+            set => this.RaiseAndSetIfChanged(ref _shouldDownload, value);
         }
     }
 }

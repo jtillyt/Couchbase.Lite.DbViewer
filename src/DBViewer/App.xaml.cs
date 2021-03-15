@@ -41,6 +41,7 @@ namespace DBViewer
         {
             containerRegistry.Register<IConfigurationService,ConfigurationService>();
             containerRegistry.Register<IHubService,HubService>();
+            containerRegistry.Register<IDbCacheService, DbCacheService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<HubView, HubViewModel>();

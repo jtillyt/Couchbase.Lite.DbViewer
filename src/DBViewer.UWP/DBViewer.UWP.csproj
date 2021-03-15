@@ -149,6 +149,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="akavache">
+      <Version>7.2.1</Version>
+    </PackageReference>
     <PackageReference Include="Couchbase.Lite">
       <Version>2.8.4</Version>
     </PackageReference>

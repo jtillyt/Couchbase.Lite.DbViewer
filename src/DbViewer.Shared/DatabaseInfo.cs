@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DbViewer.Shared
 {
@@ -13,6 +10,23 @@ namespace DbViewer.Shared
 
         public string FullDatabaseName { get; set; }
 
-        public DateTimeOffset LastDownloadTime { get; set; }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is DatabaseInfo dbInfo))
+            {
+                return false;
+            }
+
+            return dbInfo.DisplayDatabaseName == DisplayDatabaseName;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -2073412333;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(RemoteRootDirectory);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(DisplayDatabaseName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(FullDatabaseName);
+            return hashCode;
+        }
     }
 }

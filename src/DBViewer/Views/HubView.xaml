@@ -6,33 +6,66 @@
              x:Class="DBViewer.Views.HubView">
     <ContentPage.Content>
         <StackLayout>
-            <Frame Margin="0,-20,0,0" BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}" Padding="30" CornerRadius="20" HasShadow="False">
-            <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
-                <Label Text="View Remote Databases"
-            Margin="10"
-                Style="{DynamicResource PageHeaderLabel}"
-                FontAttributes="Bold"
-                VerticalOptions="Start" 
-                HorizontalOptions="CenterAndExpand" />
-                <Label Style="{DynamicResource MainBodyLabel}" Text="Connect to a DbViewer view remote databases."></Label>
-                <StackLayout  Orientation="Horizontal">
-                        <Entry Placeholder="Example: http://192.168.1.1:5020" HeightRequest="50" HorizontalOptions="FillAndExpand" Margin="30,10" Text="{Binding HubAddress}">
-                    </Entry>
-                        <Button Text="List All" Command="{Binding ListAllDatabasesCommand}" Style="{DynamicResource DarkColoredButton}" WidthRequest="100" HeightRequest="50" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,10,0" FontAttributes="Bold">
-                    </Button>
+            <Frame Margin="0,-20,0,0"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                   Padding="30"
+                   CornerRadius="20"
+                   HasShadow="False">
+                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+                    <Label Text="Download Remote Databases"
+                           Margin="10"
+                           Style="{DynamicResource PageHeaderLabel}"
+                           FontAttributes="Bold"
+                           VerticalOptions="Start"
+                           HorizontalOptions="CenterAndExpand" />
+                    <Label Style="{DynamicResource MainBodyLabel}"
+                           Text="Connect to a DbViewer view remote databases."></Label>
+                    <StackLayout  Orientation="Horizontal">
+                        <Entry Placeholder="Example: http://192.168.1.1:5020"
+                               HeightRequest="50"
+                               HorizontalOptions="FillAndExpand"
+                               Margin="30,10"
+                               Text="{Binding HubAddress}">
+                        </Entry>
+                        <Button Text="List All"
+                                Command="{Binding ListAllDatabasesCommand}"
+                                Style="{DynamicResource DarkColoredButton}"
+                                WidthRequest="100"
+                                HeightRequest="50"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                Margin="0,0,10,0"
+                                FontAttributes="Bold">
+                        </Button>
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
             </Frame>
-            <CollectionView 
-                ItemsSource="{Binding RemoteDatabases}">
+            <CollectionView Margin="30"
+                            ItemsSource="{Binding RemoteDatabases}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vms:RemoteDatabaseViewModel">
                         <StackLayout>
-                            
+                            <Frame>
+                                <StackLayout Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding ShouldDownload}"
+                                              Color="{DynamicResource ColoredBackgroundMediumColor}"
+                                              VerticalOptions="Center" />
+                                    <Label Text="{Binding DisplayName}"
+                                           Style="{DynamicResource DatabaseSummaryLabel}"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                            </Frame>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            <Button Text="Download"
+                    Command="{Binding DownloadCheckedCommand}"
+                    Style="{DynamicResource DarkColoredButton}"
+                    Margin="5"
+                    CornerRadius="10"
+                    HeightRequest="60"
+                    FontSize="24" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

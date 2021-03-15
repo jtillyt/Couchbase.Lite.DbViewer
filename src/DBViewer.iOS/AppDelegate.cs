@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DBViewer.Services;
-using DryIoc;
-using Foundation;
+﻿using Foundation;
 using UIKit;
 
 namespace DBViewer.iOS
@@ -23,14 +18,16 @@ namespace DBViewer.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
-
-            var container = new Container();
-            container.Register<IDbCopyService,LocalDbCopyService>();
-
-            LoadApplication(new App(container));
+            InitializePlugins();
+            Xamarin.Forms.Forms.Init();
+            LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
+        }
+
+        private void InitializePlugins()
+        { 
+            Akavache.Registrations.Start(nameof(DBViewer));
         }
     }
 }

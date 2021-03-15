@@ -3,12 +3,12 @@ using DBViewer.Configuration;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace DBViewer.Services
 {
-    public class SshDbFetchService : IDbCopyService
+    [Obsolete("Could still be useful in another scenario so keeping")]
+    public class SshDbFetchService
     {
         private readonly ConfigurationRoot _configuration;
 

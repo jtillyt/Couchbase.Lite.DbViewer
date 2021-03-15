@@ -57,6 +57,7 @@ namespace DBViewer.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
+                InitializePlugins();
                 Xamarin.Forms.Forms.Init(e);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -77,6 +78,11 @@ namespace DBViewer.UWP
             }
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private void InitializePlugins()
+        {
+            Akavache.Registrations.Start(nameof(DBViewer));
         }
 
         /// <summary>

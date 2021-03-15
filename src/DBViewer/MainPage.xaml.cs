@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using DBViewer.Services;
 using DBViewer.TreeView;
-using DryIoc;
 using Xamarin.Forms;
 
 namespace DBViewer
@@ -14,13 +12,11 @@ namespace DBViewer
         public readonly ObservableCollection<TreeViewNode> _rootNodes = new ObservableCollection<TreeViewNode>();
 
         //Fix container
-        public MainPage(IContainer container)
+        public MainPage()
         {
             InitializeComponent();
 
-            //TODO: Use viewmodel resolution
-            var dbFetchService = container.Resolve<IDbCopyService>();
-            ViewModel = new MainViewModel(dbFetchService);
+            ViewModel = new MainViewModel();
 
             ViewModel.RootNodes.CollectionChanged += RootNodes_CollectionChanged;
             BindingContext = ViewModel;

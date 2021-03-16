@@ -43,6 +43,11 @@ namespace DBViewer.Hub.Controllers
             var dbPath = Path.Combine(dbInfo.RemoteRootDirectory, dbInfo.FullDatabaseName);
             var zipPath = dbPath + ".zip";
 
+            if (System.IO.File.Exists(zipPath))
+            {
+                System.IO.File.Delete(zipPath);
+            }
+
             ZipFile.CreateFromDirectory(dbPath, zipPath);
 
             return !System.IO.File.Exists(zipPath) ? null : new FileStream(zipPath, FileMode.Open);

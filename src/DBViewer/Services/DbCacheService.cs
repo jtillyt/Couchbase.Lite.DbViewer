@@ -1,6 +1,7 @@
 ﻿using Akavache;
 using DbViewer.Shared;
 using DBViewer.Models;
+using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.IO;
 using System.Linq;
@@ -44,13 +45,45 @@ namespace DBViewer.Services
                     fileStream.Close();
                 }
 
-                if (Directory.Exists(dbItem.LocalDatabasePathFull))
+                if (UnzipDbStream(dbItem))
                 {
-                    Directory.Delete(dbItem.LocalDatabasePathFull, true);
+                    dbItem.IsUnzipped = true;
                 }
 
                 SaveRegistry(registry);
-            }, ex => Console.WriteLine(ex), () => Console.WriteLine("Done"));             // TODO: <James Thomas: 3/14/21> Logging/error handling 
+            }, ex => Console.WriteLine(ex), () => Console.WriteLine("Done"));
+            // TODO: <James Thomas: 3/14/21> Logging/error handling 
+        }
+
+        public bool UnzipDbStream(CachedDatabase cachedDb)
+        {
+            try
+            {
+                if (Directory.Exists(cachedDb.LocalDatabasePathFull))
+                {
+                    Directory.Delete(cachedDb.LocalDatabasePathFull, true);
+                }
+                Directory.CreateDirectory(cachedDb.LocalDatabasePathFull);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+
+            try
+            {
+                var fastZip = new FastZip();
+                fastZip.ExtractZip(cachedDb.ArchiveFullPath, cachedDb.LocalDatabasePathFull, null);
+
+                File.Delete(cachedDb.ArchiveFullPath);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private IObservable<CacheRegistry> GetRegistry()

@@ -4,9 +4,9 @@ using Xamarin.Forms.Xaml;
 namespace DBViewer.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CachedDatabasePage : ContentPage
+    public partial class CachedDatabaseListPage : ContentPage
     {
-        public CachedDatabasePage()
+        public CachedDatabaseListPage()
         {
             InitializeComponent();
         }

@@ -58,8 +58,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\CachedDatabasePage.xaml.cs">
-      <DependentUpon>CachedDatabasePage.xaml</DependentUpon>
+    <Compile Update="Views\CachedDatabaseListPage.xaml.cs">
+      <DependentUpon>CachedDatabaseListPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\HubPage.xaml.cs">
       <DependentUpon>HubPage.xaml</DependentUpon>

@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace DBViewer.ViewModels
 {
-    public class CachedDatabaseViewModel : NavigationViewModelBase, INavigatedAware
+    public class CachedDatabaseListViewModel : NavigationViewModelBase, INavigatedAware
     {
         private readonly IDbCacheService _cacheService;
 
-        public CachedDatabaseViewModel(IDbCacheService cacheService, INavigationService navigationService)
+        public CachedDatabaseListViewModel(IDbCacheService cacheService, INavigationService navigationService)
             : base(navigationService)
         {
             _cacheService = Guard

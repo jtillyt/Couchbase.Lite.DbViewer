@@ -37,7 +37,7 @@
                         <Entry Placeholder="Example: http://192.168.1.1:5020"
                                HeightRequest="50"
                                MinimumWidthRequest="50"
-                               TextColor="White"
+                               TextColor="Black"
                                PlaceholderColor="WhiteSmoke" 
                                HorizontalOptions="StartAndExpand"
                                Margin="10,10"

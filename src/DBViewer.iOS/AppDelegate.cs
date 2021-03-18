@@ -27,7 +27,6 @@ namespace DBViewer.iOS
 
         private void InitializePlugins()
         { 
-            Couchbase.Lite.Support.iOS.Activate();
             Akavache.Registrations.Start(nameof(DBViewer));
         }
     }

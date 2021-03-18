@@ -1,4 +1,5 @@
 ﻿using Couchbase.Lite;
+using Dawn;
 using DBViewer.Services;
 using Newtonsoft.Json;
 using ReactiveUI;
@@ -12,14 +13,23 @@ namespace DBViewer.ViewModels
 
         private string _documentId;
 
-        public DocumentViewModel(DocumentGroupViewModel documentGroupViewModel, IDatabaseService dataService,
+        public DocumentViewModel(DocumentGroupViewModel groupViewModel, IDatabaseService dataService,
             string documentId)
         {
-            _parentViewModel = documentGroupViewModel;
-            _dataService = dataService;
+            GroupViewModel = Guard.Argument(groupViewModel, nameof(groupViewModel))
+                  .NotNull()
+                  .Value;
 
-            DocumentId = documentId;
+            DocumentId = Guard.Argument(documentId, nameof(documentId))
+                  .NotNull()
+                  .Value;
+
+            _dataService = Guard.Argument(dataService, nameof(dataService))
+                  .NotNull()
+                  .Value;
         }
+
+        public DocumentGroupViewModel GroupViewModel {get; }
 
         public Document Document { get; }
 
@@ -27,16 +37,6 @@ namespace DBViewer.ViewModels
         {
             get => _documentId;
             set => this.RaiseAndSetIfChanged(ref _documentId, value, nameof(DocumentId));
-        }
-
-        /// <summary>
-        ///     We should load the document and pass back so that tree nodes can be created
-        /// </summary>
-        /// <returns></returns>
-        internal string GetJson()
-        {
-            var document = _dataService.GetDocumentById(DocumentId);
-            return JsonConvert.SerializeObject(document, Formatting.Indented);
         }
     }
 }

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vms="clr-namespace:DBViewer.ViewModels"
+             x:DataType="vms:DocumentViewerViewModel"
+             x:Class="DBViewer.Views.DocumentViewerPage">
+    <ContentPage.Content>
+        <Grid RowDefinitions="180,*,60">
+            <Frame Margin="0,-20,0,0"
+                   Grid.Row="0"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                   Padding="30"
+                   CornerRadius="20"
+                   HasShadow="False">
+                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+                    <Grid HeightRequest="80">
+                        <Button Style="{DynamicResource HeaderButton}"
+                                HeightRequest="40"
+                                WidthRequest="60"
+                                VerticalOptions="Center"
+                                Text="Back"
+                                HorizontalOptions="Start"
+                                Command="{Binding BackCommand}">
+                        </Button>
+                        <Label Text="Document Viewer"
+                               Margin="10"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               HorizontalOptions="CenterAndExpand" />
+                    </Grid>
+                    <Label Text="{Binding DocumentId}"
+                           Margin="0"
+                           FontSize="Small"
+                           Style="{DynamicResource PageHeaderLabel}"
+                           VerticalOptions="Start"
+                           HorizontalOptions="CenterAndExpand" />
+                </StackLayout>
+            </Frame>
+            <Editor VerticalOptions="CenterAndExpand"
+                    Grid.Row="1"
+                    IsReadOnly="True"
+                    Text="{Binding DocumentText}">
+
+            </Editor>
+            <Button Text="Share"
+                    Grid.Row="2"
+                    Command="{Binding ShareCommand}"
+                    Style="{DynamicResource DarkColoredButton}"
+                    Margin="5"
+                    CornerRadius="10"
+                    HeightRequest="60"
+                    FontSize="24" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

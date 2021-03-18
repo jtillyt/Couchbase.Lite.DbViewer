@@ -71,8 +71,8 @@ namespace DBViewer
             if (!(docTreeViewNode?.BindingContext is DocumentViewModel docVm))
                 return;
 
-            var docJson = docVm.GetJson();
-            ViewModel.JsonText = docJson;
+            //var docJson = docVm.GetJson();
+            //ViewModel.JsonText = docJson;
         }
     }
 }

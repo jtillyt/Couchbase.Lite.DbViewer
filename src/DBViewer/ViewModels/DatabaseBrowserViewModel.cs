@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System;
 using System.Reactive.Disposables;
 using System.Collections.Generic;
+using DBViewer.Views;
 using Xamarin.Essentials;
 
 namespace DBViewer.ViewModels
@@ -34,7 +35,6 @@ namespace DBViewer.ViewModels
                   .NotNull()
                   .Value;
 
-
             this.WhenAnyValue(x => x.FilterGroupText)
                 .Throttle(TimeSpan.FromMilliseconds(200))
                 .Subscribe(_ => ReloadDatabase())
@@ -46,9 +46,11 @@ namespace DBViewer.ViewModels
                 .DisposeWith(Disposables);
 
             ReloadCommand = ReactiveCommand.Create(ExecuteReload);
+            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentViewModel>(ExecuteViewSelectedDocument);
             FilterGroupText = Preferences.Get(FilterSearch_Key,"");
         }
 
+        public ReactiveCommand<DocumentViewModel, Unit> ViewSelectedDocumentCommand { get; }
         public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
 
         private string _filterGroupTextText;
@@ -161,7 +163,12 @@ namespace DBViewer.ViewModels
 
         private async Task ExecuteViewSelectedDocument(DocumentViewModel document)
         {
+            var navParams = new NavigationParameters
+            {
+                { nameof(DocumentViewModel), document }
+            };
 
+            await NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
         }
     }
 }

@@ -40,13 +40,14 @@ namespace DBViewer
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IConfigurationService,ConfigurationService>();
-            containerRegistry.Register<IHubService,HubService>();
-            containerRegistry.Register<IDatabaseCacheService, DatabaseCacheService>();
-            containerRegistry.Register<IDatabaseService, DatabaseService>();
+            containerRegistry.RegisterSingleton<IHubService,HubService>();
+            containerRegistry.RegisterSingleton<IDatabaseCacheService, DatabaseCacheService>();
+            containerRegistry.RegisterSingleton<IDatabaseService, DatabaseService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<CachedDatabaseListPage, CachedDatabaseListViewModel>();
             containerRegistry.RegisterForNavigation<DatabaseBrowserPage, DatabaseBrowserViewModel>();
+            containerRegistry.RegisterForNavigation<DocumentViewerPage, DocumentViewerViewModel>();
             containerRegistry.RegisterForNavigation<HubPage, HubViewModel>();
         }
     }

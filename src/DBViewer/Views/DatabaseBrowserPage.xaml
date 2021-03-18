@@ -61,6 +61,10 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vms:DocumentViewModel">
                         <StackLayout>
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                      CommandParameter="{Binding .}" />
+                            </StackLayout.GestureRecognizers>
                             <Frame Margin="20,0,0,0">
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="{Binding DocumentId}"

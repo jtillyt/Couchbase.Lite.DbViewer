@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using DBViewer.TreeView;
+using DBViewer.ViewModels;
 using Xamarin.Forms;
 
 namespace DBViewer
@@ -50,15 +51,15 @@ namespace DBViewer
 
             var documentTreeNodes = new List<TreeViewNode>();
 
-            foreach (var docVm in groupVm.Documents)
-            {
-                var docTemplate = Resources["DocumentNodeTemplate"] as ControlTemplate;
-                var docTreeNode = docTemplate.CreateContent() as TreeViewNode;
-                docTreeNode.BindingContext = docVm;
-                documentTreeNodes.Add(docTreeNode);
+            //foreach (var docVm in groupVm.Documents)
+            //{
+            //    var docTemplate = Resources["DocumentNodeTemplate"] as ControlTemplate;
+            //    var docTreeNode = docTemplate.CreateContent() as TreeViewNode;
+            //    docTreeNode.BindingContext = docVm;
+            //    documentTreeNodes.Add(docTreeNode);
 
-                docTreeNode.DoubleClicked += DocTreeNode_DoubleClicked;
-            }
+            //    docTreeNode.DoubleClicked += DocTreeNode_DoubleClicked;
+            //}
 
             groupTreeViewNode.Children = documentTreeNodes;
         }

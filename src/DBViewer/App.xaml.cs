@@ -29,7 +29,7 @@ namespace DBViewer
 
         protected override async void OnInitialized()
         {
-            var result = await NavigationService.NavigateAsync(nameof(CachedDatabasePage));
+            var result = await NavigationService.NavigateAsync(nameof(CachedDatabaseListPage));
 
             if (!result.Success)
             {
@@ -41,10 +41,12 @@ namespace DBViewer
         {
             containerRegistry.Register<IConfigurationService,ConfigurationService>();
             containerRegistry.Register<IHubService,HubService>();
-            containerRegistry.Register<IDbCacheService, DbCacheService>();
+            containerRegistry.Register<IDatabaseCacheService, DatabaseCacheService>();
+            containerRegistry.Register<IDatabaseService, DatabaseService>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<CachedDatabasePage, CachedDatabaseListViewModel>();
+            containerRegistry.RegisterForNavigation<CachedDatabaseListPage, CachedDatabaseListViewModel>();
+            containerRegistry.RegisterForNavigation<DatabaseBrowserPage, DatabaseBrowserViewModel>();
             containerRegistry.RegisterForNavigation<HubPage, HubViewModel>();
         }
     }

@@ -12,11 +12,11 @@ namespace DBViewer.Services
 {
     public class HubService : IHubService
     {
-        private IDbCacheService _dbCacheService;
+        private IDatabaseCacheService _dbCacheService;
         private IDbHubHttpClient _httpClient;
         private Uri _lastConnectedUri;
 
-        public HubService(IDbCacheService dbCacheService)
+        public HubService(IDatabaseCacheService dbCacheService)
         {
             _dbCacheService = Guard.Argument(dbCacheService, nameof(dbCacheService))
                   .NotNull()

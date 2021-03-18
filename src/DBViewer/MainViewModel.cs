@@ -3,9 +3,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
-using Dawn;
-using DBViewer.Data;
 using DBViewer.Services;
+using DBViewer.ViewModels;
 using Newtonsoft.Json;
 using ReactiveUI;
 using Xamarin.Essentials;
@@ -18,7 +17,7 @@ namespace DBViewer
         private const string LastDbNameKey = "LastDbName";
         private const string LastRemotePathKey = "LastRemotePath";
 
-        private readonly DataService _dataService;
+        private readonly DatabaseService _dataService;
 
         private string _databaseDirectory;
 
@@ -33,7 +32,7 @@ namespace DBViewer
 
         public MainViewModel()
         {
-            _dataService = new DataService();
+            _dataService = new DatabaseService();
 
             LoadDatabase = ReactiveCommand.Create(ExecuteLoad);
             DocumentSelected = ReactiveCommand.Create(ExecuteDocumentSelected);

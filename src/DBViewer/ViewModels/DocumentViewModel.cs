@@ -1,18 +1,18 @@
 ﻿using Couchbase.Lite;
-using DBViewer.Data;
+using DBViewer.Services;
 using Newtonsoft.Json;
 using ReactiveUI;
 
-namespace DBViewer
+namespace DBViewer.ViewModels
 {
     public class DocumentViewModel : ReactiveObject
     {
-        private readonly DataService _dataService;
+        private readonly IDatabaseService _dataService;
         private readonly DocumentGroupViewModel _parentViewModel;
 
         private string _documentId;
 
-        public DocumentViewModel(DocumentGroupViewModel documentGroupViewModel, DataService dataService,
+        public DocumentViewModel(DocumentGroupViewModel documentGroupViewModel, IDatabaseService dataService,
             string documentId)
         {
             _parentViewModel = documentGroupViewModel;

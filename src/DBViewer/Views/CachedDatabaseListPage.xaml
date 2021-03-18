@@ -36,7 +36,7 @@
                     <DataTemplate x:DataType="vms:CachedDatabaseItemViewModel">
                         <StackLayout>
                             <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ViewSelectedDatabaseCommand}"
+                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDatabaseCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                                       CommandParameter="{Binding .}" />
                             </StackLayout.GestureRecognizers>
                             <Frame BackgroundColor="{DynamicResource BackgroundSmokeColor}"

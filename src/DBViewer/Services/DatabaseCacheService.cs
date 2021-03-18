@@ -10,11 +10,11 @@ using Xamarin.Essentials;
 
 namespace DBViewer.Services
 {
-    public class DbCacheService : IDbCacheService
+    public class DatabaseCacheService : IDatabaseCacheService
     {
         private const string Registry_Key = nameof(Registry_Key);
 
-        public DbCacheService()
+        public DatabaseCacheService()
         {
             CacheUpdated = new BehaviorSubject<CacheRegistry>(new CacheRegistry());
         }

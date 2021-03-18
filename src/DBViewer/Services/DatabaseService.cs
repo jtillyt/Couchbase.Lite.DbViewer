@@ -6,9 +6,9 @@ using Couchbase.Lite;
 using Couchbase.Lite.Query;
 using Dawn;
 
-namespace DBViewer.Data
+namespace DBViewer.Services
 {
-    public class DataService
+    public class DatabaseService : IDatabaseService
     {
         private Database _database;
 
@@ -28,6 +28,15 @@ namespace DBViewer.Data
 
             _database = new Database(dbName, dbConfig);
 
+            return true;
+        }
+
+        public bool Disconnect()
+        {
+            if (_database?.Config==null)
+                return true;
+
+            _database.Close();
             return true;
         }
 

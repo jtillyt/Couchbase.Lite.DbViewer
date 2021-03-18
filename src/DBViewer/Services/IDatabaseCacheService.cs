@@ -5,7 +5,7 @@ using System.IO;
 
 namespace DBViewer.Services
 {
-    public interface IDbCacheService
+    public interface IDatabaseCacheService
     {
         IObservable<CacheRegistry> GetRegistry();
         void SaveFromStream(Stream databaseDownloadStream, DatabaseInfo databaseInfo);

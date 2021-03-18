@@ -23,7 +23,7 @@ namespace DBViewer.Models
 
             DownloadTime = downloadTime;
 
-            LocalDatabasePathFull = Path.Combine(LocalDatabasePathRoot, RemoteDatabaseInfo.DisplayDatabaseName);
+            LocalDatabasePathFull = Path.Combine(LocalDatabasePathRoot, RemoteDatabaseInfo.FullDatabaseName);
             ArchiveFullPath = LocalDatabasePathFull + ".zip";
         }
 

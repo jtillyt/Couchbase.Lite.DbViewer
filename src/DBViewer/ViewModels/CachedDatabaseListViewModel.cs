@@ -5,6 +5,7 @@ using DBViewer.Views;
 using Prism.Navigation;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -13,9 +14,9 @@ namespace DBViewer.ViewModels
 {
     public class CachedDatabaseListViewModel : NavigationViewModelBase, INavigatedAware
     {
-        private readonly IDbCacheService _cacheService;
+        private readonly IDatabaseCacheService _cacheService;
 
-        public CachedDatabaseListViewModel(IDbCacheService cacheService, INavigationService navigationService)
+        public CachedDatabaseListViewModel(IDatabaseCacheService cacheService, INavigationService navigationService)
             : base(navigationService)
         {
             _cacheService = Guard
@@ -71,7 +72,7 @@ namespace DBViewer.ViewModels
             {
                 CachedDatabases.Clear();
 
-                foreach(var item in cacheRegistry.DatabaseCollection)
+                foreach (var item in cacheRegistry.DatabaseCollection)
                 {
                     CachedDatabases.Add(new CachedDatabaseItemViewModel(item));
                 }
@@ -83,9 +84,14 @@ namespace DBViewer.ViewModels
             await NavigationService.NavigateAsync(nameof(HubPage));
         }
 
-        private async Task ExecuteViewSelectedDatabase(CachedDatabaseItemViewModel arg)
+        private async Task ExecuteViewSelectedDatabase(CachedDatabaseItemViewModel cachedDatabaseItemViewModel)
         {
+            var navParams = new NavigationParameters
+            {
+                { nameof(CachedDatabaseItemViewModel), cachedDatabaseItemViewModel }
+            };
 
+            await NavigationService.NavigateAsync(nameof(DatabaseBrowserPage), navParams);
         }
     }
 }

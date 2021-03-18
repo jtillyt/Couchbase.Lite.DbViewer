@@ -2,26 +2,30 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DBViewer.ViewModels"
+             BackgroundColor="White"
              x:DataType="vms:HubViewModel"
              x:Class="DBViewer.Views.HubPage">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout BackgroundColor="white">
             <Frame Margin="0,-20,0,0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
-                   Padding="30"
+                   Padding="5,30"
                    CornerRadius="20"
                    HasShadow="False">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
                     <Grid HeightRequest="80">
                         <Button Style="{DynamicResource HeaderButton}"
+                                VerticalOptions="Center"
                                 HeightRequest="40"
-                                WidthRequest="60"
+                                WidthRequest="80"
                                 Text="Back"
                                 HorizontalOptions="Start"
                                 Command="{Binding BackCommand}">
                         </Button>
-                        <Label Text="Download Remote Databases"
-                               Margin="10"
+                        <Label Text="Remote Databases"
+                               Margin="5"
+                               HeightRequest="40"
+                               VerticalTextAlignment="Center"
                                Style="{DynamicResource PageHeaderLabel}"
                                FontAttributes="Bold"
                                VerticalOptions="Start"
@@ -29,27 +33,31 @@
                     </Grid>
                     <Label Style="{DynamicResource MainBodyLabel}"
                            Text="Connect to a DbViewer view remote databases."></Label>
-                    <StackLayout  Orientation="Horizontal">
+                    <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                         <Entry Placeholder="Example: http://192.168.1.1:5020"
                                HeightRequest="50"
-                               HorizontalOptions="FillAndExpand"
-                               Margin="30,10"
+                               MinimumWidthRequest="50"
+                               TextColor="White"
+                               PlaceholderColor="WhiteSmoke" 
+                               HorizontalOptions="StartAndExpand"
+                               Margin="10,10"
                                Text="{Binding HubAddress}">
                         </Entry>
-                        <Button Text="List All"
+                        <Button Text="List"
                                 Command="{Binding ListAllDatabasesCommand}"
                                 Style="{DynamicResource DarkColoredButton}"
-                                WidthRequest="100"
+                                WidthRequest="120"
                                 HeightRequest="50"
-                                HorizontalOptions="Center"
+                                HorizontalOptions="End"
                                 VerticalOptions="Center"
-                                Margin="0,0,10,0"
+                                Margin="0,0,0,0"
                                 FontAttributes="Bold">
                         </Button>
                     </StackLayout>
                 </StackLayout>
             </Frame>
             <CollectionView Margin="30"
+                            BackgroundColor="White"
                             ItemsSource="{Binding RemoteDatabases}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vms:RemoteDatabaseViewModel">

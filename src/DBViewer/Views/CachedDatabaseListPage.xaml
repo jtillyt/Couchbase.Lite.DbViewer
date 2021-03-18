@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DBViewer.ViewModels"
              x:DataType="vms:CachedDatabaseListViewModel"
+             BackgroundColor="White"
              x:Class="DBViewer.Views.CachedDatabaseListPage">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout BackgroundColor="White">
             <Frame Margin="0,-20,0,0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    Padding="30"

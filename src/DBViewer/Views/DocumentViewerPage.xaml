@@ -9,14 +9,14 @@
             <Frame Margin="0,-20,0,0"
                    Grid.Row="0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
-                   Padding="30"
+                   Padding="10,30"
                    CornerRadius="20"
                    HasShadow="False">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
                     <Grid HeightRequest="80">
                         <Button Style="{DynamicResource HeaderButton}"
                                 HeightRequest="40"
-                                WidthRequest="60"
+                                WidthRequest="80"
                                 VerticalOptions="Center"
                                 Text="Back"
                                 HorizontalOptions="Start"
@@ -37,11 +37,11 @@
                            HorizontalOptions="CenterAndExpand" />
                 </StackLayout>
             </Frame>
-            <Editor VerticalOptions="CenterAndExpand"
+            <Editor VerticalOptions="FillAndExpand"
                     Grid.Row="1"
+                    TextColor="Black"
                     IsReadOnly="True"
                     Text="{Binding DocumentText}">
-
             </Editor>
             <Button Text="Share"
                     Grid.Row="2"

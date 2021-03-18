@@ -1,7 +1,6 @@
 ﻿using Couchbase.Lite;
 using Dawn;
 using DBViewer.Services;
-using Newtonsoft.Json;
 using ReactiveUI;
 
 namespace DBViewer.ViewModels
@@ -9,7 +8,6 @@ namespace DBViewer.ViewModels
     public class DocumentViewModel : ReactiveObject
     {
         private readonly IDatabaseService _dataService;
-        private readonly DocumentGroupViewModel _parentViewModel;
 
         private string _documentId;
 

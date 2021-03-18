@@ -13,6 +13,8 @@ namespace DBViewer
         public App()
         {
             InitializeComponent();
+
+            Application.Current.UserAppTheme = OSAppTheme.Light;
         }
 
         protected override void OnStart()

@@ -25,7 +25,7 @@ namespace DBViewer.Services
         {
             GetRegistry().Subscribe(registry =>
             {
-                CachedDatabase dbItem = registry.DatabaseCollection.FirstOrDefault(db => db.RemoteDatabaseInfo == databaseInfo);
+                CachedDatabase dbItem = registry.DatabaseCollection.FirstOrDefault(db => db.RemoteDatabaseInfo.DisplayDatabaseName == databaseInfo.DisplayDatabaseName);
 
                 if (dbItem == null)
                 {

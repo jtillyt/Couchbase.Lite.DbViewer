@@ -3,28 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DBViewer.ViewModels"
              x:DataType="vms:DatabaseBrowserViewModel"
+             BackgroundColor="White"
              x:Class="DBViewer.Views.DatabaseBrowserPage">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout BackgroundColor="White">
             <Frame Margin="0,-20,0,0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    Padding="30"
+                   HeightRequest="200"
                    CornerRadius="20"
                    HasShadow="False">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
-                    <Grid HeightRequest="80">
+                    <Grid HeightRequest="100">
                         <Button Style="{DynamicResource HeaderButton}"
                                 HeightRequest="40"
-                                WidthRequest="60"
+                                WidthRequest="80"
+                                VerticalOptions="Center"
                                 Text="Back"
                                 HorizontalOptions="Start"
                                 Command="{Binding BackCommand}">
                         </Button>
                         <Label Text="{Binding DatabaseName}"
                                Margin="10"
+                               HeightRequest="40"
                                Style="{DynamicResource PageHeaderLabel}"
                                FontAttributes="Bold"
-                               VerticalOptions="Start"
+                               VerticalOptions="Center"
+                               VerticalTextAlignment="Center"
                                HorizontalOptions="CenterAndExpand" />
                     </Grid>
                     <Label Style="{DynamicResource MainBodyLabel}">
@@ -39,6 +44,8 @@
                         <Entry Placeholder="Filter Groups { Comma,Separated,Values }"
                                HeightRequest="50"
                                HorizontalOptions="FillAndExpand"
+                               TextColor="White"
+                               PlaceholderColor="WhiteSmoke"
                                Margin="30,10"
                                Text="{Binding FilterGroupText}">
                         </Entry>
@@ -54,7 +61,7 @@
                                      BackgroundColor="{DynamicResource BackgroundSmokeColor}"
                                      VerticalOptions="Center"
                                      x:DataType="vms:DocumentGroupViewModel">
-                            <Label Text="{Binding GroupName}" HeightRequest="60" VerticalTextAlignment="Center" Margin="15,0" VerticalOptions="Center" FontAttributes="Bold" FontSize="Medium"/>
+                            <Label Text="{Binding GroupName}" HeightRequest="60" VerticalTextAlignment="Center" Margin="15,0" VerticalOptions="Center" FontAttributes="Bold" FontSize="Medium" TextColor="Black"/>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.GroupHeaderTemplate>

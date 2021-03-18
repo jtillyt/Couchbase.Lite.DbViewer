@@ -25,7 +25,7 @@ namespace DBViewer.Services
 
         public DateTimeOffset LastRefreshTime { get; set; }
 
-        public async Task<DownloadResult> DownloadDatabase(DatabaseInfo databaseInfo)
+        public async Task<DownloadResult> DownloadDatabaseAsync(DatabaseInfo databaseInfo)
         {
             var downloadResult = new DownloadResult();
             downloadResult.DatabaseInfo = databaseInfo;
@@ -43,7 +43,7 @@ namespace DBViewer.Services
             }
 
             if (stream == null)
-                throw new InvalidDataException(nameof(DownloadDatabase));
+                throw new InvalidDataException(nameof(DownloadDatabaseAsync));
 
             try
             {
@@ -76,7 +76,7 @@ namespace DBViewer.Services
             }
         }
 
-        public Task<IEnumerable<DatabaseInfo>> ListAll()
+        public Task<IEnumerable<DatabaseInfo>> ListAllAsync()
         {
             return _httpClient.ListAll();
         }

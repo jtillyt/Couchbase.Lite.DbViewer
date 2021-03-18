@@ -1,6 +1,7 @@
 ﻿using Dawn;
 using DbViewer.Shared;
 using DBViewer.Services;
+using Prism.Navigation;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -9,20 +10,27 @@ using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace DBViewer.ViewModels
 {
-    public class HubViewModel : ViewModelBase
+    public class HubViewModel : NavigationViewModelBase
     {
         private const string LastHubAddressKey = "LastHubAddress";
         private readonly IHubService _hubService;
+        private readonly INavigationService _navigationService;
 
-        public HubViewModel(IHubService hubService)
+        public HubViewModel(IHubService hubService, INavigationService navigationService)
+            : base(navigationService)
         {
-            _hubService = Guard.Argument(hubService, nameof(hubService))
-                               .NotNull()
-                               .Value;
+            _hubService = Guard
+                .Argument(hubService, nameof(hubService))
+                .NotNull()
+                .Value;
+
+            _navigationService = Guard
+                .Argument(navigationService, nameof(navigationService))
+                .NotNull()
+                .Value;
 
             ListAllDatabasesCommand = ReactiveCommand.CreateFromTask(ExecuteListAllDatabases);
             DownloadCheckedCommand = ReactiveCommand.CreateFromTask(ExecuteDownloadChecked);
@@ -46,7 +54,6 @@ namespace DBViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _remoteDatabases, value);
         }
 
-
         private async Task ExecuteListAllDatabases()
         {
             if (string.IsNullOrEmpty(HubAddress))
@@ -61,7 +68,7 @@ namespace DBViewer.ViewModels
 
             try
             {
-                dbList = await _hubService.ListAll();
+                dbList = await _hubService.ListAllAsync();
             }
             catch (Exception ex)
             {
@@ -86,16 +93,18 @@ namespace DBViewer.ViewModels
 
         private async Task ExecuteDownloadChecked()
         {
-            foreach(var vm in RemoteDatabases)
+            foreach (var vm in RemoteDatabases)
             {
                 if (vm.ShouldDownload)
                 {
-                    _hubService.DownloadDatabase(vm.DatabaseInfo);
+                    await _hubService.DownloadDatabaseAsync(vm.DatabaseInfo);
                 }
             }
         }
 
         private string _hubAddress;
-        private ObservableCollection<RemoteDatabaseViewModel> _remoteDatabases = new ObservableCollection<RemoteDatabaseViewModel>();
+
+        private ObservableCollection<RemoteDatabaseViewModel> _remoteDatabases =
+            new ObservableCollection<RemoteDatabaseViewModel>();
     }
 }

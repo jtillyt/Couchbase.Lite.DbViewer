@@ -4,9 +4,9 @@ using Xamarin.Forms.Xaml;
 namespace DBViewer.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class HubView : ContentPage
+    public partial class CachedDatabasePage : ContentPage
     {
-        public HubView()
+        public CachedDatabasePage()
         {
             InitializeComponent();
         }

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DBViewer.ViewModels"
              x:DataType="vms:HubViewModel"
-             x:Class="DBViewer.Views.HubView">
+             x:Class="DBViewer.Views.HubPage">
     <ContentPage.Content>
         <StackLayout>
             <Frame Margin="0,-20,0,0"
@@ -12,12 +12,21 @@
                    CornerRadius="20"
                    HasShadow="False">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
-                    <Label Text="Download Remote Databases"
-                           Margin="10"
-                           Style="{DynamicResource PageHeaderLabel}"
-                           FontAttributes="Bold"
-                           VerticalOptions="Start"
-                           HorizontalOptions="CenterAndExpand" />
+                    <Grid HeightRequest="80">
+                        <Button Style="{DynamicResource HeaderButton}"
+                                HeightRequest="40"
+                                WidthRequest="60"
+                                Text="Back"
+                                HorizontalOptions="Start"
+                                Command="{Binding BackCommand}">
+                        </Button>
+                        <Label Text="Download Remote Databases"
+                               Margin="10"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               FontAttributes="Bold"
+                               VerticalOptions="Start"
+                               HorizontalOptions="CenterAndExpand" />
+                    </Grid>
                     <Label Style="{DynamicResource MainBodyLabel}"
                            Text="Connect to a DbViewer view remote databases."></Label>
                     <StackLayout  Orientation="Horizontal">

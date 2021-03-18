@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vms="clr-namespace:DBViewer.ViewModels"
+             x:DataType="vms:CachedDatabaseViewModel"
+             x:Class="DBViewer.Views.CachedDatabasePage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame Margin="0,-20,0,0"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                   Padding="30"
+                   CornerRadius="20"
+                   HasShadow="False">
+                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+                    <Grid HeightRequest="80">
+                        <Label Text="Local Databases"
+                               Margin="10"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               FontAttributes="Bold"
+                               VerticalOptions="Start"
+                               HorizontalOptions="CenterAndExpand" />
+                        <Button Style="{DynamicResource HeaderButton}"
+                                WidthRequest="60"
+                                Text="Hubs"
+                                HorizontalOptions="End"
+                                Command="{Binding ViewHubCommand}">
+                        </Button>
+                    </Grid>
+                    <Label Style="{DynamicResource MainBodyLabel}"
+                           Text="Click on one of the databases below to start viewing..."></Label>
+                </StackLayout>
+            </Frame>
+            <CollectionView Margin="30"
+                            ItemsSource="{Binding CachedDatabases}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vms:CachedDatabaseItemViewModel">
+                        <StackLayout>
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ViewSelectedDatabaseCommand}"
+                                                      CommandParameter="{Binding .}" />
+                            </StackLayout.GestureRecognizers>
+                            <Frame BackgroundColor="{DynamicResource BackgroundSmokeColor}"
+                                   CornerRadius="6"
+                                   HeightRequest="40"
+                                   Margin="0,5">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding DisplayName}"
+                                           Style="{DynamicResource DatabaseSummaryLabel}"
+                                           VerticalOptions="Center" />
+                                    <Label Text=">"
+                                           Style="{DynamicResource DatabaseSummaryLabel}"
+                                           HorizontalOptions="EndAndExpand"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button Text="Reload"
+                    Command="{Binding ReloadCommand}"
+                    Style="{DynamicResource DarkColoredButton}"
+                    Margin="5"
+                    CornerRadius="10"
+                    HeightRequest="60"
+                    FontSize="24" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

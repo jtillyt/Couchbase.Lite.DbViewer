@@ -5,10 +5,9 @@
              x:Class="DBViewer.App">
     <Application.Resources>
         <ResourceDictionary>
-            <!-- 'Borrowed' from Kym https://github.com/kphillpotts/XamarinFormsLayoutChallenges/blob/master/SocialNetwork/SocialNetwork/SocialNetwork/App.xaml-->
-            <!--  colors  -->
             <Color x:Key="HeaderTextColor">#585858</Color>
             <Color x:Key="BodyTextColor">#C3C3C3</Color>
+            <Color x:Key="BackgroundSmokeColor">#FFEEEEEE</Color>
             <Color x:Key="BackgroundColor">White</Color>
             
             <Color x:Key="ColoredCardHeaderTextColor">White</Color>
@@ -49,13 +48,6 @@
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
             </Style>
 
-            <Style x:Key="ProfileTagLabel" TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource BodyTextColor}" />
-                <Setter Property="FontFamily" Value="{StaticResource RegularFontFamily}" />
-                <Setter Property="FontSize" Value="{StaticResource TagTextFontSize}" />
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-            </Style>
-
             <Style x:Key="DatabaseSummaryLabel" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource HeaderTextColor}" />
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -87,6 +79,19 @@
                 <Setter Property="FontFamily" Value="{StaticResource MediumFontFamily}" />
                 <Setter Property="FontSize" Value="{StaticResource ButtonFontSize}" />
             </Style>
+            
+            <Style x:Key="HeaderButton" TargetType="Button">
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource ColoredBackgroundDarkColor}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="BorderRadius" Value="20" />
+                <Setter Property="CornerRadius" Value="4"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="FontFamily" Value="{StaticResource MediumFontFamily}" />
+                <Setter Property="FontSize" Value="{StaticResource ButtonFontSize}" />
+            </Style>
+            
 
         </ResourceDictionary>
 

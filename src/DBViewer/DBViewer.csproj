@@ -58,13 +58,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\HubView.xaml.cs">
-      <DependentUpon>HubDownloadView.xaml</DependentUpon>
+    <Compile Update="Views\CachedDatabasePage.xaml.cs">
+      <DependentUpon>CachedDatabasePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HubPage.xaml.cs">
+      <DependentUpon>HubPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\HubView.xaml">
+    <EmbeddedResource Update="Views\HubPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

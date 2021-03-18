@@ -9,7 +9,7 @@ namespace DBViewer.Services
     public interface IHubService
     {
         void EnsureConnection(Uri hubUri);
-        Task<IEnumerable<DatabaseInfo>> ListAll();
-        Task<DownloadResult> DownloadDatabase(DatabaseInfo databaseInfo);
+        Task<IEnumerable<DatabaseInfo>> ListAllAsync();
+        Task<DownloadResult> DownloadDatabaseAsync(DatabaseInfo databaseInfo);
     }
 }

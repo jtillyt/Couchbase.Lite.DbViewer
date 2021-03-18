@@ -30,6 +30,7 @@ namespace DBViewer.Services
                 if (dbItem == null)
                 {
                     dbItem = new CachedDatabase(FileSystem.AppDataDirectory, databaseInfo, DateTimeOffset.Now);
+                    registry.DatabaseCollection.Add(dbItem);
                 }
 
                 dbItem.IsUnzipped = false;
@@ -70,7 +71,6 @@ namespace DBViewer.Services
                 return false;
             }
 
-
             try
             {
                 var fastZip = new FastZip();
@@ -86,7 +86,7 @@ namespace DBViewer.Services
             return true;
         }
 
-        private IObservable<CacheRegistry> GetRegistry()
+        public IObservable<CacheRegistry> GetRegistry()
         {
             return BlobCache.LocalMachine.GetOrCreateObject(Registry_Key, () => new CacheRegistry());
         }

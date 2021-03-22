@@ -17,7 +17,6 @@ namespace DBViewer.ViewModels
     {
         private const string LastHubAddressKey = "LastHubAddress";
         private readonly IHubService _hubService;
-        private readonly INavigationService _navigationService;
 
         public HubViewModel(IHubService hubService, INavigationService navigationService)
             : base(navigationService)
@@ -27,16 +26,11 @@ namespace DBViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            _navigationService = Guard
-                .Argument(navigationService, nameof(navigationService))
-                .NotNull()
-                .Value;
-
             ListAllDatabasesCommand = ReactiveCommand.CreateFromTask(ExecuteListAllDatabases);
             DownloadCheckedCommand = ReactiveCommand.CreateFromTask(ExecuteDownloadChecked);
 
             // TODO: <James Thomas: 3/14/21> Move to DI 
-            HubAddress = Preferences.Get(LastHubAddressKey, "");
+            HubAddress = Preferences.Get(LastHubAddressKey, "http://192.168.1.10:5020");
         }
 
         public ReactiveCommand<Unit, Unit> ListAllDatabasesCommand { get; }
@@ -100,6 +94,8 @@ namespace DBViewer.ViewModels
                     await _hubService.DownloadDatabaseAsync(vm.DatabaseInfo);
                 }
             }
+
+            await NavigationService.GoBackAsync();
         }
 
         private string _hubAddress;

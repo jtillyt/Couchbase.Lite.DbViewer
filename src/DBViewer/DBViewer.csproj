@@ -45,6 +45,7 @@
     <PackageReference Include="Prism.Forms" Version="8.0.0.1909" />
     <PackageReference Include="ReactiveUI" Version="13.2.2" />
     <PackageReference Include="Refit" Version="6.0.24" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="6.0.24" />
     <PackageReference Include="SharpZipLib.NETStandard" Version="1.0.7" />
     <PackageReference Include="sqlite-net" Version="1.6.292" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />

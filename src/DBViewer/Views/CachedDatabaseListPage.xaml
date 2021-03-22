@@ -41,6 +41,7 @@
                                                       CommandParameter="{Binding .}" />
                             </StackLayout.GestureRecognizers>
                             <Frame BackgroundColor="{DynamicResource BackgroundSmokeColor}"
+                                   HasShadow="False"
                                    CornerRadius="6"
                                    HeightRequest="40"
                                    Margin="0,5">

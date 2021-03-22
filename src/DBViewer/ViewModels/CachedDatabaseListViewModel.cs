@@ -5,7 +5,6 @@ using DBViewer.Views;
 using Prism.Navigation;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -60,10 +59,11 @@ namespace DBViewer.ViewModels
             ExecuteReload();
         }
 
-        private void ExecuteReload()
+        private async void ExecuteReload()
         {
-            _cacheService.GetRegistry()
-               .Subscribe(OnCacheReceived);
+            var registry = await _cacheService.GetRegistry();
+
+            OnCacheReceived(registry);
         }
 
         private void OnCacheReceived(CacheRegistry cacheRegistry)

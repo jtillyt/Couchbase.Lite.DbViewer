@@ -3,9 +3,12 @@ using DbViewer.Shared;
 using DBViewer.Models;
 using ICSharpCode.SharpZipLib.Zip;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 
 namespace DBViewer.Services
@@ -21,39 +24,37 @@ namespace DBViewer.Services
 
         public IObserver<CacheRegistry> CacheUpdated { get; }
 
-        public void SaveFromStream(Stream databaseDownloadStream, DatabaseInfo databaseInfo)
+        public async Task SaveFromStream(Stream databaseDownloadStream, DatabaseInfo databaseInfo)
         {
-            GetRegistry().Subscribe(registry =>
+            var registry = await GetRegistry();
+
+            CachedDatabase dbItem = registry.DatabaseCollection.FirstOrDefault(db => db.RemoteDatabaseInfo.DisplayDatabaseName == databaseInfo.DisplayDatabaseName);
+
+            if (dbItem == null || !Directory.Exists(dbItem.LocalDatabasePathRoot))
             {
-                CachedDatabase dbItem = registry.DatabaseCollection.FirstOrDefault(db => db.RemoteDatabaseInfo.DisplayDatabaseName == databaseInfo.DisplayDatabaseName);
+                dbItem = new CachedDatabase(FileSystem.AppDataDirectory, databaseInfo, DateTimeOffset.Now);
+                registry.DatabaseCollection.Add(dbItem);
+            }
 
-                if (dbItem == null)
-                {
-                    dbItem = new CachedDatabase(FileSystem.AppDataDirectory, databaseInfo, DateTimeOffset.Now);
-                    registry.DatabaseCollection.Add(dbItem);
-                }
+            dbItem.IsUnzipped = false;
 
-                dbItem.IsUnzipped = false;
+            if (File.Exists(dbItem.ArchiveFullPath))
+            {
+                File.Delete(dbItem.ArchiveFullPath);
+            }
 
-                if (File.Exists(dbItem.ArchiveFullPath))
-                {
-                    File.Delete(dbItem.ArchiveFullPath);
-                }
+            using (var fileStream = new FileStream(dbItem.ArchiveFullPath, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                databaseDownloadStream.CopyTo(fileStream);
+                fileStream.Close();
+            }
 
-                using (var fileStream = new FileStream(dbItem.ArchiveFullPath, FileMode.OpenOrCreate, FileAccess.Write))
-                {
-                    databaseDownloadStream.CopyTo(fileStream);
-                    fileStream.Close();
-                }
+            if (UnzipDbStream(dbItem))
+            {
+                dbItem.IsUnzipped = true;
+            }
 
-                if (UnzipDbStream(dbItem))
-                {
-                    dbItem.IsUnzipped = true;
-                }
-
-                SaveRegistry(registry);
-            }, ex => Console.WriteLine(ex), () => Console.WriteLine("Done"));
-            // TODO: <James Thomas: 3/14/21> Logging/error handling 
+            SaveRegistry(registry);
         }
 
         public bool UnzipDbStream(CachedDatabase cachedDb)
@@ -86,9 +87,32 @@ namespace DBViewer.Services
             return true;
         }
 
-        public IObservable<CacheRegistry> GetRegistry()
+        public async Task<CacheRegistry> GetRegistry()
         {
-            return BlobCache.LocalMachine.GetOrCreateObject(Registry_Key, () => new CacheRegistry());
+            var registry = await BlobCache.LocalMachine.GetOrCreateObject(Registry_Key, () => new CacheRegistry());
+
+            Cleanup(registry);
+
+            return registry;
+        }
+
+        public void Cleanup(CacheRegistry cacheRegistry)
+        {
+            var dbsWithBadPaths = new List<CachedDatabase>();
+            foreach (var item in cacheRegistry.DatabaseCollection)
+            {
+                if (!Directory.Exists(item.LocalDatabasePathFull))
+                {
+                    dbsWithBadPaths.Add(item);
+                }
+            }
+
+            foreach (var badDb in dbsWithBadPaths)
+            {
+                cacheRegistry.DatabaseCollection.Remove(badDb);
+            }
+
+            SaveRegistry(cacheRegistry);
         }
 
         private void SaveRegistry(CacheRegistry registry)

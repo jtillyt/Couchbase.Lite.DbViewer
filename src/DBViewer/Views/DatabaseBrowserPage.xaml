@@ -9,7 +9,7 @@
         <StackLayout BackgroundColor="White">
             <Frame Margin="0,-20,0,0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
-                   Padding="30"
+                   Padding="5,30"
                    HeightRequest="200"
                    CornerRadius="20"
                    HasShadow="False">
@@ -34,56 +34,69 @@
                     </Grid>
                     <Label Style="{DynamicResource MainBodyLabel}">
                         <Label.FormattedText>
-                            <FormattedString >
-                               <Span Text="Last Update: " />
-                               <Span Text="{Binding DownloadTime}" />
+                            <FormattedString>
+                                <Span Text="Last Update: " />
+                                <Span Text="{Binding DownloadTime}" />
                             </FormattedString>
-                        </Label.FormattedText> 
+                        </Label.FormattedText>
                     </Label>
                     <StackLayout  Orientation="Horizontal">
                         <Entry Placeholder="Filter Groups { Comma,Separated,Values }"
                                HeightRequest="50"
                                HorizontalOptions="FillAndExpand"
-                               TextColor="White"
+                               TextColor="Black"
                                PlaceholderColor="WhiteSmoke"
-                               Margin="30,10"
+                               Margin="10"
                                Text="{Binding FilterGroupText}">
                         </Entry>
                     </StackLayout>
                 </StackLayout>
             </Frame>
-            <CollectionView Margin="30"
-                            IsGrouped="True"
-                            ItemsSource="{Binding DocumentGroups}">
-                <CollectionView.GroupHeaderTemplate>
+            <ListView Margin="30"
+                      IsGroupingEnabled="True"
+                      ItemsSource="{Binding DocumentGroups}">
+                <ListView.GroupHeaderTemplate>
                     <DataTemplate>
-                        <StackLayout HeightRequest="60"
-                                     BackgroundColor="{DynamicResource BackgroundSmokeColor}"
-                                     VerticalOptions="Center"
-                                     x:DataType="vms:DocumentGroupViewModel">
-                            <Label Text="{Binding GroupName}" HeightRequest="60" VerticalTextAlignment="Center" Margin="15,0" VerticalOptions="Center" FontAttributes="Bold" FontSize="Medium" TextColor="Black"/>
-                        </StackLayout>
+                        <ViewCell>
+                            <StackLayout HeightRequest="60"
+                                         BackgroundColor="{DynamicResource BackgroundSmokeColor}"
+                                         VerticalOptions="Center"
+                                         x:DataType="vms:DocumentGroupViewModel">
+                                <Label Text="{Binding GroupName}"
+                                       HeightRequest="60"
+                                       VerticalTextAlignment="Center"
+                                       Margin="15,0"
+                                       VerticalOptions="Center"
+                                       FontAttributes="Bold"
+                                       FontSize="Medium"
+                                       TextColor="Black" />
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
-                </CollectionView.GroupHeaderTemplate>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="vms:DocumentViewModel">
-                        <StackLayout>
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                      CommandParameter="{Binding .}" />
-                            </StackLayout.GestureRecognizers>
-                            <Frame Margin="20,0,0,0">
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding DocumentId}"
-                                    VerticalTextAlignment="Center"
-                                           Style="{DynamicResource DatabaseSummaryLabel}"
-                                           VerticalOptions="Center" />
-                                </StackLayout>
-                            </Frame>
-                        </StackLayout>
+                </ListView.GroupHeaderTemplate>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout x:DataType="vms:DocumentViewModel">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                          CommandParameter="{Binding .}" />
+                                </StackLayout.GestureRecognizers>
+                                <Frame Margin="20,0,0,0"
+                                       HasShadow="False">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding DocumentId}"
+                                               TextColor="Black"
+                                               VerticalTextAlignment="Center"
+                                               Style="{DynamicResource DatabaseSummaryLabel}"
+                                               VerticalOptions="Center" />
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ListView.ItemTemplate>
+            </ListView>
             <Button Text="Reload"
                     Command="{Binding ReloadCommand}"
                     Style="{DynamicResource DarkColoredButton}"

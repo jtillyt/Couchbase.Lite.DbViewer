@@ -2,6 +2,7 @@
 using DbViewer.Shared;
 using DBViewer.Api;
 using DBViewer.Models;
+using Newtonsoft.Json;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,11 @@ namespace DBViewer.Services
             {
                 try
                 {
-                    _httpClient = RestService.For<IDbHubHttpClient>(hubUri.ToString());
+                    _httpClient = RestService.For<IDbHubHttpClient>(hubUri.ToString(), new RefitSettings
+                    {
+                        ContentSerializer = new NewtonsoftJsonContentSerializer()
+                    });
+
                     _lastConnectedUri = hubUri;
 
                     LastRefreshTime = DateTimeOffset.Now;

@@ -74,8 +74,7 @@ namespace DBViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _downloadTime, value);
         }
 
-        private ObservableCollection<DocumentGroupViewModel> _documentGroups =
-            new ObservableCollection<DocumentGroupViewModel>();
+        private ObservableCollection<DocumentGroupViewModel> _documentGroups;
 
         public ObservableCollection<DocumentGroupViewModel> DocumentGroups
         {
@@ -129,13 +128,6 @@ namespace DBViewer.ViewModels
             var documentIds = _databaseService.ListAllDocumentIds();
             var groupedDocuments = documentIds.GroupBy(key => { return key.Substring(0, key.IndexOf("::")); });
             var filteredGroups = groupedDocuments.Where(group => filteredGroupNames.Any(gn => gn.Count() == 0 || group.Key.ToLower().Contains(gn.ToLower())));
-            var documentViewModels = new List<DocumentGroupViewModel>();
-
-            foreach (var group in filteredGroups)
-            {
-                var groupViewModel = new DocumentGroupViewModel(_databaseService, group.Key, group.ToList());
-                documentViewModels.Add(groupViewModel);
-            }
 
             RunOnUi(() =>
             {
@@ -147,11 +139,12 @@ namespace DBViewer.ViewModels
                 var localDateTime = cachedDatabaseInfo.DownloadTime.LocalDateTime;
                 DownloadTime = $"{localDateTime.ToShortDateString()} {localDateTime.ToShortTimeString()}";
 
-                DocumentGroups.Clear();
+                DocumentGroups = new ObservableCollection<DocumentGroupViewModel>();
 
-                foreach (var groupVm in documentViewModels)
+                foreach (var group in filteredGroups)
                 {
-                    DocumentGroups.Add(groupVm);
+                    var groupViewModel = new DocumentGroupViewModel(_databaseService, group.Key, group.ToList());
+                    DocumentGroups.Add(groupViewModel);
                 }
             });
         }

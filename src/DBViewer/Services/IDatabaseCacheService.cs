@@ -1,13 +1,14 @@
 ﻿using DbViewer.Shared;
 using DBViewer.Models;
-using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace DBViewer.Services
 {
     public interface IDatabaseCacheService
     {
-        IObservable<CacheRegistry> GetRegistry();
-        void SaveFromStream(Stream databaseDownloadStream, DatabaseInfo databaseInfo);
+        void Cleanup(CacheRegistry cacheRegistry);
+        Task<CacheRegistry> GetRegistry();
+        Task SaveFromStream(Stream databaseDownloadStream, DatabaseInfo databaseInfo);
     }
 }

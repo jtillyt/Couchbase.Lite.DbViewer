@@ -62,7 +62,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vms:RemoteDatabaseViewModel">
                         <StackLayout>
-                            <Frame>
+                            <Frame HasShadow="False">
                                 <StackLayout Orientation="Horizontal">
                                     <CheckBox IsChecked="{Binding ShouldDownload}"
                                               Color="{DynamicResource ColoredBackgroundMediumColor}"

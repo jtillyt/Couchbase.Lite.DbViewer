@@ -20,7 +20,7 @@ namespace DBViewer.Services
 
             if (!Directory.Exists(dbDirectory))
             {
-                throw new DirectoryNotFoundException(dbDirectory);
+                return false;
             }
 
             var dbConfig = new DatabaseConfiguration();

@@ -5,7 +5,7 @@
              x:DataType="vms:DocumentViewerViewModel"
              x:Class="DBViewer.Views.DocumentViewerPage">
     <ContentPage.Content>
-        <Grid RowDefinitions="180,*,60">
+        <Grid RowDefinitions="140,*,60">
             <Frame Margin="0,-20,0,0"
                    Grid.Row="0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
@@ -37,12 +37,15 @@
                            HorizontalOptions="CenterAndExpand" />
                 </StackLayout>
             </Frame>
-            <Editor VerticalOptions="FillAndExpand"
-                    Grid.Row="1"
-                    TextColor="Black"
-                    IsReadOnly="True"
-                    Text="{Binding DocumentText}">
-            </Editor>
+            <ScrollView Grid.Row="1"
+                        VerticalOptions="FillAndExpand">
+                <Editor VerticalOptions="FillAndExpand"
+                        AutoSize="TextChanges"
+                        TextColor="Black"
+                        IsReadOnly="True"
+                        Text="{Binding DocumentText}">
+                </Editor>
+            </ScrollView>
             <Button Text="Share"
                     Grid.Row="2"
                     Command="{Binding ShareCommand}"

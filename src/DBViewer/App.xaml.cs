@@ -49,6 +49,7 @@ namespace DBViewer
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<CachedDatabaseListPage, CachedDatabaseListViewModel>();
             containerRegistry.RegisterForNavigation<DatabaseBrowserPage, DatabaseBrowserViewModel>();
+            containerRegistry.RegisterForNavigation<DatabaseSearchPage, DatabaseSearchViewModel>();
             containerRegistry.RegisterForNavigation<DocumentViewerPage, DocumentViewerViewModel>();
             containerRegistry.RegisterForNavigation<HubPage, HubViewModel>();
         }

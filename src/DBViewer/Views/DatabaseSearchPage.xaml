@@ -2,19 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DBViewer.ViewModels"
-             x:DataType="vms:DatabaseBrowserViewModel"
+             x:DataType="vms:DatabaseSearchViewModel"
              BackgroundColor="White"
-             x:Class="DBViewer.Views.DatabaseBrowserPage">
+             x:Class="DBViewer.Views.DatabaseSearchPage">
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
             <Frame Margin="0,-20,0,0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    Padding="5,30"
-                   HeightRequest="200"
+                   HeightRequest="160"
                    CornerRadius="20"
                    HasShadow="False">
-                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
-                    <Grid HeightRequest="100">
+                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}" VerticalOptions="Center">
+                    <Grid HeightRequest="50">
                         <Button Style="{DynamicResource HeaderButton}"
                                 HeightRequest="40"
                                 WidthRequest="80"
@@ -23,7 +23,7 @@
                                 HorizontalOptions="Start"
                                 Command="{Binding BackCommand}">
                         </Button>
-                        <Label Text="{Binding DatabaseName}"
+                        <Label Text="Search Database"
                                Margin="10"
                                HeightRequest="40"
                                Style="{DynamicResource PageHeaderLabel}"
@@ -31,32 +31,23 @@
                                VerticalOptions="Center"
                                VerticalTextAlignment="Center"
                                HorizontalOptions="CenterAndExpand" />
-                        <Button Style="{DynamicResource HeaderButton}"
-                                HeightRequest="40"
-                                WidthRequest="80"
-                                VerticalOptions="Center"
-                                Text="Search"
-                                HorizontalOptions="End"
-                                Command="{Binding ViewDatabaseSearchCommand}">
-                        </Button>
                     </Grid>
-                    <Label Style="{DynamicResource MainBodyLabel}">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="Last Update: " />
-                                <Span Text="{Binding DownloadTime}" />
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-                    <StackLayout  Orientation="Horizontal">
-                        <Entry Placeholder="Filter Groups { Comma,Separated,Values }"
+                    <StackLayout  Orientation="Horizontal" Margin="10">
+                        <Entry Placeholder="Search Text"
                                HeightRequest="50"
                                HorizontalOptions="FillAndExpand"
                                TextColor="Black"
                                PlaceholderColor="WhiteSmoke"
                                Margin="10"
-                               Text="{Binding FilterText}">
+                               Text="{Binding SearchText}">
                         </Entry>
+                        <Button Text="Search"
+                    Command="{Binding SearchCommand}"
+                    Style="{DynamicResource DarkColoredButton}"
+                    Margin="5"
+                    CornerRadius="10"
+                    HeightRequest="60"
+                    FontSize="20" />
                     </StackLayout>
                 </StackLayout>
             </Frame>
@@ -106,13 +97,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Text="Reload"
-                    Command="{Binding ReloadCommand}"
-                    Style="{DynamicResource DarkColoredButton}"
-                    Margin="5"
-                    CornerRadius="10"
-                    HeightRequest="60"
-                    FontSize="24" />
+           
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

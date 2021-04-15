@@ -5,7 +5,7 @@
              x:DataType="vms:DocumentViewerViewModel"
              x:Class="DBViewer.Views.DocumentViewerPage">
     <ContentPage.Content>
-        <Grid RowDefinitions="140,*,60">
+        <Grid RowDefinitions="140,*,60" BackgroundColor="White">
             <Frame Margin="0,-20,0,0"
                    Grid.Row="0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
@@ -38,9 +38,14 @@
                 </StackLayout>
             </Frame>
             <ScrollView Grid.Row="1"
+                        Margin="0"
+                        Padding="0"
+                        BackgroundColor="White"
                         VerticalOptions="FillAndExpand">
                 <Editor VerticalOptions="FillAndExpand"
+                        Margin="0"
                         AutoSize="TextChanges"
+                        BackgroundColor="White"
                         TextColor="Black"
                         IsReadOnly="True"
                         Text="{Binding DocumentText}">

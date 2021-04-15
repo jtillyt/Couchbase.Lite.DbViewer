@@ -10,9 +10,7 @@ namespace DBViewer.ViewModels
     {
         private readonly IDatabaseService _dataService;
 
-        private ObservableCollection<DocumentViewModel> _documents = new ObservableCollection<DocumentViewModel>();
-
-        public DocumentGroupViewModel(IDatabaseService dataService, string groupName, List<string> documentIds)
+        public DocumentGroupViewModel(IDatabaseService dataService, string groupName, List<string> documentIds, string[] searchStrings = null)
         {
             _dataService = Guard.Argument(dataService, nameof(dataService))
                   .NotNull()
@@ -22,7 +20,7 @@ namespace DBViewer.ViewModels
                   .NotNull()
                   .Value;
 
-            LoadDocuments(documentIds);
+            LoadDocuments(documentIds, searchStrings);
         }
 
         private string _groupName = "";
@@ -40,13 +38,30 @@ namespace DBViewer.ViewModels
             }
         }
 
-        public void LoadDocuments(List<string> documentIds)
+        public void LoadDocuments(List<string> documentIds, string[] searchStrings)
         {
             foreach (var documentId in documentIds)
             {
-                var documentViewModel = new DocumentViewModel(this, _dataService, documentId);
-                Add(documentViewModel);
+                if (ShouldShowDocument(documentId, searchStrings))
+                {
+                    var documentViewModel = new DocumentViewModel(this, _dataService, documentId);
+                    Add(documentViewModel);
+                }
             }
+        }
+
+        private static bool ShouldShowDocument(string documentId, string[] searchStrings)
+        { 
+            if (searchStrings == null || searchStrings[0] == string.Empty)
+                return true;
+
+            foreach(var searchString in searchStrings)
+            {
+                if (documentId.ToLowerInvariant().Contains(searchString.ToLowerInvariant()))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

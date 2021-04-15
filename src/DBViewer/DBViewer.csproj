@@ -62,6 +62,9 @@
     <Compile Update="Views\CachedDatabaseListPage.xaml.cs">
       <DependentUpon>CachedDatabaseListPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\DatabaseSearchPage.xaml.cs">
+      <DependentUpon>DatabaseSearchPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\DocumentViewerPage.xaml.cs">
       <DependentUpon>DocumentViewerPage.xaml</DependentUpon>
     </Compile>

@@ -1,17 +1,15 @@
 ﻿using Dawn;
 using DBViewer.Services;
+using DBViewer.Views;
 using Prism.Navigation;
 using ReactiveUI;
-using System.Reactive.Linq;
+using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
-using System.Threading.Tasks;
-using System;
 using System.Reactive.Disposables;
-using System.Collections.Generic;
-using DBViewer.Views;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 
 namespace DBViewer.ViewModels
@@ -35,29 +33,31 @@ namespace DBViewer.ViewModels
                   .NotNull()
                   .Value;
 
-            this.WhenAnyValue(x => x.FilterGroupText)
+            this.WhenAnyValue(x => x.FilterText)
                 .Throttle(TimeSpan.FromMilliseconds(200))
                 .Subscribe(_ => ReloadDatabase())
                 .DisposeWith(Disposables);
 
-            this.WhenAnyValue(x => x.FilterGroupText)
+            this.WhenAnyValue(x => x.FilterText)
                 .Throttle(TimeSpan.FromSeconds(5))
                 .Subscribe(_ => SaveSearchState())
                 .DisposeWith(Disposables);
 
             ReloadCommand = ReactiveCommand.Create(ExecuteReload);
             ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentViewModel>(ExecuteViewSelectedDocument);
-            FilterGroupText = Preferences.Get(FilterSearch_Key,"");
+            ViewDatabaseSearchCommand = ReactiveCommand.CreateFromTask(ExecuteViewDatabaseSearch);
+            FilterText = Preferences.Get(FilterSearch_Key, "");
         }
 
+        public ReactiveCommand<Unit, Unit> ViewDatabaseSearchCommand { get; set; }
         public ReactiveCommand<DocumentViewModel, Unit> ViewSelectedDocumentCommand { get; }
         public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
 
-        private string _filterGroupTextText;
-        public string FilterGroupText
+        private string _filterText;
+        public string FilterText
         {
-            get => _filterGroupTextText;
-            set => this.RaiseAndSetIfChanged(ref _filterGroupTextText, value);
+            get => _filterText;
+            set => this.RaiseAndSetIfChanged(ref _filterText, value);
         }
 
         private string _databaseName;
@@ -124,34 +124,35 @@ namespace DBViewer.ViewModels
             if (!connected)
                 return;
 
-            var filteredGroupNames = (FilterGroupText ?? "").Split(',');
+            var filteredGroupNames = (FilterText ?? "").Split(',');
             var documentIds = _databaseService.ListAllDocumentIds();
             var groupedDocuments = documentIds.GroupBy(key => { return key.Substring(0, key.IndexOf("::")); });
-            var filteredGroups = groupedDocuments.Where(group => filteredGroupNames.Any(gn => gn.Count() == 0 || group.Key.ToLower().Contains(gn.ToLower())));
+            //var filteredGroups = groupedDocuments.Where(group => filteredGroupNames.Any(gn => gn.Count() == 0 || group.Key.ToLower().Contains(gn.ToLower())));
 
             RunOnUi(() =>
             {
                 DatabaseName = cachedDatabaseInfo.RemoteDatabaseInfo.DisplayDatabaseName;
 
                 var dbRoot = cachedDatabaseInfo.LocalDatabasePathRoot;
-                Debug.WriteLine(dbRoot);
 
                 var localDateTime = cachedDatabaseInfo.DownloadTime.LocalDateTime;
                 DownloadTime = $"{localDateTime.ToShortDateString()} {localDateTime.ToShortTimeString()}";
 
                 DocumentGroups = new ObservableCollection<DocumentGroupViewModel>();
 
-                foreach (var group in filteredGroups)
+                foreach (var group in groupedDocuments)
                 {
-                    var groupViewModel = new DocumentGroupViewModel(_databaseService, group.Key, group.ToList());
-                    DocumentGroups.Add(groupViewModel);
+                    var groupViewModel = new DocumentGroupViewModel(_databaseService, group.Key, group.ToList(), filteredGroupNames);
+
+                    if (groupViewModel.Count > 0)
+                        DocumentGroups.Add(groupViewModel);
                 }
             });
         }
 
         private void SaveSearchState()
         {
-            Preferences.Set(FilterSearch_Key, FilterGroupText);
+            Preferences.Set(FilterSearch_Key, FilterText);
         }
 
         private async Task ExecuteViewSelectedDocument(DocumentViewModel document)
@@ -162,6 +163,18 @@ namespace DBViewer.ViewModels
             };
 
             await NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
+        }
+
+        private async Task ExecuteViewDatabaseSearch()
+        {
+            var documentsToSearch = DocumentGroups.SelectMany(dg => dg.Select(d => d.DocumentId));
+            var navParams = new NavigationParameters
+            {
+                { nameof(CachedDatabaseItemViewModel), CurrentDatabaseItemViewModel },
+                { nameof(DatabaseSearchViewModel.DocumentIdList_Param), documentsToSearch }
+            };
+
+            await NavigationService.NavigateAsync(nameof(DatabaseSearchPage), navParams);
         }
     }
 }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace DBViewer.Services
 {
-    public interface IDatabaseService
+    public interface IDatabaseConnection
     {
+        bool IsConnected { get; }
+
         bool Connect(string dbDirectory, string dbName);
         List<string> ListAllDocumentIds();
         Document GetDocumentById(string id);

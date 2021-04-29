@@ -8,9 +8,9 @@ namespace DBViewer.ViewModels
 {
     public class DocumentGroupViewModel : ObservableCollection<DocumentViewModel>
     {
-        private readonly IDatabaseService _dataService;
+        private readonly IDatabaseConnection _dataService;
 
-        public DocumentGroupViewModel(IDatabaseService dataService, string groupName, List<string> documentIds, string[] searchStrings = null)
+        public DocumentGroupViewModel(IDatabaseConnection dataService, string groupName, List<string> documentIds, string[] searchStrings = null)
         {
             _dataService = Guard.Argument(dataService, nameof(dataService))
                   .NotNull()

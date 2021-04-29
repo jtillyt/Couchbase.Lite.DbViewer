@@ -19,9 +19,8 @@ namespace DBViewer.ViewModels
         private const string FilterSearch_Key = "FilterSearch";
 
         private readonly IDatabaseCacheService _cacheService;
-        private readonly IDatabaseService _databaseService;
 
-        public DatabaseBrowserViewModel(IDatabaseCacheService cacheService, IDatabaseService databaseService, INavigationService navigationService)
+        public DatabaseBrowserViewModel(IDatabaseCacheService cacheService, INavigationService navigationService)
             : base(navigationService)
         {
             _cacheService = Guard
@@ -29,13 +28,9 @@ namespace DBViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            _databaseService = Guard.Argument(databaseService, nameof(databaseService))
-                  .NotNull()
-                  .Value;
-
             this.WhenAnyValue(x => x.FilterText)
                 .Throttle(TimeSpan.FromMilliseconds(200))
-                .Subscribe(_ => ReloadDatabase())
+                .Subscribe(_ => ExecuteReload())
                 .DisposeWith(Disposables);
 
             this.WhenAnyValue(x => x.FilterText)
@@ -107,25 +102,20 @@ namespace DBViewer.ViewModels
 
         private void ExecuteReload()
         {
-            ReloadDatabase();
-        }
-
-        private void ReloadDatabase()
-        {
             // TODO: <James Thomas: 3/18/21> Handle
             if (CurrentDatabaseItemViewModel == null)
                 return;
 
-            _databaseService.Disconnect();
-
             var cachedDatabaseInfo = CurrentDatabaseItemViewModel.CachedDatabase;
-            bool connected = _databaseService.Connect(cachedDatabaseInfo.LocalDatabasePathRoot, cachedDatabaseInfo.RemoteDatabaseInfo.DisplayDatabaseName);
+            var isConnected = cachedDatabaseInfo.Connect();
 
-            if (!connected)
+            if (!isConnected)
                 return;
 
+            var connection = cachedDatabaseInfo.ActiveConnection;
+
             var filteredGroupNames = (FilterText ?? "").Split(',');
-            var documentIds = _databaseService.ListAllDocumentIds();
+            var documentIds = connection.ListAllDocumentIds();
             var groupedDocuments = documentIds.GroupBy(key => { return key.Substring(0, key.IndexOf("::")); });
             //var filteredGroups = groupedDocuments.Where(group => filteredGroupNames.Any(gn => gn.Count() == 0 || group.Key.ToLower().Contains(gn.ToLower())));
 
@@ -142,7 +132,7 @@ namespace DBViewer.ViewModels
 
                 foreach (var group in groupedDocuments)
                 {
-                    var groupViewModel = new DocumentGroupViewModel(_databaseService, group.Key, group.ToList(), filteredGroupNames);
+                    var groupViewModel = new DocumentGroupViewModel(connection, group.Key, group.ToList(), filteredGroupNames);
 
                     if (groupViewModel.Count > 0)
                         DocumentGroups.Add(groupViewModel);

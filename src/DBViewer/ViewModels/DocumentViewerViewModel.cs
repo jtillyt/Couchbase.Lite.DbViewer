@@ -12,11 +12,11 @@ namespace DBViewer.ViewModels
 {
     public class DocumentViewerViewModel : NavigationViewModelBase, INavigationAware
     {
-        private readonly IDatabaseService _dataService;
+        private readonly IDatabaseConnection _dataService;
 
         private string _documentId;
 
-        public DocumentViewerViewModel(IDatabaseService dataService, INavigationService navigationService)
+        public DocumentViewerViewModel(IDatabaseConnection dataService, INavigationService navigationService)
             : base(navigationService)
         {
             _dataService = Guard.Argument(dataService, nameof(dataService))

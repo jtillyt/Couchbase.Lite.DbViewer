@@ -7,11 +7,11 @@ namespace DBViewer.ViewModels
 {
     public class DocumentViewModel : ReactiveObject
     {
-        private readonly IDatabaseService _dataService;
+        private readonly IDatabaseConnection _dataService;
 
         private string _documentId;
 
-        public DocumentViewModel(DocumentGroupViewModel groupViewModel, IDatabaseService dataService,
+        public DocumentViewModel(DocumentGroupViewModel groupViewModel, IDatabaseConnection dataService,
             string documentId)
         {
             GroupViewModel = Guard.Argument(groupViewModel, nameof(groupViewModel))

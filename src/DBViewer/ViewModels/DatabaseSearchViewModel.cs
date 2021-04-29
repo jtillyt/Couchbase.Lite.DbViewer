@@ -20,19 +20,14 @@ namespace DBViewer.ViewModels
         private IEnumerable<string> _documentIds;
 
         private readonly IDatabaseCacheService _cacheService;
-        private readonly IDatabaseService _databaseService;
 
-        public DatabaseSearchViewModel(IDatabaseCacheService cacheService, IDatabaseService databaseService, INavigationService navigationService)
+        public DatabaseSearchViewModel(IDatabaseCacheService cacheService, INavigationService navigationService)
             : base(navigationService)
         {
             _cacheService = Guard
                 .Argument(cacheService, nameof(cacheService))
                 .NotNull()
                 .Value;
-
-            _databaseService = Guard.Argument(databaseService, nameof(databaseService))
-                  .NotNull()
-                  .Value;
 
             SearchCommand = ReactiveCommand.Create(ExecuteSearch);
             ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentViewModel>(ExecuteViewSelectedDocument);
@@ -85,15 +80,15 @@ namespace DBViewer.ViewModels
             if (CurrentDatabaseItemViewModel == null)
                 return;
 
-            _databaseService.Disconnect();
-
             var cachedDatabaseInfo = CurrentDatabaseItemViewModel.CachedDatabase;
-            bool connected = _databaseService.Connect(cachedDatabaseInfo.LocalDatabasePathRoot, cachedDatabaseInfo.RemoteDatabaseInfo.DisplayDatabaseName);
+            var isConnected = cachedDatabaseInfo.Connect();
 
-            if (!connected)
+            if (!isConnected)
                 return;
 
-            var documentIds = _databaseService.ListAllDocumentIds();
+            var connection = cachedDatabaseInfo.ActiveConnection;
+
+            var documentIds = connection.ListAllDocumentIds();
 
             var searchTextCorrected = SearchText.ToLower();
 
@@ -101,7 +96,7 @@ namespace DBViewer.ViewModels
 
             foreach (var documentId in documentIds)
             {
-                var document = _databaseService.GetDocumentById(documentId);
+                var document = connection.GetDocumentById(documentId);
 
                 var documentText = JsonConvert.SerializeObject(document);
 
@@ -121,7 +116,7 @@ namespace DBViewer.ViewModels
 
                 foreach (var group in groupedDocuments)
                 {
-                    var groupViewModel = new DocumentGroupViewModel(_databaseService, group.Key, group.ToList());
+                    var groupViewModel = new DocumentGroupViewModel(connection, group.Key, group.ToList());
 
                     if (groupViewModel.Count > 0)
                         DocumentGroups.Add(groupViewModel);

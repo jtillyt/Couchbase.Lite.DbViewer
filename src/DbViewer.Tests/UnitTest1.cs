@@ -19,7 +19,7 @@ namespace DbViewer.Tests
         [Fact]
         public void Test1()
         {
-            var dataService = new DatabaseService();
+            var dataService = new ConnectedDatabaseService();
             var result = dataService.Connect(_dbDir, _dbName);
         }
     }

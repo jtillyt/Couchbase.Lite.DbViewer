@@ -35,6 +35,10 @@ namespace DBViewer.Services
                 dbItem = new CachedDatabase(FileSystem.AppDataDirectory, databaseInfo, DateTimeOffset.Now);
                 registry.DatabaseCollection.Add(dbItem);
             }
+            else
+            {
+                dbItem.ActiveConnection?.Disconnect();
+            }
 
             dbItem.IsUnzipped = false;
 
@@ -89,11 +93,13 @@ namespace DBViewer.Services
 
         public async Task<CacheRegistry> GetRegistry()
         {
-            var registry = await BlobCache.LocalMachine.GetOrCreateObject(Registry_Key, () => new CacheRegistry());
+            if (_inMemoryRegistry == null)
+            {
+                _inMemoryRegistry = await BlobCache.LocalMachine.GetOrCreateObject(Registry_Key, () => new CacheRegistry());
+                Cleanup(_inMemoryRegistry);
+            }
 
-            Cleanup(registry);
-
-            return registry;
+            return _inMemoryRegistry;
         }
 
         public void Cleanup(CacheRegistry cacheRegistry)
@@ -122,5 +128,7 @@ namespace DBViewer.Services
                 CacheUpdated.OnNext(registry);
             });
         }
+
+        private CacheRegistry _inMemoryRegistry = null;
     }
 }

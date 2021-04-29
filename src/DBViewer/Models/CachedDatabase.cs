@@ -1,5 +1,6 @@
 ﻿using Dawn;
 using DbViewer.Shared;
+using DBViewer.Services;
 using System;
 using System.IO;
 
@@ -7,8 +8,11 @@ namespace DBViewer.Models
 {
     public class CachedDatabase
     {
+        private object _synclock = new object();
+
         public CachedDatabase()
         {
+
         }
 
         public CachedDatabase(string localDatabasePathRoot, DatabaseInfo remoteDatabaseInfo, DateTimeOffset downloadTime)
@@ -27,6 +31,52 @@ namespace DBViewer.Models
             ArchiveFullPath = LocalDatabasePathFull + ".zip";
         }
 
+        public IDatabaseConnection ActiveConnection { get; private set; }
+
+        public bool Connect()
+        {
+            lock (_synclock)
+            {
+                if (ActiveConnection != null && ActiveConnection.IsConnected)
+                    return true;
+
+                ActiveConnection = new DatabaseConnection();
+
+                try
+                {
+                    ActiveConnection.Connect(LocalDatabasePathRoot, RemoteDatabaseInfo.DisplayDatabaseName);
+                    return true;
+                }
+                catch
+                {
+                    // TODO: <James Thomas: 4/28/83> Add logging 
+                }
+
+                return false;
+            }
+        }
+
+        public bool Disconnect()
+        {
+            if (ActiveConnection != null)
+            {
+                try
+                {
+                    ActiveConnection.Disconnect();
+                    ActiveConnection = null;
+                    return true;
+                }
+                catch
+                {
+                    // TODO: <James Thomas: 4/28/83> Add logging 
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
         public DatabaseInfo RemoteDatabaseInfo { get; set; }
         public DateTimeOffset DownloadTime { get; set; }
 
@@ -38,7 +88,7 @@ namespace DBViewer.Models
         /// <summary>
         /// The full path to the directoy that contains the unzipped database contents.
         /// </summary>
-        public string LocalDatabasePathFull {get;set; }
+        public string LocalDatabasePathFull { get; set; }
 
 
         /// <summary>
@@ -49,6 +99,6 @@ namespace DBViewer.Models
         /// <summary>
         /// Tracking whether we've already successfully unzipped
         /// </summary>
-        public bool IsUnzipped {get;set; }
+        public bool IsUnzipped { get; set; }
     }
 }

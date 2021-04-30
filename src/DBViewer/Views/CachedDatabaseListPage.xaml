@@ -43,16 +43,28 @@
                             <Frame BackgroundColor="{DynamicResource BackgroundSmokeColor}"
                                    HasShadow="False"
                                    CornerRadius="6"
-                                   HeightRequest="40"
+                                   HeightRequest="60"
                                    Margin="0,5">
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding DisplayName}"
+                                <StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding DisplayName}"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            VerticalOptions="Center" />
-                                    <Label Text=">"
+                                        <Label Text=">"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            HorizontalOptions="EndAndExpand"
                                            VerticalOptions="Center" />
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="Updated: "
+                                           HorizontalOptions="Start"
+                                           Style="{DynamicResource DatabaseSummaryLabel}"
+                                           VerticalOptions="Center" />
+                                        <Label Text="{Binding DownloadTime}"
+                                           HorizontalOptions="Start"
+                                           Style="{DynamicResource DatabaseSummaryLabel}"
+                                           VerticalOptions="Center" />
+                                    </StackLayout>
                                 </StackLayout>
                             </Frame>
                         </StackLayout>

@@ -58,6 +58,7 @@ namespace DBViewer.Services
                 dbItem.IsUnzipped = true;
             }
 
+            dbItem.DownloadTime = DateTimeOffset.Now;
             SaveRegistry(registry);
         }
 

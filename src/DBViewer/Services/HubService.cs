@@ -2,7 +2,6 @@
 using DbViewer.Shared;
 using DBViewer.Api;
 using DBViewer.Models;
-using Newtonsoft.Json;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -48,7 +47,7 @@ namespace DBViewer.Services
 
             try
             {
-                _dbCacheService.SaveFromStream(stream, databaseInfo);
+                await _dbCacheService.SaveFromStream(stream, databaseInfo);
                 downloadResult.WasSuccesful = true;
             }
             catch (Exception ex)

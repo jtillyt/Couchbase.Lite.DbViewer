@@ -16,7 +16,8 @@ namespace DBViewer.ViewModels
             DisplayName = Database.RemoteDatabaseInfo?
                                         .DisplayDatabaseName;
 
-            DownloadTime = Database.DownloadTime;
+            var dateTime = Database.DownloadTime.DateTime;
+            DownloadTime = $"{dateTime.ToShortDateString()} {dateTime.ToShortTimeString()}";
         }
 
         public CachedDatabase Database { get; set; }
@@ -28,8 +29,8 @@ namespace DBViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _displayName, value);
         }
 
-        private DateTimeOffset _downloadTime;
-        public DateTimeOffset DownloadTime
+        private string _downloadTime;
+        public string DownloadTime
         {
             get => _downloadTime;
             set => this.RaiseAndSetIfChanged(ref _downloadTime, value);

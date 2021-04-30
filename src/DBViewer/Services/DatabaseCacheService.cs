@@ -17,10 +17,7 @@ namespace DBViewer.Services
     {
         private const string Registry_Key = nameof(Registry_Key);
 
-        public DatabaseCacheService()
-        {
-            CacheUpdated = new BehaviorSubject<CacheRegistry>(new CacheRegistry());
-        }
+        public DatabaseCacheService() { CacheUpdated = new BehaviorSubject<CacheRegistry>(new CacheRegistry()); }
 
         public IObserver<CacheRegistry> CacheUpdated { get; }
 
@@ -28,12 +25,15 @@ namespace DBViewer.Services
         {
             var registry = await GetRegistry();
 
-            CachedDatabase dbItem = registry.DatabaseCollection.FirstOrDefault(db => db.RemoteDatabaseInfo.DisplayDatabaseName == databaseInfo.DisplayDatabaseName);
+            CachedDatabase dbItem = registry.DatabaseCollection
+                                            .FirstOrDefault(
+                                    db => db.RemoteDatabaseInfo.DisplayDatabaseName == databaseInfo.DisplayDatabaseName);
 
-            if (dbItem == null || !Directory.Exists(dbItem.LocalDatabasePathRoot))
+            if(dbItem == null || !Directory.Exists(dbItem.LocalDatabasePathRoot))
             {
                 dbItem = new CachedDatabase(FileSystem.AppDataDirectory, databaseInfo, DateTimeOffset.Now);
-                registry.DatabaseCollection.Add(dbItem);
+                registry.DatabaseCollection
+                        .Add(dbItem);
             }
             else
             {
@@ -42,18 +42,18 @@ namespace DBViewer.Services
 
             dbItem.IsUnzipped = false;
 
-            if (File.Exists(dbItem.ArchiveFullPath))
+            if(File.Exists(dbItem.ArchiveFullPath))
             {
                 File.Delete(dbItem.ArchiveFullPath);
             }
 
-            using (var fileStream = new FileStream(dbItem.ArchiveFullPath, FileMode.OpenOrCreate, FileAccess.Write))
+            using(var fileStream = new FileStream(dbItem.ArchiveFullPath, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 databaseDownloadStream.CopyTo(fileStream);
                 fileStream.Close();
             }
 
-            if (UnzipDbStream(dbItem))
+            if(UnzipDbStream(dbItem))
             {
                 dbItem.IsUnzipped = true;
             }
@@ -65,13 +65,14 @@ namespace DBViewer.Services
         {
             try
             {
-                if (Directory.Exists(cachedDb.LocalDatabasePathFull))
+                if(Directory.Exists(cachedDb.LocalDatabasePathFull))
                 {
                     Directory.Delete(cachedDb.LocalDatabasePathFull, true);
                 }
+
                 Directory.CreateDirectory(cachedDb.LocalDatabasePathFull);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 return false;
             }
@@ -83,7 +84,7 @@ namespace DBViewer.Services
 
                 File.Delete(cachedDb.ArchiveFullPath);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 return false;
             }
@@ -93,9 +94,10 @@ namespace DBViewer.Services
 
         public async Task<CacheRegistry> GetRegistry()
         {
-            if (_inMemoryRegistry == null)
+            if(_inMemoryRegistry == null)
             {
-                _inMemoryRegistry = await BlobCache.LocalMachine.GetOrCreateObject(Registry_Key, () => new CacheRegistry());
+                _inMemoryRegistry = await BlobCache.LocalMachine
+                                                   .GetOrCreateObject(Registry_Key, () => new CacheRegistry());
                 Cleanup(_inMemoryRegistry);
             }
 
@@ -105,17 +107,18 @@ namespace DBViewer.Services
         public void Cleanup(CacheRegistry cacheRegistry)
         {
             var dbsWithBadPaths = new List<CachedDatabase>();
-            foreach (var item in cacheRegistry.DatabaseCollection)
+            foreach(var item in cacheRegistry.DatabaseCollection)
             {
-                if (!Directory.Exists(item.LocalDatabasePathFull))
+                if(!Directory.Exists(item.LocalDatabasePathFull))
                 {
                     dbsWithBadPaths.Add(item);
                 }
             }
 
-            foreach (var badDb in dbsWithBadPaths)
+            foreach(var badDb in dbsWithBadPaths)
             {
-                cacheRegistry.DatabaseCollection.Remove(badDb);
+                cacheRegistry.DatabaseCollection
+                             .Remove(badDb);
             }
 
             SaveRegistry(cacheRegistry);
@@ -123,7 +126,10 @@ namespace DBViewer.Services
 
         private void SaveRegistry(CacheRegistry registry)
         {
-            BlobCache.LocalMachine.InsertObject(Registry_Key, registry).Subscribe(_ =>
+            BlobCache.LocalMachine
+                     .InsertObject(Registry_Key, registry)
+                     .Subscribe(
+            _ =>
             {
                 CacheUpdated.OnNext(registry);
             });

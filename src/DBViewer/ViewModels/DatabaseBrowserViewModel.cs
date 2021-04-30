@@ -106,13 +106,13 @@ namespace DBViewer.ViewModels
             if (CurrentDatabaseItemViewModel == null)
                 return;
 
-            var cachedDatabaseInfo = CurrentDatabaseItemViewModel.CachedDatabase;
-            var isConnected = cachedDatabaseInfo.Connect();
+            var database = CurrentDatabaseItemViewModel.Database;
+            var isConnected = database.Connect();
 
             if (!isConnected)
                 return;
 
-            var connection = cachedDatabaseInfo.ActiveConnection;
+            var connection = database.ActiveConnection;
 
             var filteredGroupNames = (FilterText ?? "").Split(',');
             var documentIds = connection.ListAllDocumentIds();
@@ -121,18 +121,18 @@ namespace DBViewer.ViewModels
 
             RunOnUi(() =>
             {
-                DatabaseName = cachedDatabaseInfo.RemoteDatabaseInfo.DisplayDatabaseName;
+                DatabaseName = database.RemoteDatabaseInfo.DisplayDatabaseName;
 
-                var dbRoot = cachedDatabaseInfo.LocalDatabasePathRoot;
+                var dbRoot = database.LocalDatabasePathRoot;
 
-                var localDateTime = cachedDatabaseInfo.DownloadTime.LocalDateTime;
+                var localDateTime = database.DownloadTime.LocalDateTime;
                 DownloadTime = $"{localDateTime.ToShortDateString()} {localDateTime.ToShortTimeString()}";
 
                 DocumentGroups = new ObservableCollection<DocumentGroupViewModel>();
 
                 foreach (var group in groupedDocuments)
                 {
-                    var groupViewModel = new DocumentGroupViewModel(connection, group.Key, group.ToList(), filteredGroupNames);
+                    var groupViewModel = new DocumentGroupViewModel(database, group.Key, group.ToList(), filteredGroupNames);
 
                     if (groupViewModel.Count > 0)
                         DocumentGroups.Add(groupViewModel);

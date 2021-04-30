@@ -1,17 +1,15 @@
 ﻿using Couchbase.Lite;
 using Dawn;
-using DBViewer.Services;
+using DBViewer.Models;
 using ReactiveUI;
 
 namespace DBViewer.ViewModels
 {
     public class DocumentViewModel : ReactiveObject
     {
-        private readonly IDatabaseConnection _dataService;
-
         private string _documentId;
 
-        public DocumentViewModel(DocumentGroupViewModel groupViewModel, IDatabaseConnection dataService,
+        public DocumentViewModel(DocumentGroupViewModel groupViewModel, CachedDatabase database,
             string documentId)
         {
             GroupViewModel = Guard.Argument(groupViewModel, nameof(groupViewModel))
@@ -22,7 +20,7 @@ namespace DBViewer.ViewModels
                   .NotNull()
                   .Value;
 
-            _dataService = Guard.Argument(dataService, nameof(dataService))
+            Database = Guard.Argument(database, nameof(database))
                   .NotNull()
                   .Value;
         }
@@ -30,6 +28,7 @@ namespace DBViewer.ViewModels
         public DocumentGroupViewModel GroupViewModel {get; }
 
         public Document Document { get; }
+        public CachedDatabase Database { get; }
 
         public string DocumentId
         {

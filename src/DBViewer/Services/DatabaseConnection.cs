@@ -55,7 +55,7 @@ namespace DBViewer.Services
 
         private IEnumerable<string> GetAllDocumentsIds(Database db)
         {
-            if (_database == null)
+           if (_database == null)
             {
                 return Enumerable.Empty<string>();
             }

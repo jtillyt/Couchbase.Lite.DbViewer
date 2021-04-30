@@ -1,5 +1,6 @@
 ﻿using Couchbase.Lite;
 using Dawn;
+using DBViewer.Models;
 using DBViewer.Services;
 using Newtonsoft.Json;
 using Prism.Navigation;
@@ -12,17 +13,12 @@ namespace DBViewer.ViewModels
 {
     public class DocumentViewerViewModel : NavigationViewModelBase, INavigationAware
     {
-        private readonly IDatabaseConnection _dataService;
-
         private string _documentId;
+        private CachedDatabase _database;
 
-        public DocumentViewerViewModel(IDatabaseConnection dataService, INavigationService navigationService)
+        public DocumentViewerViewModel(INavigationService navigationService)
             : base(navigationService)
         {
-            _dataService = Guard.Argument(dataService, nameof(dataService))
-                  .NotNull()
-                  .Value;
-
             ShareCommand = ReactiveCommand.CreateFromTask(ExecuteShare);
         }
 
@@ -55,6 +51,7 @@ namespace DBViewer.ViewModels
             if (parameters.ContainsKey(nameof(DocumentViewModel)))
             {
                 DocumentViewModel = parameters.GetValue<DocumentViewModel>(nameof(DocumentViewModel));
+                _database = DocumentViewModel.Database;
             }
 
             Reload();
@@ -76,7 +73,7 @@ namespace DBViewer.ViewModels
             if (DocumentViewModel == null)
                 return "";
 
-            Document = _dataService.GetDocumentById(DocumentViewModel.DocumentId);
+            Document = _database.ActiveConnection.GetDocumentById(DocumentViewModel.DocumentId);
             return JsonConvert.SerializeObject(Document, Formatting.Indented);
         }
 

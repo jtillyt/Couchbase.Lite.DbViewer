@@ -9,17 +9,17 @@ namespace DBViewer.ViewModels
     {
         public CachedDatabaseItemViewModel(CachedDatabase cachedDatabase)
         {
-            CachedDatabase = Guard.Argument(cachedDatabase, nameof(cachedDatabase))
-                  .NotNull()
-                  .Value;
+            Database = Guard.Argument(cachedDatabase, nameof(cachedDatabase))
+                                        .NotNull()
+                                        .Value;
 
-            DisplayName = CachedDatabase.RemoteDatabaseInfo?
+            DisplayName = Database.RemoteDatabaseInfo?
                                         .DisplayDatabaseName;
 
-            DownloadTime = CachedDatabase.DownloadTime;
+            DownloadTime = Database.DownloadTime;
         }
 
-        public CachedDatabase CachedDatabase { get; set; }
+        public CachedDatabase Database { get; set; }
 
         private string _displayName;
         public string DisplayName

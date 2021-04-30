@@ -2,17 +2,18 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Dawn;
+using DBViewer.Models;
 using DBViewer.Services;
 
 namespace DBViewer.ViewModels
 {
     public class DocumentGroupViewModel : ObservableCollection<DocumentViewModel>
     {
-        private readonly IDatabaseConnection _dataService;
+        private readonly CachedDatabase _database;
 
-        public DocumentGroupViewModel(IDatabaseConnection dataService, string groupName, List<string> documentIds, string[] searchStrings = null)
+        public DocumentGroupViewModel(CachedDatabase database, string groupName, List<string> documentIds, string[] searchStrings = null)
         {
-            _dataService = Guard.Argument(dataService, nameof(dataService))
+            _database = Guard.Argument(database, nameof(database))
                   .NotNull()
                   .Value;
 
@@ -44,7 +45,7 @@ namespace DBViewer.ViewModels
             {
                 if (ShouldShowDocument(documentId, searchStrings))
                 {
-                    var documentViewModel = new DocumentViewModel(this, _dataService, documentId);
+                    var documentViewModel = new DocumentViewModel(this, _database, documentId);
                     Add(documentViewModel);
                 }
             }

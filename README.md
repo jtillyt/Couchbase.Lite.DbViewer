@@ -78,7 +78,3 @@ You can share in any number of ways depending on the device:
 
 <img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/ShareScreen.png" width="300">
 
-
-
-## Next Steps:
-Editing documents is the next big push for this project.

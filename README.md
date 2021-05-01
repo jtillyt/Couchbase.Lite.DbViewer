@@ -30,4 +30,4 @@ Set up the hub making sure to take a look at the **'appsettings.json'** file.  B
 
 #### Start Client
 You will see this screen:
-[Cache Screen](~/media/docs/CacheScreen_Empty.png)
+[Empty Cache Screen](https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/CacheScreen_Empty.png)

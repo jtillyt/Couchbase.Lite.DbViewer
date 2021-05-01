@@ -104,7 +104,7 @@ namespace DBViewer.ViewModels
                     documentIdsWithHits.Add(documentId);
             }
 
-            var groupedDocuments = documentIdsWithHits.GroupBy(key => { return key.Substring(0, key.IndexOf("::")); });
+            var groupedDocuments = documentIdsWithHits.GroupBy(key => { return "Matches"; });
 
             RunOnUi(() =>
             {

@@ -57,6 +57,14 @@
                                Margin="10"
                                Text="{Binding FilterText}">
                         </Entry>
+                        <Entry Placeholder="Group Char"
+                               HeightRequest="50"  
+                               PlaceholderColor="WhiteSmoke"
+                               Margin="10"
+                               Text="{Binding SplitChars}"
+                               HorizontalOptions="End">
+                            
+                        </Entry>
                     </StackLayout>
                 </StackLayout>
             </Frame>

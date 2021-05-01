@@ -4,6 +4,7 @@ using DBViewer.Views;
 using Prism.Navigation;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -17,6 +18,7 @@ namespace DBViewer.ViewModels
     public class DatabaseBrowserViewModel : NavigationViewModelBase, INavigatedAware
     {
         private const string FilterSearch_Key = "FilterSearch";
+        private const string DocumentSplit_Key = "DocumentSplit";
 
         private readonly IDatabaseCacheService _cacheService;
 
@@ -28,12 +30,12 @@ namespace DBViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            this.WhenAnyValue(x => x.FilterText)
+            this.WhenAnyValue(x => x.FilterText, y => y.SplitChars)
                 .Throttle(TimeSpan.FromMilliseconds(200))
                 .Subscribe(_ => ExecuteReload())
                 .DisposeWith(Disposables);
 
-            this.WhenAnyValue(x => x.FilterText)
+            this.WhenAnyValue(x => x.FilterText, y => y.SplitChars)
                 .Throttle(TimeSpan.FromSeconds(5))
                 .Subscribe(_ => SaveSearchState())
                 .DisposeWith(Disposables);
@@ -42,6 +44,7 @@ namespace DBViewer.ViewModels
             ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentViewModel>(ExecuteViewSelectedDocument);
             ViewDatabaseSearchCommand = ReactiveCommand.CreateFromTask(ExecuteViewDatabaseSearch);
             FilterText = Preferences.Get(FilterSearch_Key, "");
+            SplitChars = Preferences.Get(DocumentSplit_Key, "");
         }
 
         public ReactiveCommand<Unit, Unit> ViewDatabaseSearchCommand { get; set; }
@@ -67,6 +70,13 @@ namespace DBViewer.ViewModels
         {
             get => _downloadTime;
             set => this.RaiseAndSetIfChanged(ref _downloadTime, value);
+        }
+
+        private string _splitChars = "_";
+        public string SplitChars
+        {
+            get => _splitChars;
+            set => this.RaiseAndSetIfChanged(ref _splitChars, value);
         }
 
         private ObservableCollection<DocumentGroupViewModel> _documentGroups;
@@ -116,8 +126,10 @@ namespace DBViewer.ViewModels
 
             var filteredGroupNames = (FilterText ?? "").Split(',');
             var documentIds = connection.ListAllDocumentIds();
-            var groupedDocuments = documentIds.GroupBy(key => { return key.Substring(0, key.IndexOf("::")); });
-            //var filteredGroups = groupedDocuments.Where(group => filteredGroupNames.Any(gn => gn.Count() == 0 || group.Key.ToLower().Contains(gn.ToLower())));
+
+            var shouldGroup = !string.IsNullOrWhiteSpace(SplitChars) && documentIds.Any(doc => doc.Contains(SplitChars));
+
+            var groupedDocuments = documentIds.GroupBy(key => { return shouldGroup ? key.Substring(0, key.IndexOf(SplitChars)) : "Documents"; });
 
             RunOnUi(() =>
             {
@@ -143,6 +155,7 @@ namespace DBViewer.ViewModels
         private void SaveSearchState()
         {
             Preferences.Set(FilterSearch_Key, FilterText);
+            Preferences.Set(DocumentSplit_Key, SplitChars);
         }
 
         private async Task ExecuteViewSelectedDocument(DocumentViewModel document)

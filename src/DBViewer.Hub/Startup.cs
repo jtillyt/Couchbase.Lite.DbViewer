@@ -17,9 +17,14 @@ namespace DBViewer.Hub
 {
     public class Startup
     {
+        private const string CurrentDbScanner_ConfigKey = "CurrentDbScanner";
+        private readonly string _scannerTypeString;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            _scannerTypeString = Configuration[CurrentDbScanner_ConfigKey];
         }
 
         public IConfiguration Configuration { get; }
@@ -34,7 +39,9 @@ namespace DBViewer.Hub
             });
             services.AddLogging(logs=>logs.AddConsole());
 
-            services.AddSingleton<IDbScanner, IOSSimulatorDbScanner>();//TODO: Use config value to configure which service to inject
+            var scannerType = Type.GetType(_scannerTypeString);
+            services.AddSingleton(typeof(IDbScanner), scannerType);
+            //services.AddSingleton<IDbScanner, IOSSimulatorDbScanner>();//TODO: Use config value to configure which service to inject
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

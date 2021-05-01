@@ -24,15 +24,20 @@ The single aim of this project is to simplify sharing, viewing and editing Couch
 - [ ] Android
 - [ ] iOS
 
+## Future Plans
+Editing and saving of documents that save back to original device when synced.
+
 ### Getting Started
 #### Start Hub
 Set up the hub making sure to take a look at the **'appsettings.json'** file.  By default it is setup to scan for the test database that is included with the hub.  You can leave this as is if you just want to test.
 
-#### Start Client
+### Using Client
+## Cache Screen (Starts Empty)
 You will see this screen:
 
 <img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/CacheScreen_Empty.png" width="300">
 
+## Downloading a Database
 From here we will need to add databases by connecting to a **Hub**
 
 <img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/HubsScreen_Empty.png" width="300">
@@ -45,6 +50,7 @@ You should now have the sample database downloaded to the client and ready to vi
 
 <img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/CacheScreen_TravelSample.png" width="300">
 
+## Viewing Database
 Clicking on the database will open the Database Browser view:
 
 <img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/AllDocument_Screen.png" width="300">
@@ -53,3 +59,26 @@ You can group documents by adding the characters to split the document names by.
 
 <img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/AllDocument_Grouped.png" width="300">
 
+You can filter documents by typing in any text in the filter toolbar:
+
+<img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/DocumentFilter.png" width="300">
+
+By clicking on Search in the upper right, you can perform a full text search of the database:
+
+<img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/SeachScreenWithResult.png" width="300">
+
+<img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/SearchResultDocument.png" width="300">
+
+## Viewing Document
+Clicking on any document will open the JSON representation
+
+<img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/DocumentView.png" width="300">
+
+You can share in any number of ways depending on the device:
+
+<img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/ShareScreen.png" width="300">
+
+
+
+## Next Steps:
+Editing documents is the next big push for this project.

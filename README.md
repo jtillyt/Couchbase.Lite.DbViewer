@@ -30,6 +30,6 @@ Set up the hub making sure to take a look at the **'appsettings.json'** file.  B
 
 #### Start Client
 You will see this screen:
-![](https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/CacheScreen_Empty.png | width=300)
+<img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/CacheScreen_Empty.png" width="300">
 
 From here we will need to add databases by connecting to a **Hub**

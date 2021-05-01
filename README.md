@@ -1,24 +1,33 @@
-## Couchbase Lite Database Viewer
+# Couchbase Lite Database Viewer
 
-#### Goal
-It is often necessary to see how data is saving while developing and debugging. The aim of this project is to make it easier to view a Couchbase Lite database's contents on the debugging machine, even if the physical location of the database is on a remove mobile device.
+## Project Goal
+The single aim of this project is to simplify sharing, viewing and editing CouchbaseLite databases from any mobile device or desktop.
 
-#### Roadmap to Alpha
+## Components
+### Hub
+  The hub is the central point that apps can send their DBs to for other clients to share. They can also be used to scan the local machine for databases.  The hub is a super simple http server that serves the couchbase files.
 
-The main goals for alpha are arriving at the bare minimum of functionality with very little polish on the UI
+### Client
+  The clients do most of the real work. The databases are parsed using the CouchbaseLite SDK available for Windows, Android and iOS. 
 
-- Get the desktop viewer working for local databases on UWP
-- Get the desktop viewer working for local databases on Mac
-- Add services to extend beyond local database so that remote access is enabled
-   - SSH/SCP client for pull from remote machine file system
-   - TCP client for push directly from remote device on update
-- Add mobile remove viewer optimized for smaller screen sizes
+## Viewer clients platforms
+- [x] Windows
+- [x] Android
+- [x] iOS
+- [ ] Linux
+- [ ] Mac (Hopefully coming soon)
 
-#### Roadmap to Beta
+## Hub platforms
+- [x] Windows
+- [x] Linux
+- [x] Mac 
+- [ ] Android
+- [ ] iOS
 
-The main goals for beta are taking the working concepts from alpha, organizing them and introducing extension points for further work.
+### Getting Started
+#### Start Hub
+Set up the hub making sure to take a look at the **'appsettings.json'** file.  By default it is setup to scan for the test database that is included with the hub.  You can leave this as is if you just want to test.
 
-- Work TBD after working MVP/Alpha complete
-
-#### Roadmap to 1.0
-Icons, beautification, documentation etc
+#### Start Client
+You will see this screen:
+[Cache Screen](~/media/docs/CacheScreen_Empty.png)

@@ -127,7 +127,7 @@ namespace DBViewer.ViewModels
             var filteredGroupNames = (FilterText ?? "").Split(',');
             var documentIds = connection.ListAllDocumentIds();
 
-            var shouldGroup = !string.IsNullOrWhiteSpace(SplitChars) && documentIds.Any(doc => doc.Contains(SplitChars));
+            var shouldGroup = !string.IsNullOrWhiteSpace(SplitChars) && documentIds.All(doc => doc.Contains(SplitChars));
 
             var groupedDocuments = documentIds.GroupBy(key => { return shouldGroup ? key.Substring(0, key.IndexOf(SplitChars)) : "Documents"; });
 

@@ -4,21 +4,31 @@ using DBViewer.Views;
 using Prism.Navigation;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using DBViewer.Models;
+using DynamicData;
 using Xamarin.Essentials;
 
 namespace DBViewer.ViewModels
 {
     public class DatabaseBrowserViewModel : NavigationViewModelBase, INavigatedAware
     {
+        private CachedDatabaseItemViewModel _currentDatabaseItemViewModel;
+        private ReadOnlyObservableCollection<DocumentGroupModel> _documents;
+        private readonly ISourceCache<DocumentModel, string> _documentCache =
+            new SourceCache<DocumentModel, string>(x => x.DocumentId);
+
         private const string FilterSearch_Key = "FilterSearch";
         private const string DocumentSplit_Key = "DocumentSplit";
+        private string _databaseName;
+        private string _splitChars = "_";
+        private string _downloadTime;
+        private string _filterText;
 
         private readonly IDatabaseCacheService _cacheService;
 
@@ -31,53 +41,82 @@ namespace DBViewer.ViewModels
                 .Value;
 
             this.WhenAnyValue(x => x.FilterText, y => y.SplitChars)
-                .Throttle(TimeSpan.FromMilliseconds(200))
-                .Subscribe(_ => ExecuteReload())
-                .DisposeWith(Disposables);
-
-            this.WhenAnyValue(x => x.FilterText, y => y.SplitChars)
                 .Throttle(TimeSpan.FromSeconds(5))
                 .Subscribe(_ => SaveSearchState())
                 .DisposeWith(Disposables);
 
-            ReloadCommand = ReactiveCommand.Create(ExecuteReload);
-            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentViewModel>(ExecuteViewSelectedDocument);
+            var currentDatabaseChanged =
+                this.WhenAnyValue(x => x.CurrentDatabaseItemViewModel)
+                .Where(x => x != null)
+                .Publish()
+                .RefCount();
+
+            currentDatabaseChanged
+                .Select(x => x.Database.DownloadTime.LocalDateTime)
+                .Select(x => $"{x.ToShortDateString()} {x.ToShortTimeString()}")
+                .BindTo(this, x => x.DownloadTime)
+                .DisposeWith(Disposables);
+
+            currentDatabaseChanged
+                .Do(x => x.Database.Connect())
+                .Where(x => x.Database.ActiveConnection.IsConnected)
+                .SelectMany(x => x.Database.ActiveConnection.ListAllDocumentIds())
+                .Select(x => new DocumentModel(x))
+                .Subscribe(_documentCache.AddOrUpdate)
+                .DisposeWith(Disposables);
+
+            IObservable<Func<DocumentModel, bool>> filterChanged =
+                this.WhenAnyValue(x => x.FilterText)
+                    .Select(Filter);
+
+            _documentCache
+                .Connect()
+                .RefCount()
+                .Filter(filterChanged)
+                .Group(x => x.DocumentId.Split(SplitChars.ToCharArray()).First())
+                .Transform(x => new DocumentGroupModel(x, x.Key.Split(_splitChars.ToCharArray()).First()))
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out _documents)
+                .Subscribe()
+                .DisposeWith(Disposables);
+
+            ReloadCommand = ReactiveCommand.Create(ExecuteReload, outputScheduler: RxApp.MainThreadScheduler);
+            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteViewSelectedDocument);
             ViewDatabaseSearchCommand = ReactiveCommand.CreateFromTask(ExecuteViewDatabaseSearch);
             FilterText = Preferences.Get(FilterSearch_Key, "");
             SplitChars = Preferences.Get(DocumentSplit_Key, "");
         }
 
+
         public ReactiveCommand<Unit, Unit> ViewDatabaseSearchCommand { get; set; }
-        public ReactiveCommand<DocumentViewModel, Unit> ViewSelectedDocumentCommand { get; }
+        public ReactiveCommand<DocumentModel, Unit> ViewSelectedDocumentCommand { get; }
         public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
 
-        private string _filterText;
         public string FilterText
         {
             get => _filterText;
             set => this.RaiseAndSetIfChanged(ref _filterText, value);
         }
 
-        private string _databaseName;
+
         public string DatabaseName
         {
             get => _databaseName;
             set => this.RaiseAndSetIfChanged(ref _databaseName, value);
         }
 
-        private string _downloadTime;
         public string DownloadTime
         {
             get => _downloadTime;
             set => this.RaiseAndSetIfChanged(ref _downloadTime, value);
         }
 
-        private string _splitChars = "_";
         public string SplitChars
         {
             get => _splitChars;
             set => this.RaiseAndSetIfChanged(ref _splitChars, value);
         }
+
 
         private ObservableCollection<DocumentGroupViewModel> _documentGroups;
 
@@ -87,7 +126,9 @@ namespace DBViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _documentGroups, value);
         }
 
-        private CachedDatabaseItemViewModel _currentDatabaseItemViewModel;
+
+        public ReadOnlyObservableCollection<DocumentGroupModel> Documents => _documents;
+
         public CachedDatabaseItemViewModel CurrentDatabaseItemViewModel
         {
             get => _currentDatabaseItemViewModel;
@@ -106,9 +147,9 @@ namespace DBViewer.ViewModels
             {
                 CurrentDatabaseItemViewModel = parameters.GetValue<CachedDatabaseItemViewModel>(nameof(CachedDatabaseItemViewModel));
             }
-
-            ExecuteReload();
         }
+
+        private Func<DocumentModel, bool> Filter(string arg) => model => model.DocumentId.Contains(arg);
 
         private void ExecuteReload()
         {
@@ -127,9 +168,13 @@ namespace DBViewer.ViewModels
             var filteredGroupNames = (FilterText ?? "").Split(',');
             var documentIds = connection.ListAllDocumentIds();
 
-            var shouldGroup = !string.IsNullOrWhiteSpace(SplitChars) && documentIds.All(doc => doc.Contains(SplitChars));
+            var shouldGroup = !string.IsNullOrWhiteSpace(SplitChars) &&
+                              documentIds.All(doc => doc.Contains(SplitChars));
 
-            var groupedDocuments = documentIds.GroupBy(key => { return shouldGroup ? key.Substring(0, key.IndexOf(SplitChars)) : "Documents"; });
+            var groupedDocuments = documentIds.GroupBy(key =>
+            {
+                return shouldGroup ? key.Substring(0, key.IndexOf(SplitChars)) : "Documents";
+            });
 
             RunOnUi(() =>
             {
@@ -144,7 +189,8 @@ namespace DBViewer.ViewModels
 
                 foreach (var group in groupedDocuments)
                 {
-                    var groupViewModel = new DocumentGroupViewModel(database, group.Key, group.ToList(), filteredGroupNames);
+                    var groupViewModel =
+                        new DocumentGroupViewModel(database, group.Key, group.ToList(), filteredGroupNames);
 
                     if (groupViewModel.Count > 0)
                         DocumentGroups.Add(groupViewModel);
@@ -158,15 +204,8 @@ namespace DBViewer.ViewModels
             Preferences.Set(DocumentSplit_Key, SplitChars);
         }
 
-        private async Task ExecuteViewSelectedDocument(DocumentViewModel document)
-        {
-            var navParams = new NavigationParameters
-            {
-                { nameof(DocumentViewModel), document }
-            };
-
-            await NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
-        }
+        private async Task ExecuteViewSelectedDocument(DocumentModel document) =>
+            await NavigationService.NavigateAsync(nameof(DocumentViewerPage), (nameof(DocumentModel), document), (nameof(CachedDatabase), CurrentDatabaseItemViewModel.Database));
 
         private async Task ExecuteViewDatabaseSearch()
         {

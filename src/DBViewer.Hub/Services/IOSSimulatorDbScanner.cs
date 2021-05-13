@@ -12,12 +12,15 @@ namespace DBViewer.Hub.Services
         private const string RootConfig_ConfigKey = "IOSSimulatorDbScannerOptions";
         private const string RelativePath_ConfigKey = "DataRelativePath";
         private const string AppBundleId_ConfigKey = "AppBundleId";
+        private const string SimulatorId_ConfigKey = "SimulatorId";
 
         private readonly string AppBundleId;
         private readonly string RelativePathToData;
 
+        private readonly string SimulatorId;
         private readonly IConfigurationSection _configSection;
         private readonly ILogger<IOSSimulatorDbScanner> _logger;
+
 
         public IOSSimulatorDbScanner(IConfiguration configuration, ILogger<IOSSimulatorDbScanner> logger)
         {
@@ -32,6 +35,7 @@ namespace DBViewer.Hub.Services
 
             AppBundleId = _configSection[AppBundleId_ConfigKey];
             RelativePathToData = _configSection[RelativePath_ConfigKey];
+            SimulatorId = _configSection[SimulatorId_ConfigKey] ?? "booted";
         }
 
         public IEnumerable<DatabaseInfo> Scan()
@@ -72,7 +76,7 @@ namespace DBViewer.Hub.Services
 
         private ProcessStartInfo BuildCurrentSimCommandCommand()
         {
-            var argumentString = $"simctl get_app_container booted {AppBundleId} data";
+            var argumentString = $"simctl get_app_container {SimulatorId} {AppBundleId} data";
 
             _logger.LogInformation($"Fetching sim path with args: {argumentString}");
 

@@ -22,7 +22,7 @@ namespace DBViewer.ViewModels
             ShareCommand = ReactiveCommand.CreateFromTask(ExecuteShare);
         }
 
-        public DocumentViewModel DocumentViewModel { get; private set; }
+        public DocumentModel DocumentModel { get; private set; }
 
         public ReactiveCommand<Unit, Unit> ShareCommand { get; }
 
@@ -48,10 +48,10 @@ namespace DBViewer.ViewModels
 
         public void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (parameters.ContainsKey(nameof(DocumentViewModel)))
+            if (parameters.ContainsKey(nameof(ViewModels.DocumentModel)))
             {
-                DocumentViewModel = parameters.GetValue<DocumentViewModel>(nameof(DocumentViewModel));
-                _database = DocumentViewModel.Database;
+                DocumentModel = parameters.GetValue<DocumentModel>(nameof(ViewModels.DocumentModel));
+                _database = parameters.GetValue<CachedDatabase>(nameof(CachedDatabase));
             }
 
             Reload();
@@ -63,17 +63,17 @@ namespace DBViewer.ViewModels
 
             RunOnUi(() =>
             {
-                DocumentId = DocumentViewModel?.DocumentId;
+                DocumentId = DocumentModel?.DocumentId;
                 DocumentText = documentText;
             });
         }
 
         private string GetJson()
         {
-            if (DocumentViewModel == null)
+            if (DocumentModel == null)
                 return "";
 
-            Document = _database.ActiveConnection.GetDocumentById(DocumentViewModel.DocumentId);
+            Document = _database.ActiveConnection.GetDocumentById(DocumentModel.DocumentId);
             return JsonConvert.SerializeObject(Document, Formatting.Indented);
         }
 

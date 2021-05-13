@@ -36,4 +36,20 @@ namespace DBViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _documentId, value, nameof(DocumentId));
         }
     }
+
+    public class DocumentModel : ReactiveObject
+    {
+        private string _documentId;
+
+        public DocumentModel(string id)
+        {
+            _documentId = id;
+        }
+
+        public string DocumentId
+        {
+            get => _documentId;
+            set => this.RaiseAndSetIfChanged(ref _documentId, value, nameof(DocumentId));
+        }
+    }
 }

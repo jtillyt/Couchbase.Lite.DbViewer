@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
+using System.Reactive.Disposables;
+using Couchbase.Lite;
 using Dawn;
 using DBViewer.Models;
 using DBViewer.Services;
+using DynamicData;
+using DynamicData.Binding;
 
 namespace DBViewer.ViewModels
 {
@@ -56,13 +62,29 @@ namespace DBViewer.ViewModels
             if (searchStrings == null || searchStrings[0] == string.Empty)
                 return true;
 
-            foreach(var searchString in searchStrings)
-            {
-                if (documentId.ToLowerInvariant().Contains(searchString.ToLowerInvariant()))
-                    return true;
-            }
+            return searchStrings.Any(searchString => documentId.ToLowerInvariant().Contains(searchString.ToLowerInvariant()));
+        }
+    }
 
-            return false;
+    public class DocumentGroupModel : ObservableCollectionExtended<DocumentModel>, IDisposable
+    {
+        private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
+        public DocumentGroupModel(IGroup<DocumentModel, string, string> grouping, string key)
+        {
+            GroupName = key;
+            grouping
+                .Cache
+                .Connect()
+                .Bind(this)
+                .Subscribe()
+                .DisposeWith(_compositeDisposable);
+        }
+
+        public string GroupName { get; set; }
+
+        public void Dispose()
+        {
+            _compositeDisposable.Dispose();
         }
     }
 }

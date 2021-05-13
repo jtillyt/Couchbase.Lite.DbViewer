@@ -71,14 +71,14 @@
             <!-- http://www.compliancestudio.io/blog/xamarin-forms-expandable-listview Update -->
             <ListView Margin="30"
                       IsGroupingEnabled="True"
-                      ItemsSource="{Binding DocumentGroups}">
+                      ItemsSource="{Binding Documents}">
                 <ListView.GroupHeaderTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout HeightRequest="60"
                                          BackgroundColor="{DynamicResource BackgroundSmokeColor}"
                                          VerticalOptions="Center"
-                                         x:DataType="vms:DocumentGroupViewModel">
+                                         x:DataType="vms:DocumentGroupModel">
                                 <Label Text="{Binding GroupName}"
                                        HeightRequest="60"
                                        VerticalTextAlignment="Center"
@@ -94,7 +94,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout x:DataType="vms:DocumentViewModel">
+                            <StackLayout x:DataType="vms:DocumentModel">
                                 <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                                           CommandParameter="{Binding .}" />

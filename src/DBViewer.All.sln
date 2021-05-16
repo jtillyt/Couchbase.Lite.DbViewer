@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbViewer.Shared", "DbViewer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbViewer.Tests", "DbViewer.Tests\DbViewer.Tests.csproj", "{3E29B325-C997-4F01-9CC2-6123D31CB18A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{71DAF17A-49EB-47AE-947B-D08B1D47BE4F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "build", "{71DAF17A-49EB-47AE-947B-D08B1D47BE4F}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\dotnet.yml = ..\.github\workflows\dotnet.yml
 	EndProjectSection

@@ -1,5 +1,6 @@
 {
-  "sdk": {
-    "version": "5.0.200"
-  }
+	"projects": [ "src" ],
+	"sdk": {
+		"version": "5.0.200"
+	}
 }

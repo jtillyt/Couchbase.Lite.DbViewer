@@ -26,11 +26,9 @@ jobs:
 
     - name: Build
       run: dotnet restore src/DbViewer.All.sln
-      working-directory: src
 
     - name: Build
       run: dotnet build --no-restore src/DbViewer.All.sln
-      working-directory: src
 
     - name: Test
       run: dotnet test --no-build --verbosity normal

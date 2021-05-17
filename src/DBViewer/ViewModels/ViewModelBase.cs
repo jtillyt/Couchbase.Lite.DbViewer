@@ -2,7 +2,7 @@
 using System;
 using Xamarin.Forms;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

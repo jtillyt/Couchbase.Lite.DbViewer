@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="RIDER_MODULE_ANDROID" version="4">
   <component name="FacetManager">
-    <facet type="android" name="Android Facet - DBViewer.Android">
+    <facet type="android" name="Android Facet - DbViewer.Android">
       <configuration>
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/Properties/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/Resources" />
@@ -10,7 +10,7 @@
     </facet>
   </component>
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$/../../DBViewer.Android" />
+    <content url="file://$MODULE_DIR$/../../DbViewer.Android" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

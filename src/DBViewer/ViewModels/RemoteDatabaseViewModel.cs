@@ -2,7 +2,7 @@
 using DbViewer.Shared;
 using ReactiveUI;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class RemoteDatabaseViewModel : ViewModelBase
     {

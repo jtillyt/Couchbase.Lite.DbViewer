@@ -4,7 +4,7 @@ using System.Linq;
 
 //Taken from https://github.com/AdaptSolutions/Xamarin.Forms-TreeView
 
-namespace DBViewer.TreeModel
+namespace DbViewer.TreeModel
 {
     public class TestModel : INotifyPropertyChanged
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DBViewer.Models
+namespace DbViewer.Models
 {
     public class CacheRegistry
     {

@@ -1,10 +1,10 @@
 ﻿using Dawn;
 using DbViewer.Shared;
-using DBViewer.Services;
+using DbViewer.Services;
 using System;
 using System.IO;
 
-namespace DBViewer.Models
+namespace DbViewer.Models
 {
     public class CachedDatabase
     {

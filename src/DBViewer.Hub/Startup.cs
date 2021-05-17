@@ -1,4 +1,4 @@
-using DBViewer.Hub.Services;
+using DbViewer.Hub.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DBViewer.Hub
+namespace DbViewer.Hub
 {
     public class Startup
     {
@@ -35,7 +35,7 @@ namespace DBViewer.Hub
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DBViewer.Hub", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DbViewer.Hub", Version = "v1" });
             });
             services.AddLogging(logs=>logs.AddConsole());
 
@@ -51,7 +51,7 @@ namespace DBViewer.Hub
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DBViewer.Hub v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DbViewer.Hub v1"));
             }
 
             //app.UseHttpsRedirection();

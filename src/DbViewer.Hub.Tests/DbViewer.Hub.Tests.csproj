@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DBViewer.Hub\DBViewer.Hub.csproj" />
+    <ProjectReference Include="..\DbViewer.Hub\DbViewer.Hub.csproj" />
     <ProjectReference Include="..\DbViewer.Shared\DbViewer.Shared.csproj" />
   </ItemGroup>
 

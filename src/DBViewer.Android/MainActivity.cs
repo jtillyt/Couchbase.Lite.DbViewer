@@ -3,9 +3,9 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 
-namespace DBViewer.Droid
+namespace DbViewer.Droid
 {
-    [Activity(Label = "DBViewer", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
+    [Activity(Label = "DbViewer", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -36,7 +36,7 @@ namespace DBViewer.Droid
         private void InitializePlugins(Bundle savedInstanceState)
         {
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            Akavache.Registrations.Start(nameof(DBViewer));
+            Akavache.Registrations.Start(nameof(DbViewer));
             Couchbase.Lite.Support.Droid.Activate(this);
         }
     }

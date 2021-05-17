@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace DBViewer.Hub
+namespace DbViewer.Hub
 {
     public class Program
     {

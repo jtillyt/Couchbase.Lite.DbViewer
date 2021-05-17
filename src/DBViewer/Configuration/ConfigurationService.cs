@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace DBViewer.Configuration
+namespace DbViewer.Configuration
 {
     public interface IConfigurationService
     {

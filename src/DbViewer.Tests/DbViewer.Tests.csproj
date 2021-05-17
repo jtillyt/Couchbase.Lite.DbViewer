@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbViewer.Shared\DbViewer.Shared.csproj" />
-    <ProjectReference Include="..\DBViewer\DBViewer.csproj" />
+    <ProjectReference Include="..\DbViewer\DbViewer.csproj" />
   </ItemGroup>
 
 </Project>

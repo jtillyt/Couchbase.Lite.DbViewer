@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBViewer.UWP", "DBViewer.UWP\DBViewer.UWP.csproj", "{92B2E433-4EDE-4429-9D43-D84C3F2AE076}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbViewer.UWP", "DbViewer.UWP\DbViewer.UWP.csproj", "{92B2E433-4EDE-4429-9D43-D84C3F2AE076}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBViewer.iOS", "DBViewer.iOS\DBViewer.iOS.csproj", "{D1F693EE-93F2-4C30-95DF-5FB98AE87422}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbViewer.iOS", "DbViewer.iOS\DbViewer.iOS.csproj", "{D1F693EE-93F2-4C30-95DF-5FB98AE87422}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBViewer", "DBViewer\DBViewer.csproj", "{5FEB298F-24FE-4E9E-9264-133F90425C23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbViewer", "DbViewer\DbViewer.csproj", "{5FEB298F-24FE-4E9E-9264-133F90425C23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBViewer.Android", "DBViewer.Android\DBViewer.Android.csproj", "{62028227-6F0C-4338-8D3B-C15C298B515D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbViewer.Android", "DbViewer.Android\DbViewer.Android.csproj", "{62028227-6F0C-4338-8D3B-C15C298B515D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBViewer.Hub", "DBViewer.Hub\DBViewer.Hub.csproj", "{8CDCDF28-B02D-4794-89C4-CFCCD515F5CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbViewer.Hub", "DbViewer.Hub\DbViewer.Hub.csproj", "{8CDCDF28-B02D-4794-89C4-CFCCD515F5CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbViewer.Shared", "DbViewer.Shared\DbViewer.Shared.csproj", "{28E9916D-8347-4FE6-9CEB-DC53D1309615}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbViewer.Tests", "DbViewer.Tests\DbViewer.Tests.csproj", "{3E29B325-C997-4F01-9CC2-6123D31CB18A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "build", "{71DAF17A-49EB-47AE-947B-D08B1D47BE4F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{71DAF17A-49EB-47AE-947B-D08B1D47BE4F}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\dotnet.yml = ..\.github\workflows\dotnet.yml
 	EndProjectSection

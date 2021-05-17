@@ -1,7 +1,7 @@
 ﻿using Couchbase.Lite;
 using Dawn;
-using DBViewer.Models;
-using DBViewer.Services;
+using DbViewer.Models;
+using DbViewer.Services;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using ReactiveUI;
@@ -9,7 +9,7 @@ using System.Reactive;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class DocumentViewerViewModel : NavigationViewModelBase, INavigationAware
     {

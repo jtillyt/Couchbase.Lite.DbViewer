@@ -5,7 +5,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace DBViewer.Api
+namespace DbViewer.Api
 {
     public interface IDbHubHttpClient
     {

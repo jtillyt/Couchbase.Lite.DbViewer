@@ -1,14 +1,14 @@
 ﻿using Dawn;
-using DBViewer.Models;
-using DBViewer.Services;
-using DBViewer.Views;
+using DbViewer.Models;
+using DbViewer.Services;
+using DbViewer.Views;
 using Prism.Navigation;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class CachedDatabaseListViewModel : NavigationViewModelBase, INavigatedAware
     {

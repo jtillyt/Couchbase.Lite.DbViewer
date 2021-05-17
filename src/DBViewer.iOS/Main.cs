@@ -5,7 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
-namespace DBViewer.iOS
+namespace DbViewer.iOS
 {
     public class Application
     {

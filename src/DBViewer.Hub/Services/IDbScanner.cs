@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DBViewer.Hub.Services
+namespace DbViewer.Hub.Services
 {
     public interface IDbScanner
     {

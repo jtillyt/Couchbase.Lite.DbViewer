@@ -5,7 +5,7 @@ using System.Threading;
 using Xamarin.Forms;
 
 //Taken from https://github.com/AdaptSolutions/Xamarin.Forms-TreeView
-namespace DBViewer.TreeModel
+namespace DbViewer.TreeModel
 {
     public class ItemModelProvider : ObservableCollection<ItemModel>
     {

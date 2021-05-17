@@ -1,8 +1,8 @@
-﻿using DBViewer.Services;
+﻿using DbViewer.Services;
 using Windows.Foundation;
 using Windows.UI.ViewManagement;
 
-namespace DBViewer.UWP
+namespace DbViewer.UWP
 {
     public sealed partial class MainPage
     {
@@ -13,7 +13,7 @@ namespace DBViewer.UWP
             ApplicationView.PreferredLaunchViewSize = new Size(600,1080);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            var app = new DBViewer.App();
+            var app = new DbViewer.App();
             LoadApplication(app);
         }
     }

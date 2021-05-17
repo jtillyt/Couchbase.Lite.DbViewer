@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace DBViewer.UWP
+namespace DbViewer.UWP
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -82,7 +82,7 @@ namespace DBViewer.UWP
 
         private void InitializePlugins()
         {
-            Akavache.Registrations.Start(nameof(DBViewer));
+            Akavache.Registrations.Start(nameof(DbViewer));
         }
 
         /// <summary>

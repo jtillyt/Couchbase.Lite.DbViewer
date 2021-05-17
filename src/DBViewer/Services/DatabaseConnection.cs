@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DBViewer.Services
+namespace DbViewer.Services
 {
     public class DatabaseConnection : IDatabaseConnection
     {

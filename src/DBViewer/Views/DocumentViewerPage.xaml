@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vms="clr-namespace:DBViewer.ViewModels"
+             xmlns:vms="clr-namespace:DbViewer.ViewModels"
              x:DataType="vms:DocumentViewerViewModel"
-             x:Class="DBViewer.Views.DocumentViewerPage">
+             x:Class="DbViewer.Views.DocumentViewerPage">
     <ContentPage.Content>
         <Grid RowDefinitions="140,*,60" BackgroundColor="White">
             <Frame Margin="0,-20,0,0"

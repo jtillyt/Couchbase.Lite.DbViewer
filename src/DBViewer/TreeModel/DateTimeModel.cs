@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 
-namespace DBViewer.TreeModel
+namespace DbViewer.TreeModel
 {
     public class DateTimeModel : INotifyPropertyChanged
     {

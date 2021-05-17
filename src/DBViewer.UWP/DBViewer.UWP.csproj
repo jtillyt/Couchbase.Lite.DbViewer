@@ -10,8 +10,8 @@
     <ProjectGuid>{92B2E433-4EDE-4429-9D43-D84C3F2AE076}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DBViewer.UWP</RootNamespace>
-    <AssemblyName>DBViewer.UWP</AssemblyName>
+    <RootNamespace>DbViewer.UWP</RootNamespace>
+    <AssemblyName>DbViewer.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
@@ -192,9 +192,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DBViewer\DBViewer.csproj">
-      <Project>{72B81921-CB86-4DF4-9170-5F85953F0FB8}</Project>
-      <Name>DBViewer</Name>
+    <ProjectReference Include="..\DbViewer\DbViewer.csproj">
+      <Project>{5FEB298F-24FE-4E9E-9264-133F90425C23}</Project>
+      <Name>DbViewer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

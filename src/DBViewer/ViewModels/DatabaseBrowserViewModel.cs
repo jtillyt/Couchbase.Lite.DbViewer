@@ -1,6 +1,6 @@
 ﻿using Dawn;
-using DBViewer.Services;
-using DBViewer.Views;
+using DbViewer.Services;
+using DbViewer.Views;
 using Prism.Navigation;
 using ReactiveUI;
 using System;
@@ -10,11 +10,11 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using DBViewer.Models;
+using DbViewer.Models;
 using DynamicData;
 using Xamarin.Essentials;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class DatabaseBrowserViewModel : NavigationViewModelBase, INavigatedAware
     {

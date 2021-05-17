@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 //Taken from https://github.com/AdaptSolutions/Xamarin.Forms-TreeView
-namespace DBViewer.TreeModel
+namespace DbViewer.TreeModel
 {
     [Serializable]
     public class XamlItemGroup

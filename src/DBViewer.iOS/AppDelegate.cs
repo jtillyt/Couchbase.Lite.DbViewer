@@ -1,7 +1,7 @@
 ﻿using Foundation;
 using UIKit;
 
-namespace DBViewer.iOS
+namespace DbViewer.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
     // User Interface of the application, as well as listening (and optionally responding) to 
@@ -27,7 +27,7 @@ namespace DBViewer.iOS
 
         private void InitializePlugins()
         { 
-            Akavache.Registrations.Start(nameof(DBViewer));
+            Akavache.Registrations.Start(nameof(DbViewer));
         }
     }
 }

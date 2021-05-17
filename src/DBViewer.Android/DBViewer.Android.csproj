@@ -7,8 +7,8 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{c9e5eea5-ca05-42a1-839b-61506e0a37df}</TemplateGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>DBViewer.Droid</RootNamespace>
-    <AssemblyName>DBViewer.Android</AssemblyName>
+    <RootNamespace>DbViewer.Droid</RootNamespace>
+    <AssemblyName>DbViewer.Android</AssemblyName>
     <Deterministic>True</Deterministic>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
@@ -112,9 +112,9 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DBViewer\DBViewer.csproj">
-      <Project>{72B81921-CB86-4DF4-9170-5F85953F0FB8}</Project>
-      <Name>DBViewer</Name>
+    <ProjectReference Include="..\DbViewer\DbViewer.csproj">
+      <Project>{5FEB298F-24FE-4E9E-9264-133F90425C23}</Project>
+      <Name>DbViewer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

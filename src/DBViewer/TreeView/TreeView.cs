@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Xamarin.Forms;
 
-namespace DBViewer.TreeView
+namespace DbViewer.TreeView
 {
     public class TreeView : ScrollView
     {

@@ -1,6 +1,6 @@
 ﻿using Akavache;
 using DbViewer.Shared;
-using DBViewer.Models;
+using DbViewer.Models;
 using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
-namespace DBViewer.Services
+namespace DbViewer.Services
 {
     public class DatabaseCacheService : IDatabaseCacheService
     {

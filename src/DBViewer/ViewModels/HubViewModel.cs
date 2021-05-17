@@ -1,6 +1,6 @@
 ﻿using Dawn;
 using DbViewer.Shared;
-using DBViewer.Services;
+using DbViewer.Services;
 using Prism.Navigation;
 using ReactiveUI;
 using System;
@@ -11,7 +11,7 @@ using System.Reactive;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class HubViewModel : NavigationViewModelBase
     {

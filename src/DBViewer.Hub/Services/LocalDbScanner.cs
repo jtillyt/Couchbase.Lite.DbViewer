@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DBViewer.Hub.Services
+namespace DbViewer.Hub.Services
 {
     public class LocalDbScanner : IDbScanner
     {

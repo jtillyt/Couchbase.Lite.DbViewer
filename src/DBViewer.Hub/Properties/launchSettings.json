@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "DBViewer.Hub": {
+    "DbViewer.Hub": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

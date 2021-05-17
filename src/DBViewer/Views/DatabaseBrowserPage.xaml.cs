@@ -1,7 +1,7 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace DBViewer.Views
+namespace DbViewer.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DatabaseBrowserPage : ContentPage

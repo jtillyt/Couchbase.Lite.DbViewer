@@ -1,6 +1,6 @@
 ﻿using DbViewer.Shared;
 
-namespace DBViewer.Models
+namespace DbViewer.Models
 {
     public class DownloadResult
     {

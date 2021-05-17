@@ -1,9 +1,9 @@
 ﻿using Dawn;
-using DBViewer.Models;
+using DbViewer.Models;
 using ReactiveUI;
 using System;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class CachedDatabaseItemViewModel : ViewModelBase
     {

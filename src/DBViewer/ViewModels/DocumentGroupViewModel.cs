@@ -6,12 +6,12 @@ using System.Linq;
 using System.Reactive.Disposables;
 using Couchbase.Lite;
 using Dawn;
-using DBViewer.Models;
-using DBViewer.Services;
+using DbViewer.Models;
+using DbViewer.Services;
 using DynamicData;
 using DynamicData.Binding;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class DocumentGroupViewModel : ObservableCollection<DocumentViewModel>
     {

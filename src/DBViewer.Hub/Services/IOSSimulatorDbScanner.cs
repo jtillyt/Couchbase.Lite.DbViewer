@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace DBViewer.Hub.Services
+namespace DbViewer.Hub.Services
 {
     public class IOSSimulatorDbScanner : IDbScanner
     {

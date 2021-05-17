@@ -9,9 +9,9 @@
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{6143fdea-f3c2-4a09-aafa-6e230626515e}</TemplateGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DBViewer.iOS</RootNamespace>
+    <RootNamespace>DbViewer.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>DBViewer.iOS</AssemblyName>
+    <AssemblyName>DbViewer.iOS</AssemblyName>
     <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <ProvisioningType>automatic</ProvisioningType>
@@ -151,9 +151,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\DBViewer\DBViewer.csproj">
-      <Project>{72B81921-CB86-4DF4-9170-5F85953F0FB8}</Project>
-      <Name>DBViewer</Name>
+    <ProjectReference Include="..\DbViewer\DbViewer.csproj">
+      <Project>{5FEB298F-24FE-4E9E-9264-133F90425C23}</Project>
+      <Name>DbViewer</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

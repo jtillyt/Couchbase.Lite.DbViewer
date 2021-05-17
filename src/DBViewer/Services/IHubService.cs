@@ -1,10 +1,10 @@
 ﻿using DbViewer.Shared;
-using DBViewer.Models;
+using DbViewer.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DBViewer.Services
+namespace DbViewer.Services
 {
     public interface IHubService
     {

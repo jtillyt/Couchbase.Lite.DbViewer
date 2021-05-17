@@ -1,11 +1,11 @@
 ﻿using Dawn;
-using DBViewer.Configuration;
+using DbViewer.Configuration;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using System;
 using System.IO;
 
-namespace DBViewer.Services
+namespace DbViewer.Services
 {
     [Obsolete("Could still be useful in another scenario so keeping")]
     public class SshDbFetchService

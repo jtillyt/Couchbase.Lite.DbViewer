@@ -1,12 +1,12 @@
-﻿using DBViewer.Configuration;
-using DBViewer.Services;
-using DBViewer.ViewModels;
-using DBViewer.Views;
+﻿using DbViewer.Configuration;
+using DbViewer.Services;
+using DbViewer.ViewModels;
+using DbViewer.Views;
 using DryIoc;
 using Prism.Ioc;
 using Xamarin.Forms;
 
-namespace DBViewer
+namespace DbViewer
 {
     public partial class App
     {

@@ -1,14 +1,14 @@
 ﻿using Dawn;
 using DbViewer.Shared;
-using DBViewer.Api;
-using DBViewer.Models;
+using DbViewer.Api;
+using DbViewer.Models;
 using Refit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace DBViewer.Services
+namespace DbViewer.Services
 {
     public class HubService : IHubService
     {

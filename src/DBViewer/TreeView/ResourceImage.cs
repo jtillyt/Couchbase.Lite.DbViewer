@@ -2,7 +2,7 @@ using System.Linq;
 using System.Reflection;
 using Xamarin.Forms;
 
-namespace DBViewer.TreeView
+namespace DbViewer.TreeView
 {
     /// <summary>
     ///     A control for loading images from the shared UI library.

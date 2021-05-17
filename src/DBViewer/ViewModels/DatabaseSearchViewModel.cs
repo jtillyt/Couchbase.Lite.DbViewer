@@ -1,6 +1,6 @@
 ﻿using Dawn;
-using DBViewer.Services;
-using DBViewer.Views;
+using DbViewer.Services;
+using DbViewer.Views;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using ReactiveUI;
@@ -11,7 +11,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class DatabaseSearchViewModel : NavigationViewModelBase, INavigatedAware
     {

@@ -1,5 +1,5 @@
 ﻿using DbViewer.Shared;
-using DBViewer.Hub.Services;
+using DbViewer.Hub.Services;
 using ImTools;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 
-namespace DBViewer.Hub.Controllers
+namespace DbViewer.Hub.Controllers
 {
     [ApiController]
     [Route("Databases")]

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DBViewer.Configuration
+namespace DbViewer.Configuration
 {
     public class ConfigurationRoot
     {

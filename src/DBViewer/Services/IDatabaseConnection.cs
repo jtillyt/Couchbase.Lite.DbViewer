@@ -1,7 +1,7 @@
 ﻿using Couchbase.Lite;
 using System.Collections.Generic;
 
-namespace DBViewer.Services
+namespace DbViewer.Services
 {
     public interface IDatabaseConnection
     {

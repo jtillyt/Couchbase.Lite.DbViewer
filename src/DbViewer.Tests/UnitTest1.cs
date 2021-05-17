@@ -1,6 +1,6 @@
 using Couchbase.Lite;
 using Couchbase.Lite.Query;
-using DBViewer.Services;
+using DbViewer.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

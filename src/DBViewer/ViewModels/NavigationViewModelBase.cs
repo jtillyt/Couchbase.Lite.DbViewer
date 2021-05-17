@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Reactive;
 using System.Threading.Tasks;
 
-namespace DBViewer.ViewModels
+namespace DbViewer.ViewModels
 {
     public class NavigationViewModelBase : ViewModelBase
     {

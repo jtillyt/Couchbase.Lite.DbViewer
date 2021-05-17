@@ -25,6 +25,6 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: Build
-      run: build/./build_all.sh
+      run: ../build/./build_all.sh
       working-directory: src
 

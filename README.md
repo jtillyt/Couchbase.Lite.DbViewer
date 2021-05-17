@@ -1,4 +1,5 @@
 # Couchbase Lite Database Viewer
+https://github.com/jaytilly/Couchbase.Lite.DbViewer/actions/workflows/dotnet.yml/badge.svg
 
 ## Project Goal
 The single aim of this project is to simplify sharing, viewing and editing CouchbaseLite databases from any mobile device or desktop.
@@ -6,6 +7,7 @@ The single aim of this project is to simplify sharing, viewing and editing Couch
 ## Components
 ### Hub
   The hub is the central point that apps can send their DBs to for other clients to share. They can also be used to scan the local machine for databases.  The hub is a super simple http server that serves the couchbase files.
+  Platforms such as Linux and Mac aren't able to open Couchbase databases.  Using the hub to send the Couchbase databases to a platform that can is a common use case. 
 
 ### Client
   The clients do most of the real work. The databases are parsed using the CouchbaseLite SDK available for Windows, Android and iOS. 

@@ -28,11 +28,11 @@ jobs:
       run: ls src
 
     - name: Restore
-      run: dotnet restore DbViewer.All.sln --verbosity diag
+      run: dotnet restore DBViewer.All.sln --verbosity diag
       working-directory: src
 
     - name: Build
-      run: dotnet build --no-restore DbViewer.All.sln
+      run: dotnet build --no-restore DBViewer.All.sln
       working-directory: src
 
     - name: Test

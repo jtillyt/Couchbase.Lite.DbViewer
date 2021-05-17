@@ -24,8 +24,11 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
+    - name: List Dir
+      run: ls
+
     - name: Restore
-      run: dotnet restore src/DbViewer.All.sln --verbosity diag
+      run: dotnet restore DbViewer.All.sln --verbosity diag
 
     - name: Build
       run: dotnet build --no-restore src/DbViewer.All.sln

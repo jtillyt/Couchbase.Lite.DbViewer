@@ -39,5 +39,5 @@ jobs:
         dotnet build --no-restore DbViewer.Mobile.iOS.sln
       working-directory: src
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    #- name: Test
+    #  run: dotnet test --no-build --verbosity normal

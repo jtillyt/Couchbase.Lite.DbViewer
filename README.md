@@ -1,5 +1,5 @@
 # Couchbase Lite Database Viewer
-https://github.com/jaytilly/Couchbase.Lite.DbViewer/actions/workflows/dotnet.yml/badge.svg
+<img src="https://github.com/jaytilly/Couchbase.Lite.DbViewer/actions/workflows/dotnet.yml/badge.svg" />
 
 ## Project Goal
 The single aim of this project is to simplify sharing, viewing and editing CouchbaseLite databases from any mobile device or desktop.

@@ -30,13 +30,13 @@ jobs:
     - name: Restore
       run: |
         dotnet restore DbViewer.Hub.sln
-        dotnet restore DbViewer.iOS.sln
+        dotnet restore DbViewer.Mobile.iOS.sln
       working-directory: src
 
     - name: Build
       run: |
         dotnet build --no-restore DbViewer.Hub.sln
-        dotnet build --no-restore DbViewer.iOS.sln
+        dotnet build --no-restore DbViewer.Mobile.iOS.sln
       working-directory: src
 
     - name: Test

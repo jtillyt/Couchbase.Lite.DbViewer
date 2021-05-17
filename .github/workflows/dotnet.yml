@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -28,11 +28,11 @@ jobs:
       run: ls src
 
     - name: Restore
-      run: dotnet restore DBViewer.All.sln --verbosity diag
+      run: dotnet restore DbViewer.All.sln 
       working-directory: src
 
     - name: Build
-      run: dotnet build --no-restore DBViewer.All.sln
+      run: dotnet build --no-restore DbViewer.All.sln
       working-directory: src
 
     - name: Test

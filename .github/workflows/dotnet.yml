@@ -25,6 +25,12 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: Build
-      run: ../build/./build_all.sh
+      run: dotnet restore ../src/DbViewer.All.sln
       working-directory: src
 
+    - name: Build
+      run: dotnet build --no-restore ../src/DbViewer.All.sln
+      working-directory: src
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal

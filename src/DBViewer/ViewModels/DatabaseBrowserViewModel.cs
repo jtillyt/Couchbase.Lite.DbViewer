@@ -69,11 +69,15 @@ namespace DbViewer.ViewModels
                 this.WhenAnyValue(x => x.FilterText)
                     .Select(Filter);
 
+            IObservable<Unit> splitChanged =
+                this.WhenAnyValue(x => x.SplitChars)
+                .Select(x => Unit.Default);
+
             _documentCache
                 .Connect()
                 .RefCount()
                 .Filter(filterChanged)
-                .Group(x => x.DocumentId.Split(SplitChars.ToCharArray()).First())
+                .Group(x => x.DocumentId.Split(SplitChars.ToCharArray()).First(), splitChanged)
                 .Transform(x => new DocumentGroupModel(x, x.Key.Split(_splitChars.ToCharArray()).First()))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _documents)
@@ -149,7 +153,7 @@ namespace DbViewer.ViewModels
             }
         }
 
-        private Func<DocumentModel, bool> Filter(string arg) => model => model.DocumentId.Contains(arg);
+        private Func<DocumentModel, bool> Filter(string arg) => model => model.DocumentId.ToLowerInvariant().Contains(arg.ToLowerInvariant());
 
         private void ExecuteReload()
         {

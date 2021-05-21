@@ -30,7 +30,7 @@ namespace DbViewer.ViewModels
             DownloadCheckedCommand = ReactiveCommand.CreateFromTask(ExecuteDownloadChecked);
 
             // TODO: <James Thomas: 3/14/21> Move to DI 
-            HubAddress = Preferences.Get(LastHubAddressKey, "http://192.168.1.10:5020");
+            HubAddress = Preferences.Get(LastHubAddressKey, "http://127.0.0.1:5020");
         }
 
         public ReactiveCommand<Unit, Unit> ListAllDatabasesCommand { get; }

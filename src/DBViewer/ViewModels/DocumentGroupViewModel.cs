@@ -1,15 +1,13 @@
-﻿using System;
+using Dawn;
+using DbViewer.Models;
+using DynamicData;
+using DynamicData.Binding;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Disposables;
-using Couchbase.Lite;
-using Dawn;
-using DbViewer.Models;
-using DbViewer.Services;
-using DynamicData;
-using DynamicData.Binding;
 
 namespace DbViewer.ViewModels
 {
@@ -58,9 +56,11 @@ namespace DbViewer.ViewModels
         }
 
         private static bool ShouldShowDocument(string documentId, string[] searchStrings)
-        { 
+        {
             if (searchStrings == null || searchStrings[0] == string.Empty)
+            {
                 return true;
+            }
 
             return searchStrings.Any(searchString => documentId.ToLowerInvariant().Contains(searchString.ToLowerInvariant()));
         }
@@ -69,12 +69,15 @@ namespace DbViewer.ViewModels
     public class DocumentGroupModel : ObservableCollectionExtended<DocumentModel>, IDisposable
     {
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
+        private readonly DocumentModel.Comparer _comparer = new DocumentModel.Comparer();
+
         public DocumentGroupModel(IGroup<DocumentModel, string, string> grouping, string key)
         {
             GroupName = key;
             grouping
                 .Cache
                 .Connect()
+                .Sort(_comparer)
                 .Bind(this)
                 .Subscribe()
                 .DisposeWith(_compositeDisposable);

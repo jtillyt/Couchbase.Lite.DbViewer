@@ -1,4 +1,4 @@
-﻿using Couchbase.Lite;
+using Couchbase.Lite;
 using Dawn;
 using DbViewer.Models;
 using DbViewer.Services;

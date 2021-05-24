@@ -1,4 +1,4 @@
-﻿using Dawn;
+using Dawn;
 using DbViewer.Services;
 using DbViewer.Views;
 using Prism.Navigation;
@@ -18,6 +18,9 @@ namespace DbViewer.ViewModels
 {
     public class DatabaseBrowserViewModel : NavigationViewModelBase, INavigatedAware
     {
+        private const string UnknownFolder = "- Ungrouped -";
+        private const string NoGroupsFolder = "Documents";
+
         private CachedDatabaseItemViewModel _currentDatabaseItemViewModel;
         private ReadOnlyObservableCollection<DocumentGroupModel> _documents;
         private readonly ISourceCache<DocumentModel, string> _documentCache =
@@ -26,9 +29,9 @@ namespace DbViewer.ViewModels
         private const string FilterSearch_Key = "FilterSearch";
         private const string DocumentSplit_Key = "DocumentSplit";
         private string _databaseName;
-        private string _splitChars = "_";
+        private string _splitChars = "";
         private string _downloadTime;
-        private string _filterText;
+        private string _filterText = "";
 
         private readonly IDatabaseCacheService _cacheService;
 
@@ -67,18 +70,20 @@ namespace DbViewer.ViewModels
 
             IObservable<Func<DocumentModel, bool>> filterChanged =
                 this.WhenAnyValue(x => x.FilterText)
+                    .Throttle(TimeSpan.FromMilliseconds(300))
                     .Select(Filter);
 
             IObservable<Unit> splitChanged =
                 this.WhenAnyValue(x => x.SplitChars)
+                .Throttle(TimeSpan.FromMilliseconds(300))
                 .Select(x => Unit.Default);
 
             _documentCache
                 .Connect()
                 .RefCount()
                 .Filter(filterChanged)
-                .Group(x => x.DocumentId.Split(SplitChars.ToCharArray()).First(), splitChanged)
-                .Transform(x => new DocumentGroupModel(x, x.Key.Split(_splitChars.ToCharArray()).First()))
+                .Group(x => GetGroupNameFromDocumentId(x.DocumentId, SplitChars), splitChanged)
+                .Transform(x => new DocumentGroupModel(x, x.Key))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out _documents)
                 .Subscribe()
@@ -91,6 +96,22 @@ namespace DbViewer.ViewModels
             SplitChars = Preferences.Get(DocumentSplit_Key, "");
         }
 
+        private static string GetGroupNameFromDocumentId(string documentId, string splitChar)
+        {
+            if (string.IsNullOrWhiteSpace(splitChar))
+            {
+                return NoGroupsFolder;
+            }
+
+            if (string.IsNullOrWhiteSpace(documentId))
+            {
+                return UnknownFolder;
+            }
+
+            var split = documentId.Split(splitChar.ToCharArray());
+
+            return split.Length > 1 ? split.First() : UnknownFolder;
+        }
 
         public ReactiveCommand<Unit, Unit> ViewDatabaseSearchCommand { get; set; }
         public ReactiveCommand<DocumentModel, Unit> ViewSelectedDocumentCommand { get; }
@@ -101,7 +122,6 @@ namespace DbViewer.ViewModels
             get => _filterText;
             set => this.RaiseAndSetIfChanged(ref _filterText, value);
         }
-
 
         public string DatabaseName
         {

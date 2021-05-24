@@ -4,6 +4,11 @@ namespace DbViewer.Models
 {
     public class CacheRegistry
     {
-        public List<CachedDatabase> DatabaseCollection {get;set; } = new List<CachedDatabase>();
+        public CacheRegistry()
+        {
+            DatabaseCollection = new List<CachedDatabase>();
+        }
+
+        public List<CachedDatabase> DatabaseCollection { get; set; }
     }
 }

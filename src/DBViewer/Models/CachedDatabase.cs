@@ -3,6 +3,8 @@ using DbViewer.Shared;
 using DbViewer.Services;
 using System;
 using System.IO;
+using Newtonsoft.Json;
+using Xamarin.Essentials;
 
 namespace DbViewer.Models
 {
@@ -12,25 +14,19 @@ namespace DbViewer.Models
 
         public CachedDatabase()
         {
-
+            
         }
 
-        public CachedDatabase(string localDatabasePathRoot, DatabaseInfo remoteDatabaseInfo, DateTimeOffset downloadTime)
+        public CachedDatabase(DatabaseInfo remoteDatabaseInfo, DateTimeOffset downloadTime)
         {
-            LocalDatabasePathRoot = Guard.Argument(localDatabasePathRoot, nameof(localDatabasePathRoot))
-                  .NotNull()
-                  .Value;
-
             RemoteDatabaseInfo = Guard.Argument(remoteDatabaseInfo, nameof(remoteDatabaseInfo))
                   .NotNull()
                   .Value;
 
             DownloadTime = downloadTime;
-
-            LocalDatabasePathFull = Path.Combine(LocalDatabasePathRoot, RemoteDatabaseInfo.FullDatabaseName);
-            ArchiveFullPath = LocalDatabasePathFull + ".zip";
         }
 
+        [JsonIgnore]
         public IDatabaseConnection ActiveConnection { get; private set; }
 
         public bool Connect()
@@ -78,23 +74,27 @@ namespace DbViewer.Models
         }
 
         public DatabaseInfo RemoteDatabaseInfo { get; set; }
+
         public DateTimeOffset DownloadTime { get; set; }
 
         /// <summary>
         /// The path to the directory that contains the database folder. Couchbase uses this with the subdirectory being the 'name'
         /// </summary>
-        public string LocalDatabasePathRoot { get; set; }
+        [JsonIgnore]
+        public string LocalDatabasePathRoot => FileSystem.AppDataDirectory;
 
         /// <summary>
         /// The full path to the directoy that contains the unzipped database contents.
         /// </summary>
-        public string LocalDatabasePathFull { get; set; }
+        [JsonIgnore]
+        public string LocalDatabasePathFull => Path.Combine(LocalDatabasePathRoot, RemoteDatabaseInfo.FullDatabaseName);
 
 
         /// <summary>
         /// The full path to the zip file that was downloaded.
         /// </summary>
-        public string ArchiveFullPath { get; set; }
+        [JsonIgnore]
+        public string ArchiveFullPath => LocalDatabasePathFull + ".zip";
 
         /// <summary>
         /// Tracking whether we've already successfully unzipped

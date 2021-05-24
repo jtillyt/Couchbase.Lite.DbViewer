@@ -1,45 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vms="clr-namespace:DbViewer.ViewModels"
-             x:DataType="vms:DatabaseBrowserViewModel"
-             BackgroundColor="White"
-             x:Class="DbViewer.Views.DatabaseBrowserPage">
+<ContentPage
+    x:Class="DbViewer.Views.DatabaseBrowserPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vms="clr-namespace:DbViewer.ViewModels"
+    x:DataType="vms:DatabaseBrowserViewModel"
+    BackgroundColor="White">
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
-            <Frame Margin="0,-20,0,0"
-                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
-                   Padding="5,30"
-                   HeightRequest="200"
-                   CornerRadius="20"
-                   HasShadow="False">
+
+            <Frame
+                Margin="0,-20,0,0"
+                Padding="5,30"
+                BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                CornerRadius="20"
+                HasShadow="False"
+                HeightRequest="200">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+
                     <Grid HeightRequest="100">
-                        <Button Style="{DynamicResource HeaderButton}"
-                                HeightRequest="40"
-                                WidthRequest="80"
-                                VerticalOptions="Center"
-                                Text="Back"
-                                HorizontalOptions="Start"
-                                Command="{Binding BackCommand}">
-                        </Button>
-                        <Label Text="{Binding DatabaseName}"
-                               Margin="10"
-                               HeightRequest="40"
-                               Style="{DynamicResource PageHeaderLabel}"
-                               FontAttributes="Bold"
-                               VerticalOptions="Center"
-                               VerticalTextAlignment="Center"
-                               HorizontalOptions="CenterAndExpand" />
-                        <Button Style="{DynamicResource HeaderButton}"
-                                HeightRequest="40"
-                                WidthRequest="80"
-                                VerticalOptions="Center"
-                                Text="Search"
-                                HorizontalOptions="End"
-                                Command="{Binding ViewDatabaseSearchCommand}">
-                        </Button>
+                        <Button
+                            Command="{Binding BackCommand}"
+                            HeightRequest="40"
+                            HorizontalOptions="Start"
+                            Style="{DynamicResource HeaderButton}"
+                            Text="Back"
+                            VerticalOptions="Center"
+                            WidthRequest="80" />
+                        <Label
+                            Margin="10"
+                            FontAttributes="Bold"
+                            HeightRequest="40"
+                            HorizontalOptions="CenterAndExpand"
+                            Style="{DynamicResource PageHeaderLabel}"
+                            Text="{Binding DatabaseName}"
+                            VerticalOptions="Center"
+                            VerticalTextAlignment="Center" />
+                        <Button
+                            Command="{Binding ViewDatabaseSearchCommand}"
+                            HeightRequest="40"
+                            HorizontalOptions="End"
+                            Style="{DynamicResource HeaderButton}"
+                            Text="Search"
+                            VerticalOptions="Center"
+                            WidthRequest="80" />
                     </Grid>
+
                     <Label Style="{DynamicResource MainBodyLabel}">
                         <Label.FormattedText>
                             <FormattedString>
@@ -48,79 +54,82 @@
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
-                    <StackLayout  Orientation="Horizontal">
-                        <Entry Placeholder="Filter Groups { Comma,Separated,Values }"
-                               HeightRequest="50"
-                               HorizontalOptions="FillAndExpand"
-                               TextColor="Black"
-                               PlaceholderColor="WhiteSmoke"
-                               Margin="10"
-                               Text="{Binding FilterText}">
-                        </Entry>
-                        <Entry Placeholder="Group Char"
-                               HeightRequest="50"  
-                               PlaceholderColor="WhiteSmoke"
-                               Margin="10"
-                               Text="{Binding SplitChars}"
-                               HorizontalOptions="End">
-                            
-                        </Entry>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Entry
+                            Margin="10"
+                            HeightRequest="50"
+                            HorizontalOptions="FillAndExpand"
+                            Placeholder="Filter Groups { Comma,Separated,Values }"
+                            PlaceholderColor="Gray"
+                            Text="{Binding FilterText}"
+                            TextColor="Black" />
+                        <!--  Grouping/filtering broken in ios xam formsS  -->
+                        <Entry
+                            Margin="10"
+                            HeightRequest="50"
+                            HorizontalOptions="End"
+                            IsEnabled="False"
+                            IsVisible="False"
+                            Placeholder="Group Chars"
+                            PlaceholderColor="Gray"
+                            Text="{Binding SplitChars}" />
                     </StackLayout>
                 </StackLayout>
             </Frame>
-            <!-- http://www.compliancestudio.io/blog/xamarin-forms-expandable-listview Update -->
-            <ListView Margin="30"
-                      IsGroupingEnabled="True"
-                      ItemsSource="{Binding Documents}">
-                <ListView.GroupHeaderTemplate>
+
+            <CollectionView
+                Margin="30"
+                IsGrouped="True"
+                ItemsSource="{Binding Documents}">
+                <CollectionView.GroupHeaderTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <StackLayout HeightRequest="60"
-                                         BackgroundColor="{DynamicResource BackgroundSmokeColor}"
-                                         VerticalOptions="Center"
-                                         x:DataType="vms:DocumentGroupModel">
-                                <Label Text="{Binding GroupName}"
-                                       HeightRequest="60"
-                                       VerticalTextAlignment="Center"
-                                       Margin="15,0"
-                                       VerticalOptions="Center"
-                                       FontAttributes="Bold"
-                                       FontSize="Medium"
-                                       TextColor="Black" />
-                            </StackLayout>
-                        </ViewCell>
+                        <StackLayout
+                            x:DataType="vms:DocumentGroupModel"
+                            BackgroundColor="{DynamicResource BackgroundSmokeColor}"
+                            HeightRequest="60"
+                            VerticalOptions="Center">
+                            <Label
+                                Margin="15,0"
+                                FontAttributes="Bold"
+                                FontSize="Medium"
+                                HeightRequest="60"
+                                Text="{Binding GroupName}"
+                                TextColor="Black"
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center" />
+                        </StackLayout>
                     </DataTemplate>
-                </ListView.GroupHeaderTemplate>
-                <ListView.ItemTemplate>
+                </CollectionView.GroupHeaderTemplate>
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <StackLayout x:DataType="vms:DocumentModel">
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                          CommandParameter="{Binding .}" />
-                                </StackLayout.GestureRecognizers>
-                                <Frame Margin="20,0,0,0"
-                                       HasShadow="False">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding DocumentId}"
-                                               TextColor="Black"
-                                               VerticalTextAlignment="Center"
-                                               Style="{DynamicResource DatabaseSummaryLabel}"
-                                               VerticalOptions="Center" />
-                                    </StackLayout>
-                                </Frame>
-                            </StackLayout>
-                        </ViewCell>
+                        <StackLayout x:DataType="vms:DocumentModel">
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
+                            </StackLayout.GestureRecognizers>
+                            <Frame Margin="20,0,0,0" HasShadow="False">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label
+                                        Style="{DynamicResource DatabaseSummaryLabel}"
+                                        Text="{Binding DocumentId}"
+                                        TextColor="Black"
+                                        VerticalOptions="Center"
+                                        VerticalTextAlignment="Center" />
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <Button Text="Reload"
-                    Command="{Binding ReloadCommand}"
-                    Style="{DynamicResource DarkColoredButton}"
-                    Margin="5"
-                    CornerRadius="10"
-                    HeightRequest="60"
-                    FontSize="24" />
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button
+                Margin="5"
+                Command="{Binding ReloadCommand}"
+                CornerRadius="10"
+                FontSize="24"
+                HeightRequest="60"
+                Style="{DynamicResource DarkColoredButton}"
+                Text="Reload" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

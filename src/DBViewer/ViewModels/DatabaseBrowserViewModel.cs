@@ -44,7 +44,7 @@ namespace DbViewer.ViewModels
                 .Value;
 
             this.WhenAnyValue(x => x.FilterText, y => y.SplitChars)
-                .Throttle(TimeSpan.FromSeconds(5))
+                .Throttle(TimeSpan.FromSeconds(1))
                 .Subscribe(_ => SaveSearchState())
                 .DisposeWith(Disposables);
 
@@ -173,7 +173,27 @@ namespace DbViewer.ViewModels
             }
         }
 
-        private Func<DocumentModel, bool> Filter(string arg) => model => model.DocumentId.ToLowerInvariant().Contains(arg.ToLowerInvariant());
+        private Func<DocumentModel, bool> Filter(string arg) => model =>
+        {
+            var sections = arg.Split(',');
+
+            var documentId = model.DocumentId.ToLowerInvariant();
+
+            foreach (var section in sections)
+            {
+                if (string.IsNullOrWhiteSpace(section))
+                    continue;
+
+                var cleanedSection = section.Trim().ToLowerInvariant();
+
+                if (documentId.Contains(cleanedSection.ToLowerInvariant()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        };
 
         private void ExecuteReload()
         {

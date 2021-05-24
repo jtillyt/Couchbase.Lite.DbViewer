@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DbViewer.Shared
 {
@@ -9,6 +10,8 @@ namespace DbViewer.Shared
         public string DisplayDatabaseName { get; set; }
 
         public string FullDatabaseName { get; set; }
+
+        public Uri RequestAddress { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -47,6 +47,7 @@ namespace DbViewer.Services
 
             try
             {
+                databaseInfo.RequestAddress = _lastConnectedUri;
                 await _dbCacheService.SaveFromStream(stream, databaseInfo);
                 downloadResult.WasSuccesful = true;
             }

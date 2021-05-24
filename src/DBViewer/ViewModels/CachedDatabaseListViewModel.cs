@@ -13,13 +13,18 @@ namespace DbViewer.ViewModels
     public class CachedDatabaseListViewModel : NavigationViewModelBase, INavigatedAware
     {
         private readonly IDatabaseCacheService _cacheService;
+        private readonly IHubService _hubService;
 
-        public CachedDatabaseListViewModel(IDatabaseCacheService cacheService, INavigationService navigationService)
+        public CachedDatabaseListViewModel(IDatabaseCacheService cacheService, INavigationService navigationService, IHubService hubService)
                : base(navigationService)
         {
             _cacheService = Guard.Argument(cacheService, nameof(cacheService))
                                  .NotNull()
                                  .Value;
+
+            _hubService = Guard.Argument(hubService, nameof(hubService))
+                               .NotNull()
+                               .Value;
 
             ReloadCommand = ReactiveCommand.Create(ExecuteReload);
             ViewHubCommand = ReactiveCommand.CreateFromTask(ExecuteViewHubAsync);
@@ -66,9 +71,9 @@ namespace DbViewer.ViewModels
             {
                 CachedDatabases.Clear();
 
-                foreach(var item in cacheRegistry.DatabaseCollection)
+                foreach (var item in cacheRegistry.DatabaseCollection)
                 {
-                    CachedDatabases.Add(new CachedDatabaseItemViewModel(item));
+                    CachedDatabases.Add(new CachedDatabaseItemViewModel(item, _hubService));
                 }
             });
         }

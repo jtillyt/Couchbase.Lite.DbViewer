@@ -42,28 +42,57 @@
                             </StackLayout.GestureRecognizers>
                             <Frame BackgroundColor="{DynamicResource BackgroundSmokeColor}"
                                    HasShadow="False"
-                                   CornerRadius="6"
-                                   HeightRequest="60"
+                                   CornerRadius="8"
+                                   HeightRequest="90"
                                    Margin="0,5">
                                 <StackLayout>
-                                    <StackLayout Orientation="Horizontal">
+                                    <StackLayout Orientation="Horizontal" Margin="10">
                                         <Label Text="{Binding DisplayName}"
+                                           FontAttributes="Bold"
+                                           FontSize="Large"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
+                                           VerticalTextAlignment="Center"
                                            VerticalOptions="Center" />
-                                        <Label Text=">"
+                                        <Button Text="Pull Latest"
+                                                Command="{Binding GetLatestCommand}"
+                                                HeightRequest="30"
+                                                WidthRequest="100"
+                                                CornerRadius="3"
+                                                TextColor="White"
+                                                BackgroundColor="LightSeaGreen"
+                                                HorizontalOptions="EndAndExpand">
+                                        </Button>
+                                        <!--<Label Text=">"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            HorizontalOptions="EndAndExpand"
+                                           VerticalTextAlignment="Center"
+                                           VerticalOptions="Center" />-->
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center" Margin="10">
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center"  HorizontalOptions="StartAndExpand">
+                                        <Label Text="Hub: "
+                                           HorizontalOptions="Start"
+                                           VerticalTextAlignment="Center"
+                                           Style="{DynamicResource DatabaseSummaryLabel}"
+                                           VerticalOptions="Center" />
+                                            <Label Text="{Binding HubAddress}"
+                                           HorizontalOptions="Start"
+                                           VerticalTextAlignment="Center"
+                                           Style="{DynamicResource DatabaseSummaryLabel}"
                                            VerticalOptions="Center" />
                                     </StackLayout>
-                                    <StackLayout Orientation="Horizontal">
+                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center"  HorizontalOptions="EndAndExpand">
                                         <Label Text="Updated: "
                                            HorizontalOptions="Start"
+                                           VerticalTextAlignment="Center"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            VerticalOptions="Center" />
                                         <Label Text="{Binding DownloadTime}"
                                            HorizontalOptions="Start"
+                                           VerticalTextAlignment="Center"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            VerticalOptions="Center" />
+                                    </StackLayout>
                                     </StackLayout>
                                 </StackLayout>
                             </Frame>

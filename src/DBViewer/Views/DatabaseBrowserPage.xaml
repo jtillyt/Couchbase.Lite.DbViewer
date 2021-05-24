@@ -60,7 +60,7 @@
                             Margin="10"
                             HeightRequest="50"
                             HorizontalOptions="FillAndExpand"
-                            Placeholder="Filter Groups { Comma,Separated,Values }"
+                            Placeholder="Filter {Comma,Separated,Values}"
                             PlaceholderColor="Gray"
                             Text="{Binding FilterText}"
                             TextColor="Black" />

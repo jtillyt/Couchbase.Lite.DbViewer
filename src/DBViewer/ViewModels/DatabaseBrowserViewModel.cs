@@ -173,8 +173,11 @@ namespace DbViewer.ViewModels
             }
         }
 
-        private Func<DocumentModel, bool> Filter(string arg) => model =>
+        private static Func<DocumentModel, bool> Filter(string arg) => model =>
         {
+            if (string.IsNullOrWhiteSpace(arg))
+                return true;
+
             var sections = arg.Split(',');
 
             var documentId = model.DocumentId.ToLowerInvariant();

@@ -1,7 +1,5 @@
 using Couchbase.Lite;
-using Dawn;
 using DbViewer.Models;
-using DbViewer.Services;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using ReactiveUI;
@@ -26,8 +24,6 @@ namespace DbViewer.ViewModels
 
         public ReactiveCommand<Unit, Unit> ShareCommand { get; }
 
-        public Document Document { get; private set; }
-
         public string DocumentId
         {
             get => _documentId;
@@ -51,7 +47,6 @@ namespace DbViewer.ViewModels
             if (parameters.ContainsKey(nameof(ViewModels.DocumentModel)))
             {
                 DocumentModel = parameters.GetValue<DocumentModel>(nameof(ViewModels.DocumentModel));
-                _database = parameters.GetValue<CachedDatabase>(nameof(CachedDatabase));
             }
 
             Reload();
@@ -60,6 +55,7 @@ namespace DbViewer.ViewModels
         private void Reload()
         {
             string documentText = GetJson();
+            _database = DocumentModel?.Database;
 
             RunOnUi(() =>
             {
@@ -70,11 +66,11 @@ namespace DbViewer.ViewModels
 
         private string GetJson()
         {
-            if (DocumentModel == null)
+            if (DocumentModel?.Database == null)
                 return "";
 
-            Document = _database.ActiveConnection.GetDocumentById(DocumentModel.DocumentId);
-            return JsonConvert.SerializeObject(Document, Formatting.Indented);
+            var dbDoc = DocumentModel.Database.ActiveConnection.GetDocumentById(DocumentModel.DocumentId);
+            return JsonConvert.SerializeObject(dbDoc, Formatting.Indented);
         }
 
         private async Task ExecuteShare()

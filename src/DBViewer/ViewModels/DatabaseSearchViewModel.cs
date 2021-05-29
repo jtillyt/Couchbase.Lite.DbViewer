@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 
 namespace DbViewer.ViewModels
@@ -17,7 +16,7 @@ namespace DbViewer.ViewModels
     {
         internal const string DocumentIdList_Param = nameof(DocumentIdList_Param);
 
-        private IEnumerable<string> _documentIds;
+        private IEnumerable<string> _documentIdsToSearch;
 
         private readonly IDatabaseCacheService _cacheService;
 
@@ -29,12 +28,20 @@ namespace DbViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            SearchCommand = ReactiveCommand.Create(ExecuteSearch);
-            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentViewModel>(ExecuteViewSelectedDocument);
+            SearchCommand = ReactiveCommand.CreateFromTask(ExecuteSearch);
+            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteViewSelectedDocument);
         }
 
-        public ReactiveCommand<DocumentViewModel, Unit> ViewSelectedDocumentCommand { get; }
+        public ReactiveCommand<DocumentModel, Unit> ViewSelectedDocumentCommand { get; }
+
         public ReactiveCommand<Unit, Unit> SearchCommand { get; }
+
+        private string _searchTitle;
+        public string SearchTitle
+        {
+            get => _searchTitle;
+            set => this.RaiseAndSetIfChanged(ref _searchTitle, value);
+        }
 
         private string _searchText;
         public string SearchText
@@ -43,12 +50,11 @@ namespace DbViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _searchText, value);
         }
 
-        private ObservableCollection<DocumentGroupViewModel> _documentGroups;
-
-        public ObservableCollection<DocumentGroupViewModel> DocumentGroups
+        private ObservableCollection<DocumentModel> _searchResults;
+        public ObservableCollection<DocumentModel> SearchResults
         {
-            get => _documentGroups;
-            set => this.RaiseAndSetIfChanged(ref _documentGroups, value);
+            get => _searchResults;
+            set => this.RaiseAndSetIfChanged(ref _searchResults, value);
         }
 
         private CachedDatabaseItemViewModel _currentDatabaseItemViewModel;
@@ -71,64 +77,55 @@ namespace DbViewer.ViewModels
             }
             if (parameters.ContainsKey(DocumentIdList_Param))
             {
-                _documentIds = parameters.GetValue<IEnumerable<string>>(nameof(DocumentIdList_Param));
+                _documentIdsToSearch = parameters.GetValue<IEnumerable<string>>(nameof(DocumentIdList_Param));
             }
         }
 
-        private void ExecuteSearch()
+        private Task ExecuteSearch()
         {
-            if (CurrentDatabaseItemViewModel == null)
-                return;
-
-            var database = CurrentDatabaseItemViewModel.Database;
-            var isConnected = database.Connect();
-
-            if (!isConnected)
-                return;
-
-            var connection = database.ActiveConnection;
-
-            var documentIds = connection.ListAllDocumentIds();
-
-            var searchTextCorrected = SearchText.ToLower();
-
-            var documentIdsWithHits = new List<string>();
-
-            foreach (var documentId in documentIds)
+            return Task.Run(() =>
             {
-                var document = connection.GetDocumentById(documentId);
+                if (CurrentDatabaseItemViewModel == null)
+                    return;
 
-                var documentText = JsonConvert.SerializeObject(document);
+                var database = CurrentDatabaseItemViewModel.Database;
+                var isConnected = database.Connect();
 
-                if (documentText.ToLower().Contains(searchTextCorrected))
-                    documentIdsWithHits.Add(documentId);
-            }
+                if (!isConnected)
+                    return;
 
-            var groupedDocuments = documentIdsWithHits.GroupBy(key => { return "Matches"; });
+                var connection = database.ActiveConnection;
 
-            RunOnUi(() =>
-            {
-                var dbRoot = database.LocalDatabasePathRoot;
+                var documentIds = connection.ListAllDocumentIds();
 
-                var localDateTime = database.DownloadTime.LocalDateTime;
+                var searchTextCorrected = SearchText.ToLower();
 
-                DocumentGroups = new ObservableCollection<DocumentGroupViewModel>();
+                var documentIdsWithHits = new List<string>();
 
-                foreach (var group in groupedDocuments)
+                foreach (var documentId in documentIds)
                 {
-                    var groupViewModel = new DocumentGroupViewModel(database, group.Key, group.ToList());
+                    var document = connection.GetDocumentById(documentId);
 
-                    if (groupViewModel.Count > 0)
-                        DocumentGroups.Add(groupViewModel);
+                    var documentText = JsonConvert.SerializeObject(document);
+
+                    if (documentText.ToLower().Contains(searchTextCorrected))
+                    {
+                        documentIdsWithHits.Add(documentId);
+                    }
                 }
+
+                RunOnUi(() =>
+                {
+                    SearchResults = new ObservableCollection<DocumentModel>(documentIds.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId)));
+                });
             });
         }
 
-        private async Task ExecuteViewSelectedDocument(DocumentViewModel document)
+        private async Task ExecuteViewSelectedDocument(DocumentModel document)
         {
             var navParams = new NavigationParameters
             {
-                { nameof(DocumentViewModel), document }
+                { nameof(DocumentModel), document }
             };
 
             await NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);

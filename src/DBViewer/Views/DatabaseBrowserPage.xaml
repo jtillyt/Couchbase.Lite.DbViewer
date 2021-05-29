@@ -1,50 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="DbViewer.Views.DatabaseBrowserPage"
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:vms="clr-namespace:DbViewer.ViewModels"
-    x:DataType="vms:DatabaseBrowserViewModel"
-    BackgroundColor="White">
+<ContentPage x:Class="DbViewer.Views.DatabaseBrowserPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vms="clr-namespace:DbViewer.ViewModels"
+             BackgroundColor="White"
+             x:DataType="vms:DatabaseBrowserViewModel">
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
 
-            <Frame
-                Margin="0,-20,0,0"
-                Padding="5,30"
-                VerticalOptions="Start"
-                BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
-                CornerRadius="20"
-                HasShadow="False"
-                HeightRequest="200">
+            <Frame Margin="0,-20,0,0"
+                   Padding="5,30"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                   CornerRadius="30"
+                   HasShadow="False"
+                   HeightRequest="200"
+                   VerticalOptions="Start">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
 
                     <Grid HeightRequest="100">
-                        <Button
-                            Command="{Binding BackCommand}"
-                            HeightRequest="40"
-                            HorizontalOptions="Start"
-                            Style="{DynamicResource HeaderButton}"
-                            Text="Back"
-                            VerticalOptions="Center"
-                            WidthRequest="80" />
-                        <Label
-                            Margin="10"
-                            FontAttributes="Bold"
-                            HeightRequest="40"
-                            HorizontalOptions="CenterAndExpand"
-                            Style="{DynamicResource PageHeaderLabel}"
-                            Text="{Binding DatabaseName}"
-                            VerticalOptions="Center"
-                            VerticalTextAlignment="Center" />
-                        <Button
-                            Command="{Binding ViewDatabaseSearchCommand}"
-                            HeightRequest="40"
-                            HorizontalOptions="End"
-                            Style="{DynamicResource HeaderButton}"
-                            Text="Search"
-                            VerticalOptions="Center"
-                            WidthRequest="80" />
+                        <Button Command="{Binding BackCommand}"
+                                HeightRequest="40"
+                                HorizontalOptions="Start"
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Back"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
+
+                        <Label Margin="10"
+                               FontAttributes="Bold"
+                               HeightRequest="40"
+                               HorizontalOptions="CenterAndExpand"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               Text="{Binding DatabaseName}"
+                               VerticalOptions="Center"
+                               VerticalTextAlignment="Center" />
+
+                        <Button Command="{Binding ViewDatabaseSearchCommand}"
+                                HeightRequest="40"
+                                HorizontalOptions="End"
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Search"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
                     </Grid>
 
                     <Label Style="{DynamicResource MainBodyLabel}">
@@ -57,66 +54,54 @@
                     </Label>
 
                     <StackLayout Orientation="Horizontal">
-                        <Entry
-                            Margin="10"
-                            HeightRequest="50"
-                            HorizontalOptions="FillAndExpand"
-                            PlaceholderColor="Gray"
-                            Placeholder="Filter {Comma,Separated,Values}"
-                            Text="{Binding FilterText}"
-                            TextColor="Black" />
+                        <Entry Margin="10"
+                               HeightRequest="50"
+                               HorizontalOptions="FillAndExpand"
+                               Placeholder="Filter {Comma,Separated,Values}"
+                               PlaceholderColor="Gray"
+                               Text="{Binding FilterText}"
+                               TextColor="Black" />
                     </StackLayout>
                 </StackLayout>
             </Frame>
 
-            <ListView
-                Margin="50,30"
-                HorizontalOptions="FillAndExpand"
-                HasUnevenRows="False"
-                ItemsSource="{Binding Documents}"
-                IsPullToRefreshEnabled="False"
-                IsGroupingEnabled="True"
-                CachingStrategy="RetainElement"
-                IsRefreshing="False"
-                SelectionMode="None"
-                SeparatorVisibility="None">
+            <ListView Style="{StaticResource DocumentListView}"
+                      CachingStrategy="RecycleElementAndDataTemplate"
+                      IsGroupingEnabled="True"
+                      ItemsSource="{Binding Documents}">
                 <ListView.GroupHeaderTemplate>
                     <DataTemplate>
                         <ViewCell>
 
-                            <StackLayout
-                            x:DataType="vms:DocumentGroupModel"
-                            BackgroundColor="{DynamicResource BackgroundSmokeColor}"
-                            HeightRequest="60"
-                            VerticalOptions="Center">
-                                <Label
-                                Margin="15,0"
-                                FontAttributes="Bold"
-                                FontSize="Medium"
-                                HeightRequest="60"
-                                Text="{Binding GroupName}"
-                                TextColor="Black"
-                                VerticalOptions="Center"
-                                VerticalTextAlignment="Center" />
+                            <StackLayout x:DataType="vms:DocumentGroupViewModel"
+                                         BackgroundColor="{DynamicResource BackgroundSmokeColor}"
+                                         HeightRequest="60"
+                                         VerticalOptions="Center">
+                                <Label Margin="15,0"
+                                       FontAttributes="Bold"
+                                       FontSize="Medium"
+                                       HeightRequest="60"
+                                       Text="{Binding GroupName}"
+                                       TextColor="Black"
+                                       VerticalOptions="Center"
+                                       VerticalTextAlignment="Center" />
                             </StackLayout>
+                            
                         </ViewCell>
                     </DataTemplate>
                 </ListView.GroupHeaderTemplate>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Label
-                                Margin="30,0"
-                                x:DataType="vms:DocumentModel"
-                                FontSize="18"
-                                Text="{Binding DocumentId}"
-                                TextColor="Black"
-                                VerticalOptions="Center"
-                                VerticalTextAlignment="Center">
+                            
+                            <Label Style="{StaticResource DocumentListViewItem}"
+                                   x:DataType="vms:DocumentModel"
+                                   Text="{Binding DocumentId}">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
                                 </Label.GestureRecognizers>
                             </Label>
+
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

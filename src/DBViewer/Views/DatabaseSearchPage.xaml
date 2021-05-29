@@ -1,103 +1,86 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage x:Class="DbViewer.Views.DatabaseSearchPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DbViewer.ViewModels"
              x:DataType="vms:DatabaseSearchViewModel"
-             BackgroundColor="White"
-             x:Class="DbViewer.Views.DatabaseSearchPage">
+             BackgroundColor="White">
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
+
             <Frame Margin="0,-20,0,0"
-                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    Padding="5,30"
-                   HeightRequest="160"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    CornerRadius="20"
-                   HasShadow="False">
+                   HasShadow="False"
+                   HeightRequest="160">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}" VerticalOptions="Center">
+
                     <Grid HeightRequest="50">
-                        <Button Style="{DynamicResource HeaderButton}"
+                        
+                        <Button Command="{Binding BackCommand}"
                                 HeightRequest="40"
-                                WidthRequest="80"
-                                VerticalOptions="Center"
-                                Text="Back"
                                 HorizontalOptions="Start"
-                                Command="{Binding BackCommand}">
-                        </Button>
-                        <Label Text="Search Database"
-                               Margin="10"
-                               HeightRequest="40"
-                               Style="{DynamicResource PageHeaderLabel}"
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Back"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
+
+                        <Label Margin="10"
                                FontAttributes="Bold"
+                               HeightRequest="40"
+                               HorizontalOptions="CenterAndExpand"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               Text="Search Database"
                                VerticalOptions="Center"
-                               VerticalTextAlignment="Center"
-                               HorizontalOptions="CenterAndExpand" />
+                               VerticalTextAlignment="Center" />
                     </Grid>
-                    <StackLayout  Orientation="Horizontal" Margin="10">
-                        <Entry Placeholder="Search Text"
+                    
+                    <StackLayout Margin="10" Orientation="Horizontal">
+                        <Entry Margin="10"
                                HeightRequest="50"
                                HorizontalOptions="FillAndExpand"
-                               TextColor="Black"
+                               Placeholder="Search Text"
                                PlaceholderColor="WhiteSmoke"
-                               Margin="10"
-                               Text="{Binding SearchText}">
-                        </Entry>
-                        <Button Text="Search"
-                    Command="{Binding SearchCommand}"
-                    Style="{DynamicResource DarkColoredButton}"
-                    Margin="5"
-                    CornerRadius="10"
-                    HeightRequest="60"
-                    FontSize="20" />
+                               Text="{Binding SearchText}"
+                               TextColor="Black" />
+                        
+                        <Button Margin="5"
+                                Command="{Binding SearchCommand}"
+                                CornerRadius="10"
+                                FontSize="20"
+                                HeightRequest="60"
+                                Style="{DynamicResource DarkColoredButton}"
+                                Text="Search" />
                     </StackLayout>
                 </StackLayout>
             </Frame>
-            <!-- http://www.compliancestudio.io/blog/xamarin-forms-expandable-listview Update -->
-            <ListView Margin="30"
-                      IsGroupingEnabled="True"
-                      ItemsSource="{Binding DocumentGroups}">
-                <ListView.GroupHeaderTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout HeightRequest="60"
-                                         BackgroundColor="{DynamicResource BackgroundSmokeColor}"
-                                         VerticalOptions="Center"
-                                         x:DataType="vms:DocumentGroupViewModel">
-                                <Label Text="{Binding GroupName}"
-                                       HeightRequest="60"
-                                       VerticalTextAlignment="Center"
-                                       Margin="15,0"
-                                       VerticalOptions="Center"
-                                       FontAttributes="Bold"
-                                       FontSize="Medium"
-                                       TextColor="Black" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.GroupHeaderTemplate>
+
+            <ListView Style="{StaticResource DocumentListView}"
+                      CachingStrategy="RecycleElementAndDataTemplate"
+                      IsGroupingEnabled="False"
+                      ItemsSource="{Binding SearchResults}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout x:DataType="vms:DocumentViewModel">
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                          CommandParameter="{Binding .}" />
-                                </StackLayout.GestureRecognizers>
-                                <Frame Margin="20,0,0,0"
-                                       HasShadow="False">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding DocumentId}"
-                                               TextColor="Black"
-                                               VerticalTextAlignment="Center"
-                                               Style="{DynamicResource DatabaseSummaryLabel}"
-                                               VerticalOptions="Center" />
-                                    </StackLayout>
-                                </Frame>
-                            </StackLayout>
+
+                            <Label Margin="30,10"
+                                   x:DataType="vms:DocumentModel"
+                                   FontSize="18"
+                                   Text="{Binding DocumentId}"
+                                   TextColor="Black"
+                                   VerticalOptions="Center"
+                                   VerticalTextAlignment="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-           
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

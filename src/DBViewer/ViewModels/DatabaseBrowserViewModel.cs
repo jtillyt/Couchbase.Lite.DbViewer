@@ -1,4 +1,5 @@
 using Dawn;
+using DbViewer.Extensions;
 using DbViewer.Models;
 using DbViewer.Services;
 using DbViewer.Views;
@@ -27,7 +28,7 @@ namespace DbViewer.ViewModels
         private string[] _possibleSplitDelims = { "::", "_" };
 
         private CachedDatabaseItemViewModel _currentDatabaseItemViewModel;
-        private ReadOnlyObservableCollection<DocumentGroupModel> _documents;
+        private ReadOnlyObservableCollection<DocumentGroupViewModel> _documents;
 
         private readonly ISourceCache<DocumentModel, string> _documentCache =
             new SourceCache<DocumentModel, string>(x => x.DocumentId);
@@ -77,7 +78,7 @@ namespace DbViewer.ViewModels
                 .Subscribe(x =>
                 {
                     var docs = x.Database.ActiveConnection.ListAllDocumentIds(true);
-                    var docVms = docs.Select(docId => new DocumentModel(docId));
+                    var docVms = docs.Select(docId => new DocumentModel(x.Database, docId));
 
                     FindGroupChar(docs.Take(10));
 
@@ -99,9 +100,9 @@ namespace DbViewer.ViewModels
                 .Filter(filterChanged)
                 .Group(x => GetGroupNameFromDocumentId(x.DocumentId, _splitChars))
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Transform(x => new DocumentGroupModel(x, x.Key))
+                .Transform(x => new DocumentGroupViewModel(x, x.Key))
                 .Bind(out _documents)
-                //.LogManagedThread("Browser - After Bind")
+                .LogManagedThread("Browser - After Bind")
                 .Subscribe()
                 .DisposeWith(Disposables);
 
@@ -174,15 +175,7 @@ namespace DbViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _splitChars, value);
         }
 
-        private ObservableCollection<DocumentGroupViewModel> _documentGroups;
-
-        public ObservableCollection<DocumentGroupViewModel> DocumentGroups
-        {
-            get => _documentGroups;
-            set => this.RaiseAndSetIfChanged(ref _documentGroups, value);
-        }
-
-        public ReadOnlyObservableCollection<DocumentGroupModel> Documents => _documents;
+        public ReadOnlyObservableCollection<DocumentGroupViewModel> Documents => _documents;
 
         public CachedDatabaseItemViewModel CurrentDatabaseItemViewModel
         {
@@ -244,7 +237,7 @@ namespace DbViewer.ViewModels
 
         private Task ExecuteViewDatabaseSearch()
         {
-            var documentsToSearch = DocumentGroups.SelectMany(dg => dg.Select(d => d.DocumentId));
+            var documentsToSearch = Documents.SelectMany(dg => dg.Select(d => d.DocumentId));
             var navParams = new NavigationParameters
             {
                 { nameof(CachedDatabaseItemViewModel), CurrentDatabaseItemViewModel },

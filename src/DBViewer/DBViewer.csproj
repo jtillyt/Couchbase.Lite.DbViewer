@@ -57,26 +57,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\CachedDatabaseListPage.xaml.cs">
-      <DependentUpon>CachedDatabaseListPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\DatabaseSearchPage.xaml.cs">
-      <DependentUpon>DatabaseSearchPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\DocumentViewerPage.xaml.cs">
-      <DependentUpon>DocumentViewerPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\DatabaseBrowserPage.xaml.cs">
-      <DependentUpon>DatabaseBrowserPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\HubPage.xaml.cs">
-      <DependentUpon>HubPage.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Views\HubPage.xaml">
+    <EmbeddedResource Update="Themes\Styles.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
+
 </Project>

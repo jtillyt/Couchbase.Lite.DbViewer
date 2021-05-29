@@ -2,12 +2,14 @@ using Dawn;
 using DbViewer.Models;
 using DynamicData;
 using DynamicData.Binding;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 
 namespace DbViewer.ViewModels
 {
@@ -77,8 +79,11 @@ namespace DbViewer.ViewModels
             grouping
                 .Cache
                 .Connect()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .SubscribeOn(RxApp.MainThreadScheduler)
                 .Sort(_comparer)
                 .Bind(this)
+                //.LogManagedThread("Group - AfterBind")
                 .Subscribe()
                 .DisposeWith(_compositeDisposable);
         }

@@ -12,6 +12,7 @@
             <Frame
                 Margin="0,-20,0,0"
                 Padding="5,30"
+                VerticalOptions="Start"
                 BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                 CornerRadius="20"
                 HasShadow="False"
@@ -60,36 +61,35 @@
                             Margin="10"
                             HeightRequest="50"
                             HorizontalOptions="FillAndExpand"
-                            Placeholder="Filter {Comma,Separated,Values}"
                             PlaceholderColor="Gray"
+                            Placeholder="Filter {Comma,Separated,Values}"
                             Text="{Binding FilterText}"
                             TextColor="Black" />
-                        <!--  Grouping/filtering broken in ios xam formsS  -->
-                        <Entry
-                            Margin="10"
-                            HeightRequest="50"
-                            HorizontalOptions="End"
-                            IsEnabled="False"
-                            IsVisible="False"
-                            Placeholder="Group Chars"
-                            PlaceholderColor="Gray"
-                            Text="{Binding SplitChars}" />
                     </StackLayout>
                 </StackLayout>
             </Frame>
 
-            <CollectionView
-                Margin="30"
-                IsGrouped="True"
-                ItemsSource="{Binding Documents}">
-                <CollectionView.GroupHeaderTemplate>
+            <ListView
+                Margin="50,30"
+                HorizontalOptions="FillAndExpand"
+                HasUnevenRows="False"
+                ItemsSource="{Binding Documents}"
+                IsPullToRefreshEnabled="False"
+                IsGroupingEnabled="True"
+                CachingStrategy="RetainElement"
+                IsRefreshing="False"
+                SelectionMode="None"
+                SeparatorVisibility="None">
+                <ListView.GroupHeaderTemplate>
                     <DataTemplate>
-                        <StackLayout
+                        <ViewCell>
+
+                            <StackLayout
                             x:DataType="vms:DocumentGroupModel"
                             BackgroundColor="{DynamicResource BackgroundSmokeColor}"
                             HeightRequest="60"
                             VerticalOptions="Center">
-                            <Label
+                                <Label
                                 Margin="15,0"
                                 FontAttributes="Bold"
                                 FontSize="Medium"
@@ -98,38 +98,39 @@
                                 TextColor="Black"
                                 VerticalOptions="Center"
                                 VerticalTextAlignment="Center" />
-                        </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
-                </CollectionView.GroupHeaderTemplate>
-                <CollectionView.ItemTemplate>
+                </ListView.GroupHeaderTemplate>
+                <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout x:DataType="vms:DocumentModel">
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
-                            </StackLayout.GestureRecognizers>
-                            <Frame Margin="20,0,0,0" HasShadow="False">
-                                <StackLayout Orientation="Horizontal">
-                                    <Label
-                                        Style="{DynamicResource DatabaseSummaryLabel}"
-                                        Text="{Binding DocumentId}"
-                                        TextColor="Black"
-                                        VerticalOptions="Center"
-                                        VerticalTextAlignment="Center" />
-                                </StackLayout>
-                            </Frame>
-                        </StackLayout>
+                        <ViewCell>
+                            <Label
+                                Margin="30,0"
+                                x:DataType="vms:DocumentModel"
+                                FontSize="18"
+                                Text="{Binding DocumentId}"
+                                TextColor="Black"
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </ViewCell>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ListView.ItemTemplate>
+            </ListView>
 
-            <Button
+            <!--<Button
                 Margin="5"
                 Command="{Binding ReloadCommand}"
                 CornerRadius="10"
                 FontSize="24"
                 HeightRequest="60"
+                IsEnabled="False"
                 Style="{DynamicResource DarkColoredButton}"
-                Text="Reload" />
+                Text="Reload" />-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

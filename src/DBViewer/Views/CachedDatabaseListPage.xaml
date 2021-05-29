@@ -50,6 +50,7 @@
                                         <Label Text="{Binding DisplayName}"
                                            FontAttributes="Bold"
                                            FontSize="Large"
+                                           HorizontalOptions="Start"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            VerticalTextAlignment="Center"
                                            VerticalOptions="Center" />
@@ -69,8 +70,8 @@
                                            VerticalOptions="Center" />-->
                                     </StackLayout>
                                     <StackLayout Orientation="Horizontal" VerticalOptions="Center" Margin="10">
-                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center"  HorizontalOptions="StartAndExpand">
-                                        <Label Text="Hub: "
+                                        <StackLayout Orientation="Horizontal" VerticalOptions="Center"  HorizontalOptions="StartAndExpand">
+                                            <Label Text="Hub: "
                                            HorizontalOptions="Start"
                                            VerticalTextAlignment="Center"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
@@ -80,19 +81,19 @@
                                            VerticalTextAlignment="Center"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            VerticalOptions="Center" />
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center"  HorizontalOptions="EndAndExpand">
-                                        <Label Text="Updated: "
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal" VerticalOptions="Center"  HorizontalOptions="EndAndExpand">
+                                            <Label Text="Updated: "
                                            HorizontalOptions="Start"
                                            VerticalTextAlignment="Center"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            VerticalOptions="Center" />
-                                        <Label Text="{Binding DownloadTime}"
+                                            <Label Text="{Binding DownloadTime}"
                                            HorizontalOptions="Start"
                                            VerticalTextAlignment="Center"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            VerticalOptions="Center" />
-                                    </StackLayout>
+                                        </StackLayout>
                                     </StackLayout>
                                 </StackLayout>
                             </Frame>

@@ -43,9 +43,9 @@ namespace DbViewer.Services
             return true;
         }
 
-        public List<string> ListAllDocumentIds()
+        public List<string> ListAllDocumentIds(bool sort = false)
         {
-            var documentIds = GetAllDocumentsIds(_database);
+            var documentIds = GetAllDocumentsIds(_database, sort);
 
             if (documentIds == null)
                 return new List<string>();
@@ -53,18 +53,25 @@ namespace DbViewer.Services
             return documentIds.ToList();
         }
 
-        private IEnumerable<string> GetAllDocumentsIds(Database db)
+        private IEnumerable<string> GetAllDocumentsIds(Database db, bool sort = false)
         {
            if (_database == null)
             {
                 return Enumerable.Empty<string>();
             }
 
-            return QueryBuilder
+            var docIds = QueryBuilder
                 .Select((ISelectResult)SelectResult.Expression(Meta.ID),
                     (ISelectResult)SelectResult.Property("Type")).From(DataSource.Database(db)).Execute()
                 .Select(i => i.GetString("id"))
                 .Where(docId => docId != null).ToList();
+
+            if (sort)
+            {
+                docIds.Sort();
+            }
+
+            return docIds;
         }
 
         public Document GetDocumentById(string id)

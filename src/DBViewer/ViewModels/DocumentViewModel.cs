@@ -2,8 +2,8 @@
 using Dawn;
 using DbViewer.Models;
 using ReactiveUI;
-using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DbViewer.ViewModels
 {
@@ -11,8 +11,7 @@ namespace DbViewer.ViewModels
     {
         private string _documentId;
 
-        public DocumentViewModel(DocumentGroupViewModel groupViewModel, CachedDatabase database,
-            string documentId)
+        public DocumentViewModel(DocumentGroupViewModel groupViewModel, CachedDatabase database, string documentId)
         {
             GroupViewModel = Guard.Argument(groupViewModel, nameof(groupViewModel))
                   .NotNull()
@@ -39,7 +38,7 @@ namespace DbViewer.ViewModels
         }
     }
 
-    public class DocumentModel : ReactiveObject
+    public class DocumentModel : INotifyPropertyChanged
     {
         private string _documentId;
 
@@ -51,7 +50,22 @@ namespace DbViewer.ViewModels
         public string DocumentId
         {
             get => _documentId;
-            set => this.RaiseAndSetIfChanged(ref _documentId, value, nameof(DocumentId));
+            set
+            {
+                if (_documentId != value)
+                {
+                    _documentId = value;
+                    
+                    OnPropertyChanged(nameof(DocumentId));
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public class Comparer : IComparer<DocumentModel>

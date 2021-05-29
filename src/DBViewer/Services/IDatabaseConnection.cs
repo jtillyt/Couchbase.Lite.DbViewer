@@ -8,7 +8,7 @@ namespace DbViewer.Services
         bool IsConnected { get; }
 
         bool Connect(string dbDirectory, string dbName);
-        List<string> ListAllDocumentIds();
+        List<string> ListAllDocumentIds(bool sort = false);
         Document GetDocumentById(string id);
         bool Disconnect();
     }

@@ -6,11 +6,11 @@
              x:Class="DbViewer.Views.DocumentViewerPage">
     <ContentPage.Content>
         <Grid RowDefinitions="140,*,60" BackgroundColor="White">
-            <Frame Margin="0,-20,0,0"
+            <Frame Margin="0,-30,0,0"
                    Grid.Row="0"
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    Padding="10,30"
-                   CornerRadius="20"
+                   CornerRadius="30"
                    HasShadow="False">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
                     <Grid HeightRequest="80">
@@ -23,7 +23,7 @@
                                 Command="{Binding BackCommand}">
                         </Button>
                         <Label Text="Document Viewer"
-                               Margin="10"
+                               Margin="10,0,10,10"
                                Style="{DynamicResource PageHeaderLabel}"
                                FontAttributes="Bold"
                                VerticalOptions="Center"

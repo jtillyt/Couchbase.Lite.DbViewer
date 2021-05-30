@@ -1,98 +1,105 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage x:Class="DbViewer.Views.CachedDatabaseListPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DbViewer.ViewModels"
              x:DataType="vms:CachedDatabaseListViewModel"
-             BackgroundColor="White"
-             x:Class="DbViewer.Views.CachedDatabaseListPage">
+             BackgroundColor="White">
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
             <Frame Margin="0,-20,0,0"
-                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    Padding="30"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    CornerRadius="20"
                    HasShadow="False">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
                     <Grid HeightRequest="80">
-                        <Label Text="Local Databases"
-                               Margin="10"
-                               Style="{DynamicResource PageHeaderLabel}"
+                        <Label Margin="10"
                                FontAttributes="Bold"
-                               VerticalOptions="Start"
-                               HorizontalOptions="CenterAndExpand" />
-                        <Button Style="{DynamicResource HeaderButton}"
-                                WidthRequest="60"
-                                Text="Hubs"
+                               HorizontalOptions="CenterAndExpand"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               Text="Local Databases"
+                               VerticalOptions="Start" />
+                        <Button Command="{Binding ViewHubCommand}"
                                 HorizontalOptions="End"
-                                Command="{Binding ViewHubCommand}">
-                        </Button>
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Hubs"
+                                WidthRequest="60" />
                     </Grid>
-                    <Label Style="{DynamicResource MainBodyLabel}"
-                           Text="Click on one of the databases below to start viewing..."></Label>
+                    <Label Style="{DynamicResource MainBodyLabel}" Text="Click on one of the databases below to start viewing..." />
                 </StackLayout>
             </Frame>
-            <CollectionView Margin="30"
-                            ItemsSource="{Binding CachedDatabases}">
+            <CollectionView Margin="30" ItemsSource="{Binding CachedDatabases}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vms:CachedDatabaseItemViewModel">
                         <StackLayout>
                             <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDatabaseCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                      CommandParameter="{Binding .}" />
+                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDatabaseCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
                             </StackLayout.GestureRecognizers>
-                            <Frame BackgroundColor="{DynamicResource BackgroundSmokeColor}"
-                                   HasShadow="False"
+                            <Frame Margin="0,5"
+                                   BackgroundColor="{DynamicResource BackgroundSmokeColor}"
+                                   Padding="5"
                                    CornerRadius="8"
-                                   HeightRequest="90"
-                                   Margin="0,5">
+                                   HasShadow="False"
+                                   HeightRequest="100">
                                 <StackLayout>
-                                    <StackLayout Orientation="Horizontal" Margin="10">
-                                        <Label Text="{Binding DisplayName}"
-                                           FontAttributes="Bold"
-                                           FontSize="Large"
-                                           HorizontalOptions="Start"
-                                           Style="{DynamicResource DatabaseSummaryLabel}"
-                                           VerticalTextAlignment="Center"
-                                           VerticalOptions="Center" />
-                                        <Button Text="Pull Latest"
+                                    <StackLayout Margin="10" Orientation="Horizontal">
+                                        <Label FontAttributes="Bold"
+                                               FontSize="Large"
+                                               HorizontalOptions="Start"
+                                               Style="{DynamicResource DatabaseSummaryLabel}"
+                                               Text="{Binding DisplayName}"
+                                               VerticalOptions="Center"
+                                               VerticalTextAlignment="Center" />
+                                        <Button BackgroundColor="LightSeaGreen"
                                                 Command="{Binding GetLatestCommand}"
-                                                HeightRequest="30"
-                                                WidthRequest="100"
                                                 CornerRadius="3"
+                                                HeightRequest="40"
+                                                FontSize="Small"
+                                                HorizontalOptions="EndAndExpand"
+                                                Text="Pull Latest"
                                                 TextColor="White"
-                                                BackgroundColor="LightSeaGreen"
-                                                HorizontalOptions="EndAndExpand">
-                                        </Button>
+                                                WidthRequest="140" />
                                         <!--<Label Text=">"
                                            Style="{DynamicResource DatabaseSummaryLabel}"
                                            HorizontalOptions="EndAndExpand"
                                            VerticalTextAlignment="Center"
                                            VerticalOptions="Center" />-->
                                     </StackLayout>
-                                    <StackLayout Orientation="Horizontal" VerticalOptions="Center" Margin="10">
-                                        <StackLayout Orientation="Horizontal" VerticalOptions="Center"  HorizontalOptions="StartAndExpand">
-                                            <Label Text="Hub: "
-                                           HorizontalOptions="Start"
-                                           VerticalTextAlignment="Center"
-                                           Style="{DynamicResource DatabaseSummaryLabel}"
-                                           VerticalOptions="Center" />
-                                            <Label Text="{Binding HubAddress}"
-                                           HorizontalOptions="Start"
-                                           VerticalTextAlignment="Center"
-                                           Style="{DynamicResource DatabaseSummaryLabel}"
-                                           VerticalOptions="Center" />
+                                    <StackLayout Margin="10"
+                                                 Orientation="Horizontal"
+                                                 VerticalOptions="Center">
+                                        <StackLayout HorizontalOptions="StartAndExpand"
+                                                     Orientation="Horizontal"
+                                                     VerticalOptions="Center">
+                                            <Label HorizontalOptions="Start"
+                                                   Style="{DynamicResource DatabaseSummaryLabel}"
+                                                   Text="Hub: "
+                                            FontSize="Small"
+                                                   VerticalOptions="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label HorizontalOptions="Start"
+                                            FontSize="Small"
+                                                   Style="{DynamicResource DatabaseSummaryLabel}"
+                                                   Text="{Binding HubAddress}"
+                                                   VerticalOptions="Center"
+                                                   VerticalTextAlignment="Center" />
                                         </StackLayout>
-                                        <StackLayout Orientation="Horizontal" VerticalOptions="Center"  HorizontalOptions="EndAndExpand">
-                                            <Label Text="Updated: "
-                                           HorizontalOptions="Start"
-                                           VerticalTextAlignment="Center"
-                                           Style="{DynamicResource DatabaseSummaryLabel}"
-                                           VerticalOptions="Center" />
-                                            <Label Text="{Binding DownloadTime}"
-                                           HorizontalOptions="Start"
-                                           VerticalTextAlignment="Center"
-                                           Style="{DynamicResource DatabaseSummaryLabel}"
-                                           VerticalOptions="Center" />
+                                        <StackLayout HorizontalOptions="EndAndExpand"
+                                                     Orientation="Horizontal"
+                                                     VerticalOptions="Center">
+                                            <Label HorizontalOptions="Start"
+                                                   Style="{DynamicResource DatabaseSummaryLabel}"
+                                                   Text="Updated: "
+                                            FontSize="Small"
+                                                   VerticalOptions="Center"
+                                                   VerticalTextAlignment="Center" />
+                                            <Label HorizontalOptions="Start"
+                                                   Style="{DynamicResource DatabaseSummaryLabel}"
+                                            FontSize="Small"
+                                                   Text="{Binding DownloadTime}"
+                                                   VerticalOptions="Center"
+                                                   VerticalTextAlignment="Center" />
                                         </StackLayout>
                                     </StackLayout>
                                 </StackLayout>
@@ -101,13 +108,13 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Button Text="Reload"
+            <Button Margin="5"
                     Command="{Binding ReloadCommand}"
-                    Style="{DynamicResource DarkColoredButton}"
-                    Margin="5"
                     CornerRadius="10"
+                    FontSize="24"
                     HeightRequest="60"
-                    FontSize="24" />
+                    Style="{DynamicResource DarkColoredButton}"
+                    Text="Reload" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

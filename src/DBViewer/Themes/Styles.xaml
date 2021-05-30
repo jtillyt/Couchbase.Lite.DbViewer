@@ -1,18 +1,35 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                    x:Class="DbViewer.Themes.Styles">
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary x:Class="DbViewer.Themes.Styles"
+                    xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Color x:Key="HeaderTextColor">#585858</Color>
     <Color x:Key="BodyTextColor">#C3C3C3</Color>
     <Color x:Key="BackgroundSmokeColor">#FFEEEEEE</Color>
     <Color x:Key="BackgroundColor">White</Color>
 
+    <Color x:Key="LightestText">White</Color>
+    <Color x:Key="DarkestText">#000000</Color>
+
     <Color x:Key="ColoredCardHeaderTextColor">White</Color>
+    <Color x:Key="ColoredBackgroundLightestColor">#a2f6ec</Color>
     <Color x:Key="ColoredBackgroundLightColor">#0D8B7C</Color>
     <Color x:Key="ColoredBackgroundMediumColor">#0A655A</Color>
     <Color x:Key="ColoredBackgroundDarkColor">#08574E</Color>
     <Color x:Key="ColoredBackgroundDarkerColor">#000A09</Color>
+
+
+    <OnPlatform x:Key="HeaderEntryTextColor" x:TypeArguments="Color">
+        <On Platform="iOS" Value="{StaticResource DarkestText}" />
+        <On Platform="UWP" Value="{StaticResource DarkestText}" />
+        <On Platform="Android" Value="{StaticResource LightestText}" />
+    </OnPlatform>
+
+    <OnPlatform x:Key="HeaderEntryTextHintColor" x:TypeArguments="Color">
+        <On Platform="iOS" Value="{StaticResource DarkestText}" />
+        <On Platform="UWP" Value="{StaticResource DarkestText}" />
+        <On Platform="Android" Value="{StaticResource ColoredBackgroundLightestColor}" />
+    </OnPlatform>
 
     <!--  font families  -->
     <OnPlatform x:Key="RegularFontFamily" x:TypeArguments="x:String">
@@ -41,7 +58,7 @@
     <!--  styles  -->
     <Style x:Key="PageHeaderLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource ColoredCardHeaderTextColor}" />
-        <Setter Property="FontFamily" Value="{StaticResource RegularFontFamily }" />
+        <Setter Property="FontFamily" Value="{StaticResource RegularFontFamily}" />
         <Setter Property="FontSize" Value="{StaticResource TitleFontSize}" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
@@ -68,31 +85,42 @@
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
+    <Style x:Key="HeaderEntry" TargetType="Entry">
+        <Setter Property="FontFamily" Value="{StaticResource RegularFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="Margin" Value="40,10,40,0"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource HeaderEntryTextHintColor}" />
+        <Setter Property="TextColor" Value="{DynamicResource HeaderEntryTextColor}"/>
+    </Style>
+
     <Style x:Key="DarkColoredButton" TargetType="Button">
-        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="BackgroundColor" Value="{StaticResource ColoredBackgroundDarkColor}" />
         <Setter Property="TextColor" Value="White" />
-        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="HeightRequest" Value="50" />
         <Setter Property="BorderRadius" Value="20" />
         <Setter Property="FontFamily" Value="{StaticResource MediumFontFamily}" />
         <Setter Property="FontSize" Value="{StaticResource ButtonFontSize}" />
     </Style>
 
     <Style x:Key="HeaderButton" TargetType="Button">
-        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="BackgroundColor" Value="{StaticResource ColoredBackgroundDarkColor}" />
         <Setter Property="TextColor" Value="White" />
         <Setter Property="HeightRequest" Value="40" />
         <Setter Property="BorderRadius" Value="20" />
-        <Setter Property="CornerRadius" Value="4"/>
-        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="FontFamily" Value="{StaticResource MediumFontFamily}" />
         <Setter Property="FontSize" Value="{StaticResource ButtonFontSize}" />
     </Style>
 
     <Style x:Key="DocumentListView" TargetType="ListView">
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-        <Setter Property="Margin" Value="30,20" />
+        <Setter Property="Margin" Value="20,10" />
         <Setter Property="HasUnevenRows" Value="False" />
         <Setter Property="IsPullToRefreshEnabled" Value="False" />
         <Setter Property="IsRefreshing" Value="False" />
@@ -101,11 +129,11 @@
     </Style>
 
     <Style x:Key="DocumentListViewItem" TargetType="Label">
-        <Setter Property="Margin" Value="30,10"/>
-        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Margin" Value="30,10" />
+        <Setter Property="FontSize" Value="18" />
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
-        
+
     </Style>
 </ResourceDictionary>

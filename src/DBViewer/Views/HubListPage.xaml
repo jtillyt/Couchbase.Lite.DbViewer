@@ -41,7 +41,7 @@
                     <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
                         <Entry Margin="10,10"
                                HorizontalOptions="StartAndExpand"
-                               MinimumWidthRequest="50"
+                               MinimumWidthRequest="100"
                                Placeholder="Example: http://192.168.1.1:5020"
                                Style="{StaticResource HeaderEntry}"
                                Text="{Binding HubAddress}" />

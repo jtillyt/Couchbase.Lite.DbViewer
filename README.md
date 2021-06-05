@@ -15,6 +15,7 @@ Couchbase is not available on all platforms such as MacOS. This means that we ca
 ## Goals
 - [x] Read Couchbase.Lite DBs
 - [x] Provide Hub for receiving databases from remote systems
+- [x] Add/Remove Edit Database Scanners from client
 - [ ] Allow creation of new database
 - [ ] Allow update of database records 
 - [ ] Add Hub functionality to add/overrwrite database remotely
@@ -41,11 +42,11 @@ Couchbase is not available on all platforms such as MacOS. This means that we ca
   The hub is the central point that apps can send their DBs to for other clients to share. They can also be used to scan the local machine for databases.  The hub is a super simple http server that serves the couchbase files.
   
   Platforms such as Linux and Mac are not able to open Couchbase.Lite databases at the time of this writing.  Using the hub to send the Couchbase databases to a platform that can is a common use case.
-### [Set up Hub](https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/SettingUpHub.md)
+### [Set up Hub](/media/docs/SettingUpHub.md)
 <br>
 
 ## Client
   The clients do most of the real work. The databases are parsed using the CouchbaseLite SDK available for Windows, Android and iOS. 
-### [Using the Client](https://github.com/jaytilly/Couchbase.Lite.DbViewer/blob/main/media/docs/UsingClient.md)
+### [Using the Client](media/docs/UsingClient.md)
 
 

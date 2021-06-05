@@ -29,6 +29,7 @@ namespace DbViewer.ViewModels
 
             var dateTime = Database.DownloadTime.DateTime;
             DownloadTime = GetDownloadTimeString(dateTime);
+
             GetLatestCommand = ReactiveCommand.CreateFromTask(ExecuteGetLatest);
         }
 
@@ -61,8 +62,7 @@ namespace DbViewer.ViewModels
         {
             var remoteInfo = Database.RemoteDatabaseInfo;
 
-            _hubService.EnsureConnection(remoteInfo.RequestAddress);
-            var result = await _hubService.DownloadDatabaseAsync(remoteInfo);
+            var result = await _hubService.DownloadDatabaseAsync(remoteInfo.RequestAddress, remoteInfo);
 
             if (result.WasSuccesful)
             {
@@ -82,5 +82,7 @@ namespace DbViewer.ViewModels
         {
             return cachedDatabase?.RemoteDatabaseInfo?.RequestAddress?.Host ?? "Unknown";
         }
+
+       
     }
 }

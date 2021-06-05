@@ -7,8 +7,8 @@ namespace DbViewer.Services
 {
     public interface IDatabaseCacheService
     {
-        void Cleanup(CacheRegistry cacheRegistry);
-        Task<CacheRegistry> GetRegistry();
+        void Cleanup(CachedDatabaseRegistry cacheRegistry);
+        Task<CachedDatabaseRegistry> GetRegistry();
         Task SaveFromStream(Stream databaseDownloadStream, DatabaseInfo databaseInfo);
     }
 }

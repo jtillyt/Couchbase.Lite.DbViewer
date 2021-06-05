@@ -59,48 +59,4 @@ namespace DbViewer.ViewModels
             }
         }
     }
-
-    //public class DocumentModel : INotifyPropertyChanged
-    //{
-    //    private string _documentId;
-
-    //    public DocumentModel(string id)
-    //    {
-    //        _documentId = id;
-    //    }
-
-    //    public string DocumentId
-    //    {
-    //        get => _documentId;
-    //        set
-    //        {
-    //            if (_documentId != value)
-    //            {
-    //                _documentId = value;
-
-    //                OnPropertyChanged(nameof(DocumentId));
-    //            }
-    //        }
-    //    }
-
-    //    public event PropertyChangedEventHandler PropertyChanged;
-
-    //    private void OnPropertyChanged(string propertyName)
-    //    {
-    //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    //    }
-
-    //    public class Comparer : IComparer<DocumentModel>
-    //    {
-    //        public int Compare(DocumentModel x, DocumentModel y)
-    //        {
-    //            if (x.DocumentId == null || y.DocumentId == null)
-    //            {
-    //                return 0;
-    //            }
-
-    //            return string.Compare(x.DocumentId, y.DocumentId, true);
-    //        }
-    //    }
-    //}
 }

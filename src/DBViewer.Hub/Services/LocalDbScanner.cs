@@ -1,51 +1,57 @@
-﻿using DbViewer.Shared;
-using Microsoft.Extensions.Configuration;
+﻿using Dawn;
+using DbViewer.Shared;
+using DbViewer.Shared.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DbViewer.Hub.Services
 {
-    public class LocalDbScanner : IDbScanner
+    [ServiceType("Local Directory Scanner", "local-directory-scanner")]
+    public class LocalDbScanner : IDbScanner, IService
     {
-        private const string RootConfig_ConfigKey = "LocalDbScannerOptions";
         private const string LocalPath_ConfigKey = "LocalDbDirectory";
 
-        private readonly IConfigurationSection _configSection;
         private readonly ILogger<LocalDbScanner> _logger;
-        private readonly string _path;
+        private ServiceInfo _serviceInfo;
 
-        public LocalDbScanner(IConfiguration configuration, ILogger<LocalDbScanner> logger)
+        public LocalDbScanner(ILogger<LocalDbScanner> logger)
         {
-            if (configuration is null)
-            {
-                throw new System.ArgumentNullException(nameof(configuration));
-            }
-
             _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
-
-            _configSection = configuration.GetSection(RootConfig_ConfigKey);
-
-            _path = _configSection[LocalPath_ConfigKey];
         }
+
+        public void InitiateService(ServiceInfo serviceInfo)
+        {
+            _serviceInfo = Guard.Argument(serviceInfo)
+                                .NotNull()
+                                .Value;
+
+            _logger.LogInformation($"Initiating service {serviceInfo.ServiceName} of type {serviceInfo.ServiceTypeId}");
+
+            LocalDirectory = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == LocalPath_ConfigKey)?.Value;
+        }
+
+        [ServiceProperty(LocalPath_ConfigKey, "Local Scan Directory", "TestDatabase", "This is the path to root directory that contains Couchbase Lite database directories.")]
+        public string LocalDirectory { get; set; }
 
         public IEnumerable<DatabaseInfo> Scan()
         {
             var list = new List<DatabaseInfo>();
 
-            _logger.LogInformation($"DBRoot dir: {_path}");
+            _logger.LogInformation($"DBRoot dir: {LocalDirectory}");
 
-            if (!Directory.Exists(_path))
+            if (!Directory.Exists(LocalDirectory))
                 return list;
 
-            foreach (var dir in Directory.GetDirectories(_path))
+            foreach (var dir in Directory.GetDirectories(LocalDirectory))
             {
-               list.Add(new DatabaseInfo()
-               {
+                list.Add(new DatabaseInfo()
+                {
                     DisplayDatabaseName = Path.GetFileNameWithoutExtension(dir),
                     FullDatabaseName = Path.GetFileName(dir),
-                    RemoteRootDirectory = _path
-               }); 
+                    RemoteRootDirectory = LocalDirectory
+                });
             }
 
             return list;

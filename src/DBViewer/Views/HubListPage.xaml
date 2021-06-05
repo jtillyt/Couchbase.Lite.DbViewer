@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="DbViewer.Views.HubListPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vms="clr-namespace:DbViewer.ViewModels"
+             x:DataType="vms:HubListViewModel"
+             BackgroundColor="White">
+    <ContentPage.Content>
+
+        <StackLayout BackgroundColor="white">
+
+            <Frame Margin="0,-20,0,0"
+                   Padding="5,30"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                   CornerRadius="20"
+                   HasShadow="False">
+
+                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+
+                    <Grid HeightRequest="80">
+                        <Button Command="{Binding BackCommand}"
+                                HeightRequest="40"
+                                HorizontalOptions="Start"
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Back"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
+
+                        <Label Margin="5"
+                               FontAttributes="Bold"
+                               HeightRequest="40"
+                               HorizontalOptions="CenterAndExpand"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               Text="Hubs"
+                               VerticalOptions="Start"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+
+                    <Label Style="{DynamicResource MainBodyLabel}" Text="Connect to hubs to download and view CB Lite DBs." />
+
+                    <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                        <Entry Margin="10,10"
+                               HorizontalOptions="StartAndExpand"
+                               MinimumWidthRequest="50"
+                               Placeholder="Example: http://192.168.1.1:5020"
+                               Style="{StaticResource HeaderEntry}"
+                               Text="{Binding HubAddress}" />
+
+                        <Button Margin="0,0,0,0"
+                                Command="{Binding AddHubCommand}"
+                                FontAttributes="Bold"
+                                HeightRequest="50"
+                                HorizontalOptions="End"
+                                Style="{DynamicResource DarkColoredButton}"
+                                Text="Add"
+                                VerticalOptions="Center"
+                                WidthRequest="120" />
+                    </StackLayout>
+
+                </StackLayout>
+            </Frame>
+
+            <CollectionView Margin="30"
+                            BackgroundColor="White"
+                            ItemsSource="{Binding KnownHubs}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vms:HubItemViewModel">
+                        <Frame HasShadow="False" HorizontalOptions="FillAndExpand" 
+                               BackgroundColor="{StaticResource BackgroundSmokeColor}" 
+                               CornerRadius="6">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedHubCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+                            <StackLayout Orientation="Vertical">
+                                <Label Style="{DynamicResource ListItemMainLabel}"
+                                           Text="{Binding DisplayName}"
+                                           VerticalOptions="Center" />
+                                <Label Style="{DynamicResource ListItemMainLabel}"
+                                           Text="{Binding HostAddress}"
+                                           VerticalOptions="Center" 
+                                           FontSize="Small" />
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Margin="5"
+                    Command="{Binding ReloadHubsCommand}"
+                    CornerRadius="10"
+                    FontSize="24"
+                    HeightRequest="60"
+                    Style="{DynamicResource DarkColoredButton}"
+                    Text="Reload" />
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

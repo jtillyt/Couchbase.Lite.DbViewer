@@ -64,7 +64,7 @@ namespace DbViewer.ViewModels
             OnCacheReceived(registry);
         }
 
-        private void OnCacheReceived(CacheRegistry cacheRegistry)
+        private void OnCacheReceived(CachedDatabaseRegistry cacheRegistry)
         {
             RunOnUi(
             () =>
@@ -78,9 +78,9 @@ namespace DbViewer.ViewModels
             });
         }
 
-        private async Task ExecuteViewHubAsync() { await NavigationService.NavigateAsync(nameof(HubPage)); }
+        private Task ExecuteViewHubAsync() => NavigationService.NavigateAsync(nameof(HubListPage));
 
-        private async Task ExecuteViewSelectedDatabase(CachedDatabaseItemViewModel cachedDatabaseItemViewModel)
+        private Task ExecuteViewSelectedDatabase(CachedDatabaseItemViewModel cachedDatabaseItemViewModel)
         {
             var navParams = new NavigationParameters
                             {
@@ -90,7 +90,7 @@ namespace DbViewer.ViewModels
                                 }
                             };
 
-            await NavigationService.NavigateAsync(nameof(DatabaseBrowserPage), navParams);
+            return NavigationService.NavigateAsync(nameof(DatabaseBrowserPage), navParams);
         }
     }
 }

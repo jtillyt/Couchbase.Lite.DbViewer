@@ -86,13 +86,17 @@ namespace DbViewer.ViewModels
             return Task.Run(() =>
             {
                 if (CurrentDatabaseItemViewModel == null)
+                {
                     return;
+                }
 
                 var database = CurrentDatabaseItemViewModel.Database;
                 var isConnected = database.Connect();
 
                 if (!isConnected)
+                {
                     return;
+                }
 
                 var connection = database.ActiveConnection;
 
@@ -121,14 +125,14 @@ namespace DbViewer.ViewModels
             });
         }
 
-        private async Task ExecuteViewSelectedDocument(DocumentModel document)
+        private Task ExecuteViewSelectedDocument(DocumentModel document)
         {
             var navParams = new NavigationParameters
             {
                 { nameof(DocumentModel), document }
             };
 
-            await NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
+            return NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
         }
     }
 }

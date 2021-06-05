@@ -24,7 +24,7 @@
                                 HorizontalOptions="End"
                                 Style="{DynamicResource HeaderButton}"
                                 Text="Hubs"
-                                WidthRequest="60" />
+                                WidthRequest="70" />
                     </Grid>
                     <Label Style="{DynamicResource MainBodyLabel}" Text="Click on one of the databases below to start viewing..." />
                 </StackLayout>
@@ -47,7 +47,7 @@
                                         <Label FontAttributes="Bold"
                                                FontSize="Large"
                                                HorizontalOptions="Start"
-                                               Style="{DynamicResource DatabaseSummaryLabel}"
+                                               Style="{DynamicResource ListItemMainLabel}"
                                                Text="{Binding DisplayName}"
                                                VerticalOptions="Center"
                                                VerticalTextAlignment="Center" />
@@ -61,7 +61,7 @@
                                                 TextColor="White"
                                                 WidthRequest="140" />
                                         <!--<Label Text=">"
-                                           Style="{DynamicResource DatabaseSummaryLabel}"
+                                           Style="{DynamicResource ListItemMainLabel}"
                                            HorizontalOptions="EndAndExpand"
                                            VerticalTextAlignment="Center"
                                            VerticalOptions="Center" />-->
@@ -73,14 +73,14 @@
                                                      Orientation="Horizontal"
                                                      VerticalOptions="Center">
                                             <Label HorizontalOptions="Start"
-                                                   Style="{DynamicResource DatabaseSummaryLabel}"
+                                                   Style="{DynamicResource ListItemMainLabel}"
                                                    Text="Hub: "
                                             FontSize="Small"
                                                    VerticalOptions="Center"
                                                    VerticalTextAlignment="Center" />
                                             <Label HorizontalOptions="Start"
                                             FontSize="Small"
-                                                   Style="{DynamicResource DatabaseSummaryLabel}"
+                                                   Style="{DynamicResource ListItemMainLabel}"
                                                    Text="{Binding HubAddress}"
                                                    VerticalOptions="Center"
                                                    VerticalTextAlignment="Center" />
@@ -89,13 +89,13 @@
                                                      Orientation="Horizontal"
                                                      VerticalOptions="Center">
                                             <Label HorizontalOptions="Start"
-                                                   Style="{DynamicResource DatabaseSummaryLabel}"
+                                                   Style="{DynamicResource ListItemMainLabel}"
                                                    Text="Updated: "
                                             FontSize="Small"
                                                    VerticalOptions="Center"
                                                    VerticalTextAlignment="Center" />
                                             <Label HorizontalOptions="Start"
-                                                   Style="{DynamicResource DatabaseSummaryLabel}"
+                                                   Style="{DynamicResource ListItemMainLabel}"
                                             FontSize="Small"
                                                    Text="{Binding DownloadTime}"
                                                    VerticalOptions="Center"

@@ -1,7 +1,8 @@
 ﻿using Dawn;
-using DbViewer.Shared;
 using DbViewer.Api;
 using DbViewer.Models;
+using DbViewer.Shared;
+using DbViewer.Shared.Configuration;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -12,21 +13,28 @@ namespace DbViewer.Services
 {
     public class HubService : IHubService
     {
-        private IDatabaseCacheService _dbCacheService;
-        private IDbHubHttpClient _httpClient;
-        private Uri _lastConnectedUri;
+        private Dictionary<Uri, IDbHubHttpClient> _hubClients = new Dictionary<Uri, IDbHubHttpClient>();
 
-        public HubService(IDatabaseCacheService dbCacheService)
+        private IDatabaseCacheService _dbCacheService;
+        private IHubCacheService _hubCacheService;
+
+        public HubService(IDatabaseCacheService dbCacheService, IHubCacheService hubCacheService)
         {
             _dbCacheService = Guard.Argument(dbCacheService, nameof(dbCacheService))
-                  .NotNull()
-                  .Value;
+                                   .NotNull()
+                                   .Value;
+
+            _hubCacheService = Guard.Argument(hubCacheService, nameof(hubCacheService))
+                                    .NotNull()
+                                    .Value;
         }
 
         public DateTimeOffset LastRefreshTime { get; set; }
 
-        public async Task<DownloadResult> DownloadDatabaseAsync(DatabaseInfo databaseInfo)
+        public async Task<DownloadResult> DownloadDatabaseAsync(Uri hubUri, DatabaseInfo databaseInfo)
         {
+            var connection = GetConnection(hubUri);
+
             var downloadResult = new DownloadResult();
             downloadResult.DatabaseInfo = databaseInfo;
 
@@ -34,7 +42,7 @@ namespace DbViewer.Services
 
             try
             {
-                var httpResponseMessage = await _httpClient.GetDatabase(databaseInfo.DisplayDatabaseName);
+                var httpResponseMessage = await connection.GetDatabase(databaseInfo.DisplayDatabaseName);
                 stream = await httpResponseMessage.Content.ReadAsStreamAsync();
             }
             catch (Exception ex)
@@ -47,7 +55,7 @@ namespace DbViewer.Services
 
             try
             {
-                databaseInfo.RequestAddress = _lastConnectedUri;
+                databaseInfo.RequestAddress = hubUri;
                 await _dbCacheService.SaveFromStream(stream, databaseInfo);
                 downloadResult.WasSuccesful = true;
             }
@@ -59,18 +67,20 @@ namespace DbViewer.Services
             return downloadResult;
         }
 
-        public void EnsureConnection(Uri hubUri)
+        public IDbHubHttpClient GetConnection(Uri hubUri)
         {
-            if (_httpClient == null || _lastConnectedUri != hubUri)
+            IDbHubHttpClient client = null;
+
+            if (!_hubClients.TryGetValue(hubUri, out client))
             {
                 try
                 {
-                    _httpClient = RestService.For<IDbHubHttpClient>(hubUri.ToString(), new RefitSettings
+                    client = RestService.For<IDbHubHttpClient>(hubUri.ToString(), new RefitSettings
                     {
                         ContentSerializer = new NewtonsoftJsonContentSerializer()
                     });
 
-                    _lastConnectedUri = hubUri;
+                    _hubClients.Add(hubUri, client);
 
                     LastRefreshTime = DateTimeOffset.Now;
                 }
@@ -79,11 +89,63 @@ namespace DbViewer.Services
 
                 }
             }
+
+            return client;
         }
 
-        public Task<IEnumerable<DatabaseInfo>> ListAllAsync()
+
+        public Task<IEnumerable<DatabaseInfo>> ListAllHubDatabasesAsync(Uri hubUri) => GetConnection(hubUri).ListAll();
+
+        public Task<HubInfo> GetCachedHubAsync(string hubId) => _hubCacheService.GetCachedHub(hubId);
+
+        public Task<List<HubInfo>> ListAllKnownHubsAsync() => _hubCacheService.ListAll();
+
+        public async Task<HubInfo> TryAddHubAsync(Uri hubUri)
         {
-            return _httpClient.ListAll();
+            var connection = GetConnection(hubUri);
+
+            HubInfo hubInfo = null;
+
+            try
+            {
+                hubInfo = await connection.GetHubInfo();
+                hubInfo.HostAddress = hubUri.ToString();
+
+                await _hubCacheService.SaveHub(hubInfo);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return hubInfo;
+        }
+
+        public async Task<bool> UpdateHubAsync(HubInfo hubInfo)
+        {
+            var uri = new Uri(hubInfo.HostAddress);
+            var connection = GetConnection(uri);
+
+            try
+            {
+                await connection.UpdateHub(hubInfo);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            try
+            {
+                await _hubCacheService.SaveHub(hubInfo);
+                return true;
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return false;
         }
     }
 }

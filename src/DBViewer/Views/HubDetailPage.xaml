@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="DbViewer.Views.HubDetailPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vms="clr-namespace:DbViewer.ViewModels"
+             x:DataType="vms:HubDetailViewModel"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="white">
+            <Frame Margin="0,-20,0,0"
+                   Padding="5,30"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                   CornerRadius="20"
+                   HasShadow="False">
+                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+
+                    <Grid HeightRequest="80">
+
+                        <Button Command="{Binding BackCommand}"
+                                HeightRequest="40"
+                                HorizontalOptions="Start"
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Back"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
+
+                        <Label Margin="5"
+                               FontAttributes="Bold"
+                               HeightRequest="40"
+                               HorizontalOptions="CenterAndExpand"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               Text="{Binding HubName}"
+                               VerticalOptions="Start"
+                               VerticalTextAlignment="Center" />
+
+                        <Button Margin="0,0,0,0"
+                                Command="{Binding ViewHubSetupCommand}"
+                                FontAttributes="Bold"
+                                HeightRequest="50"
+                                HorizontalOptions="End"
+                                Style="{DynamicResource DarkColoredButton}"
+                                Text="Setup"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
+                    </Grid>
+
+                    <Label Style="{DynamicResource MainBodyLabel}" Text="{Binding Status}" />
+
+                    <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+
+                        <Button Margin="0,10,0,0"
+                                Command="{Binding RescanCommand}"
+                                FontAttributes="Bold"
+                                HeightRequest="50"
+                                HorizontalOptions="CenterAndExpand"
+                                Style="{DynamicResource DarkColoredButton}"
+                                Text="Rescan All"
+                                VerticalOptions="Center"
+                                WidthRequest="120" />
+
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+
+            <CollectionView Margin="30"
+                            BackgroundColor="White"
+                            ItemsSource="{Binding RemoteDatabases}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vms:RemoteDatabaseViewModel">
+
+                        <StackLayout>
+                            <Frame HasShadow="False">
+                                <StackLayout Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding ShouldDownload}"
+                                              VerticalOptions="Center"
+                                              Color="{DynamicResource ColoredBackgroundMediumColor}" />
+                                    <Label Style="{DynamicResource ListItemMainLabel}"
+                                           Text="{Binding DisplayName}"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Margin="5"
+                    Command="{Binding DownloadCheckedCommand}"
+                    CornerRadius="10"
+                    FontSize="24"
+                    HeightRequest="60"
+                    Style="{DynamicResource DarkColoredButton}"
+                    Text="Download" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

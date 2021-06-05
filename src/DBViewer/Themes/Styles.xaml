@@ -63,7 +63,7 @@
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
-    <Style x:Key="DatabaseSummaryLabel" TargetType="Label">
+    <Style x:Key="ListItemMainLabel" TargetType="Label">
         <Setter Property="TextColor" Value="{StaticResource HeaderTextColor}" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="FontFamily" Value="{StaticResource LightFontFamily}" />

@@ -9,7 +9,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 
 namespace DbViewer.Services
 {
@@ -19,13 +18,10 @@ namespace DbViewer.Services
 
         public DatabaseCacheService()
         {
-            BlobCache.ApplicationName = AppInfo.Name;
-            BlobCache.EnsureInitialized();
-
-            CacheUpdated = new BehaviorSubject<CacheRegistry>(new CacheRegistry());
+            CacheUpdated = new BehaviorSubject<CachedDatabaseRegistry>(new CachedDatabaseRegistry());
         }
 
-        public IObserver<CacheRegistry> CacheUpdated { get; }
+        public IObserver<CachedDatabaseRegistry> CacheUpdated { get; }
 
         public async Task SaveFromStream(Stream databaseDownloadStream, DatabaseInfo databaseInfo)
         {
@@ -99,7 +95,7 @@ namespace DbViewer.Services
             return true;
         }
 
-        public void Cleanup(CacheRegistry cacheRegistry)
+        public void Cleanup(CachedDatabaseRegistry cacheRegistry)
         {
             var dbsWithBadPaths = new List<CachedDatabase>();
             foreach (var item in cacheRegistry.DatabaseCollection)
@@ -119,7 +115,7 @@ namespace DbViewer.Services
             SaveRegistry(cacheRegistry);
         }
 
-        private void SaveRegistry(CacheRegistry registry)
+        private void SaveRegistry(CachedDatabaseRegistry registry)
         {
             BlobCache.LocalMachine
                      .InsertObject(Database_Cache_Key, registry)
@@ -130,16 +126,14 @@ namespace DbViewer.Services
             });
         }
 
-        public async Task<CacheRegistry> GetRegistry()
+        public async Task<CachedDatabaseRegistry> GetRegistry()
         {
             if (_inMemoryRegistry == null)
             {
                 try
                 {
                     _inMemoryRegistry = await BlobCache.LocalMachine
-                                                       .GetOrCreateObject(Database_Cache_Key, () => new CacheRegistry());
-
-                    var val = await BlobCache.LocalMachine.GetObject<CacheRegistry>(Database_Cache_Key);
+                                                       .GetOrCreateObject(Database_Cache_Key, () => new CachedDatabaseRegistry());
 
                     Cleanup(_inMemoryRegistry);
                 }
@@ -152,6 +146,6 @@ namespace DbViewer.Services
             return _inMemoryRegistry;
         }
 
-        private CacheRegistry _inMemoryRegistry = null;
+        private CachedDatabaseRegistry _inMemoryRegistry = null;
     }
 }

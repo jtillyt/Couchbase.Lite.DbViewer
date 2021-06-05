@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="DbViewer.Views.ServiceSettingsPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vms="clr-namespace:DbViewer.ViewModels"
+             x:DataType="vms:ServiceSettingsViewModel"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="white">
+
+            <Frame Margin="0,-20,0,0"
+                   Padding="5,30"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                   CornerRadius="20"
+                   HasShadow="False">
+                
+                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+
+                    <Grid HeightRequest="80">
+
+                        <Button Command="{Binding BackCommand}"
+                                HeightRequest="40"
+                                HorizontalOptions="Start"
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Back"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
+                        
+                        <Label Margin="5"
+                               FontAttributes="Bold"
+                               HeightRequest="40"
+                               HorizontalOptions="CenterAndExpand"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               Text="{Binding ServiceName}"
+                               VerticalOptions="Start"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+
+                    <Label Style="{DynamicResource MainBodyLabel}" Text="Edit service properties" />
+
+                </StackLayout>
+            </Frame>
+            <CollectionView Margin="30"
+                            BackgroundColor="White"
+                            ItemsSource="{Binding ServiceProperties}">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vms:ServicePropertyViewModel">
+                        <StackLayout>
+
+                            <Frame BackgroundColor="{StaticResource BackgroundSmokeColor}"
+                                   CornerRadius="6"
+                                   HasShadow="False"
+                                   Margin="0,0,0,10"
+                                   HorizontalOptions="FillAndExpand">
+                                <StackLayout Orientation="Vertical">
+
+                                    <Label HorizontalOptions="Start"
+                                           Style="{DynamicResource ListItemMainLabel}"
+                                           Text="{Binding DisplayName}"
+                                           VerticalOptions="Center" />
+
+                                    <Label HorizontalOptions="Start"
+                                           HorizontalTextAlignment="Start"
+                                           FontSize="Small"
+                                           Style="{DynamicResource ListItemMainLabel}"
+                                           Text="{Binding Description}"
+                                           VerticalOptions="Center" />
+                                    
+                                    <Entry HorizontalOptions="FillAndExpand"
+                                           HorizontalTextAlignment="Start"
+                                           IsSpellCheckEnabled="False"
+                                           Keyboard="Plain"
+                                           Style="{DynamicResource ListItemMainLabel}"
+                                           Text="{Binding Value}"
+                                           VerticalOptions="Center" />
+                                    
+                                </StackLayout>
+                            </Frame>
+
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <StackLayout HeightRequest="90" Orientation="Horizontal">
+
+                <Button Margin="5"
+                        Command="{Binding SaveServiceCommand}"
+                        CornerRadius="10"
+                        FontSize="24"
+                        HeightRequest="60"
+                        HorizontalOptions="FillAndExpand"
+                        Style="{DynamicResource DarkColoredButton}"
+                        Text="Save" />
+                
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

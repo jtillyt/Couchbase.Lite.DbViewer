@@ -1,45 +1,51 @@
-﻿using DbViewer.Shared;
-using Microsoft.Extensions.Configuration;
+﻿using Dawn;
+using DbViewer.Shared;
+using DbViewer.Shared.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace DbViewer.Hub.Services
 {
-    public class IOSSimulatorDbScanner : IDbScanner
+    [ServiceType("iOS Simulator Scanner", "ios-simulator-scanner")]
+    public class IOSSimulatorDbScanner : IDbScanner, IService
     {
-        private const string RootConfig_ConfigKey = "IOSSimulatorDbScannerOptions";
         private const string RelativePath_ConfigKey = "DataRelativePath";
         private const string AppBundleId_ConfigKey = "AppBundleId";
         private const string SimulatorId_ConfigKey = "SimulatorId";
 
-        private readonly string AppBundleId;
-        private readonly string RelativePathToData;
+        private ServiceInfo _serviceInfo;
 
-        private readonly string SimulatorId;
-        private readonly IConfigurationSection _configSection;
         private readonly ILogger<IOSSimulatorDbScanner> _logger;
 
-
-        public IOSSimulatorDbScanner(IConfiguration configuration, ILogger<IOSSimulatorDbScanner> logger)
+        public IOSSimulatorDbScanner(ILogger<IOSSimulatorDbScanner> logger)
         {
-            if (configuration is null)
-            {
-                throw new System.ArgumentNullException(nameof(configuration));
-            }
-
             _logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
-
-            _configSection = configuration.GetSection(RootConfig_ConfigKey);
-
-            AppBundleId = _configSection[AppBundleId_ConfigKey];
-            RelativePathToData = _configSection[RelativePath_ConfigKey];
-            SimulatorId = _configSection[SimulatorId_ConfigKey] ?? "booted";
         }
+
+        [ServiceProperty(AppBundleId_ConfigKey, "App Bundle Id", "com.your.app.bundle", "This is the BundleId found in the app's Info.plist file")]
+        public string AppBundleId { get; set; }
+
+
+        [ServiceProperty(RelativePath_ConfigKey, "Relative Path to Database", "Documents/DataStore", "This is the relative path to where the databases are in relation to the root of the application.")]
+        public string RelativePathToData { get; set; }
+
+
+        [ServiceProperty(SimulatorId_ConfigKey, "Simulator Id", "Some-Guid-Id", "This is the simulator id that you would like to target for scanning. These can be found in XCode. Use the string 'booted' for target the active simulator")]
+        public string SimulatorId { get; set; }
+
 
         public IEnumerable<DatabaseInfo> Scan()
         {
+            if (!OperatingSystem.IsMacOS())
+            {
+                _logger.LogWarning("Can't scan. This scanner only works on Mac.");
+                return Enumerable.Empty<DatabaseInfo>();
+            }
+
             var list = new List<DatabaseInfo>();
             var appDataPath = GetCurrentSimulatorDataPath();
             var rootDbPath = Path.Combine(appDataPath, RelativePathToData);
@@ -51,12 +57,12 @@ namespace DbViewer.Hub.Services
 
             foreach (var dir in Directory.GetDirectories(rootDbPath))
             {
-               list.Add(new DatabaseInfo()
-               {
+                list.Add(new DatabaseInfo()
+                {
                     DisplayDatabaseName = Path.GetFileNameWithoutExtension(dir),
                     FullDatabaseName = Path.GetFileName(dir),
                     RemoteRootDirectory = rootDbPath
-               }); 
+                });
             }
 
             return list;
@@ -70,7 +76,7 @@ namespace DbViewer.Hub.Services
             process.Start();
             string result = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-            
+
             return result.Trim();
         }
 
@@ -90,6 +96,19 @@ namespace DbViewer.Hub.Services
             };
 
             return psi;
+        }
+
+        public void InitiateService(ServiceInfo serviceInfo)
+        {
+            _serviceInfo = Guard.Argument(serviceInfo)
+                                .NotNull()
+                                .Value;
+
+            _logger.LogInformation($"Initiating service {_serviceInfo.ServiceName} of type {_serviceInfo.ServiceTypeId}");
+
+            AppBundleId = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == AppBundleId_ConfigKey)?.Value;
+            SimulatorId = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == SimulatorId_ConfigKey)?.Value;
+            RelativePathToData = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == RelativePath_ConfigKey)?.Value;
         }
     }
 }

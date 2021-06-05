@@ -57,6 +57,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\ServiceSettingsPage.xaml.cs">
+      <DependentUpon>ServiceSettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HubSettingsPage.xaml.cs">
+      <DependentUpon>HubSettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HubListPage.xaml.cs">
+      <DependentUpon>HubListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HubDetailPage.xaml.cs">
+      <DependentUpon>HubDetailPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Themes\Styles.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

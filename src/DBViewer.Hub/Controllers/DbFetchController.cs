@@ -7,6 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using DbViewer.Shared.Configuration;
+using Dawn;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DbViewer.Hub.Controllers
 {
@@ -15,19 +19,37 @@ namespace DbViewer.Hub.Controllers
     public class DbFetchController : ControllerBase
     {
         private readonly ILogger<DbFetchController> _logger;
-        private readonly IDbScanner _dbScanner;
+        private readonly IHubService _hubService;
 
-        public DbFetchController(ILogger<DbFetchController> logger, IDbScanner dbScanner)
+        public DbFetchController(ILogger<DbFetchController> logger, IHubService hubService)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _dbScanner = dbScanner ?? throw new ArgumentNullException(nameof(dbScanner));
+            _logger = Guard.Argument(logger, nameof(logger))
+                  .NotNull()
+                  .Value;
+
+            _hubService = Guard.Argument(hubService, nameof(hubService))
+                  .NotNull()
+                  .Value;
         }
 
         [HttpGet]
         public IEnumerable<DatabaseInfo> ListAllDbs()
         {
             _logger.LogInformation("Fetching DB Info");
-            return _dbScanner.Scan();
+
+            var scanners = _hubService.GetAllDbScanners();
+
+            if (scanners == null)
+                return Enumerable.Empty<DatabaseInfo>();
+
+            var dbs = new List<DatabaseInfo>();
+
+            foreach(var scanner in scanners)
+            {
+               dbs.AddRange(scanner.Scan());
+            }
+
+            return dbs;
         }
 
         [HttpGet("Name/{displayName}")]

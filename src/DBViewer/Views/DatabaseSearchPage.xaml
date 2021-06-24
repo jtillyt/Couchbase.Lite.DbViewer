@@ -2,6 +2,7 @@
 <ContentPage x:Class="DbViewer.Views.DatabaseSearchPage"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DbViewer.Models"
              xmlns:vms="clr-namespace:DbViewer.ViewModels"
              x:DataType="vms:DatabaseSearchViewModel"
              BackgroundColor="White">
@@ -17,7 +18,7 @@
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}" VerticalOptions="Center">
 
                     <Grid HeightRequest="50">
-                        
+
                         <Button Command="{Binding BackCommand}"
                                 HeightRequest="40"
                                 HorizontalOptions="Start"
@@ -35,20 +36,25 @@
                                VerticalOptions="Center"
                                VerticalTextAlignment="Center" />
                     </Grid>
-                    
+
                     <StackLayout Margin="10" Orientation="Horizontal">
                         <Entry Margin="10"
                                HeightRequest="50"
                                HorizontalOptions="FillAndExpand"
                                Placeholder="Search Text"
                                PlaceholderColor="WhiteSmoke"
+                               IsSpellCheckEnabled="False"
+                               IsTextPredictionEnabled="False"
+                               Keyboard="Text"
                                Text="{Binding SearchText}"
                                TextColor="Black" />
-                        
+
                         <Button Margin="5"
                                 Command="{Binding SearchCommand}"
                                 CornerRadius="10"
                                 FontSize="20"
+                                WidthRequest="90"
+                                Padding="5,0"
                                 HeightRequest="60"
                                 Style="{DynamicResource DarkColoredButton}"
                                 Text="Search" />
@@ -56,16 +62,16 @@
                 </StackLayout>
             </Frame>
 
-            <ListView Style="{StaticResource DocumentListView}"
-                      CachingStrategy="RecycleElementAndDataTemplate"
+            <ListView CachingStrategy="RecycleElementAndDataTemplate"
                       IsGroupingEnabled="False"
-                      ItemsSource="{Binding SearchResults}">
+                      ItemsSource="{Binding SearchResults}"
+                      Style="{StaticResource DocumentListView}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
 
                             <Label Margin="30,10"
-                                   x:DataType="vms:DocumentModel"
+                                   x:DataType="models:DocumentModel"
                                    FontSize="18"
                                    Text="{Binding DocumentId}"
                                    TextColor="Black"

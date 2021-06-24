@@ -1,9 +1,11 @@
 ﻿using Dawn;
+using DbViewer.DataStores;
 using DbViewer.Models;
 using DbViewer.Services;
 using ReactiveUI;
 using System;
 using System.Reactive;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DbViewer.ViewModels
@@ -11,14 +13,19 @@ namespace DbViewer.ViewModels
     public class CachedDatabaseItemViewModel : ViewModelBase
     {
         private readonly IHubService _hubService;
+        private readonly IDatabaseDatastore _databaseCacheService;
 
-        public CachedDatabaseItemViewModel(CachedDatabase cachedDatabase, IHubService hubService)
+        public CachedDatabaseItemViewModel(CachedDatabase cachedDatabase, IDatabaseDatastore databaseCacheService, IHubService hubService)
         {
             Database = Guard.Argument(cachedDatabase, nameof(cachedDatabase))
                                         .NotNull()
                                         .Value;
 
             _hubService = Guard.Argument(hubService, nameof(hubService))
+                  .NotNull()
+                  .Value;
+
+            _databaseCacheService = Guard.Argument(databaseCacheService, nameof(databaseCacheService))
                   .NotNull()
                   .Value;
 
@@ -30,10 +37,12 @@ namespace DbViewer.ViewModels
             var dateTime = Database.DownloadTime.DateTime;
             DownloadTime = GetDownloadTimeString(dateTime);
 
-            GetLatestCommand = ReactiveCommand.CreateFromTask(ExecuteGetLatest);
+            GetLatestCommand = ReactiveCommand.CreateFromTask(ExecuteGetLatestAsync);
+            DeleteCommand = ReactiveCommand.CreateFromTask(ExecuteDeleteAsync);
         }
 
         public ReactiveCommand<Unit, Unit> GetLatestCommand { get; }
+        public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
 
         public CachedDatabase Database { get; set; }
 
@@ -58,11 +67,14 @@ namespace DbViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _hubAddress, value);
         }
 
-        private async Task ExecuteGetLatest()
+        private Task ExecuteDeleteAsync(CancellationToken cancellationToken) => _databaseCacheService.DeleteDatabaseAsync(Database, cancellationToken);
+
+        private async Task ExecuteGetLatestAsync(CancellationToken cancellationToken)
         {
             var remoteInfo = Database.RemoteDatabaseInfo;
 
-            var result = await _hubService.DownloadDatabaseAsync(remoteInfo.RequestAddress, remoteInfo);
+            var result = await _hubService.DownloadDatabaseAsync(remoteInfo.RequestAddress, remoteInfo, cancellationToken)
+                                          .ConfigureAwait(false);
 
             if (result.WasSuccesful)
             {
@@ -82,7 +94,5 @@ namespace DbViewer.ViewModels
         {
             return cachedDatabase?.RemoteDatabaseInfo?.RequestAddress?.Host ?? "Unknown";
         }
-
-       
     }
 }

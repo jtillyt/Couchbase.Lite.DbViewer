@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DbViewer.Shared.Configuration
+namespace DbViewer.Shared.Dtos
 {
     public class ServiceDefinition
     {

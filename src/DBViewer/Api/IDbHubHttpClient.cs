@@ -1,8 +1,9 @@
 ﻿using DbViewer.Shared;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using Refit;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DbViewer.Api
@@ -10,15 +11,15 @@ namespace DbViewer.Api
     public interface IDbHubHttpClient
     {
         [Get("/Hubs")]
-        Task<HubInfo> GetHubInfo();
+        Task<HubInfo> GetHubInfoAsync(CancellationToken cancellationToken);
 
         [Get("/Databases")]
-        Task<IEnumerable<DatabaseInfo>> ListAll();
+        Task<IEnumerable<DatabaseInfo>> ListAllAsync(CancellationToken cancellationToken);
         
         [Get("/Databases/Name/{displayName}")]
-        Task<HttpResponseMessage> GetDatabase(string displayName);
+        Task<HttpResponseMessage> GetDatabaseAsync(string displayName, CancellationToken cancellationToken);
 
         [Put("/Hubs/Update/{hubInfo}")]
-        Task UpdateHub(HubInfo hubInfo);
+        Task UpdateHubAsync(HubInfo hubInfo, CancellationToken cancellationToken);
     }
 }

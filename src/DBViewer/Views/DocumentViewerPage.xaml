@@ -1,40 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage x:Class="DbViewer.Views.DocumentViewerPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DbViewer.ViewModels"
-             x:DataType="vms:DocumentViewerViewModel"
-             x:Class="DbViewer.Views.DocumentViewerPage">
+             x:DataType="vms:DocumentViewerViewModel">
     <ContentPage.Content>
-        <Grid RowDefinitions="140,*,60" BackgroundColor="White">
-            <Frame Margin="0,-30,0,0"
-                   Grid.Row="0"
-                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+        <Grid BackgroundColor="White" RowDefinitions="140,*,60">
+            <Frame Grid.Row="0"
+                   Margin="0,-30,0,0"
                    Padding="10,30"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    CornerRadius="30"
                    HasShadow="False">
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
                     <Grid HeightRequest="80">
-                        <Button Style="{DynamicResource HeaderButton}"
+                        <Button Command="{Binding BackCommand}"
                                 HeightRequest="40"
-                                WidthRequest="80"
-                                VerticalOptions="Center"
-                                Text="Back"
                                 HorizontalOptions="Start"
-                                Command="{Binding BackCommand}">
-                        </Button>
-                        <Label Text="Document Viewer"
-                               Margin="10,0,10,10"
-                               Style="{DynamicResource PageHeaderLabel}"
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Back"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
+                        <Label Margin="10,0,10,10"
                                FontAttributes="Bold"
-                               VerticalOptions="Center"
-                               HorizontalOptions="CenterAndExpand" />
+                               HorizontalOptions="CenterAndExpand"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               Text="Document Viewer"
+                               VerticalOptions="Center" />
                     </Grid>
-                    <Label Text="{Binding DocumentId}"
-                           Margin="0"
+                    <Label Margin="0"
                            FontSize="Small"
+                           HorizontalOptions="CenterAndExpand"
                            Style="{DynamicResource PageHeaderLabel}"
-                           VerticalOptions="Start"
-                           HorizontalOptions="CenterAndExpand" />
+                           Text="{Binding DocumentId}"
+                           VerticalOptions="Start" />
                 </StackLayout>
             </Frame>
             <ScrollView Grid.Row="1"
@@ -42,23 +41,22 @@
                         Padding="0"
                         BackgroundColor="White"
                         VerticalOptions="FillAndExpand">
-                <Editor VerticalOptions="FillAndExpand"
-                        Margin="0"
+                <Editor Margin="0"
                         AutoSize="TextChanges"
                         BackgroundColor="White"
-                        TextColor="Black"
                         IsReadOnly="True"
-                        Text="{Binding DocumentText}">
-                </Editor>
+                        Text="{Binding DocumentText}"
+                        TextColor="Black"
+                        VerticalOptions="FillAndExpand" />
             </ScrollView>
-            <Button Text="Share"
-                    Grid.Row="2"
-                    Command="{Binding ShareCommand}"
-                    Style="{DynamicResource DarkColoredButton}"
+            <Button Grid.Row="2"
                     Margin="5"
+                    Command="{Binding ShareCommand}"
                     CornerRadius="10"
+                    FontSize="24"
                     HeightRequest="60"
-                    FontSize="24" />
+                    Style="{DynamicResource DarkColoredButton}"
+                    Text="Share" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

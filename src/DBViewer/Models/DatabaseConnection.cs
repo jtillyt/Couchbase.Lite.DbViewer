@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DbViewer.Services
+namespace DbViewer.Models
 {
     public class DatabaseConnection : IDatabaseConnection
     {
@@ -24,8 +24,10 @@ namespace DbViewer.Services
                 return false;
             }
 
-            var dbConfig = new DatabaseConfiguration();
-            dbConfig.Directory = dbDirectory;
+            var dbConfig = new DatabaseConfiguration
+            {
+                Directory = dbDirectory
+            };
 
             _database = new Database(dbName, dbConfig);
 
@@ -55,14 +57,14 @@ namespace DbViewer.Services
 
         private IEnumerable<string> GetAllDocumentsIds(Database db, bool sort = false)
         {
-           if (_database == null)
+            if (_database == null)
             {
                 return Enumerable.Empty<string>();
             }
 
             var docIds = QueryBuilder
-                .Select((ISelectResult)SelectResult.Expression(Meta.ID),
-                    (ISelectResult)SelectResult.Property("Type")).From(DataSource.Database(db)).Execute()
+                .Select(SelectResult.Expression(Meta.ID),
+                    SelectResult.Property("Type")).From(DataSource.Database(db)).Execute()
                 .Select(i => i.GetString("id"))
                 .Where(docId => docId != null).ToList();
 

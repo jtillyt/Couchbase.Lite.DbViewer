@@ -1,27 +1,37 @@
-﻿using Dawn;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
+using System.Threading;
+using System.Threading.Tasks;
+using Dawn;
 using DbViewer.Services;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using DbViewer.Views;
 using DynamicData;
 using Prism.Navigation;
 using ReactiveUI;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive;
-using System.Threading.Tasks;
+using Serilog;
 using Xamarin.Essentials;
+using Xamarin.Essentials.Interfaces;
 
 namespace DbViewer.ViewModels
 {
     public class HubListViewModel : NavigationViewModelBase, INavigatedAware
     {
-        public const string HubId_NavParam = nameof(HubId_NavParam);
-
+        public const string HubIdNavParam = nameof(HubIdNavParam);
         private const string LastHubAddressKey = "LastHubAddress";
-        private readonly IHubService _hubService;
 
-        public HubListViewModel(IHubService hubService, INavigationService navigationService)
+        private readonly IPreferences _preferences;
+        private readonly IHubService _hubService;
+        private readonly ILogger _logger = Log.ForContext<HubListViewModel>();
+
+        private string _hubAddress;
+
+        private ObservableCollection<HubItemViewModel> _knownHubs =
+            new ObservableCollection<HubItemViewModel>();
+
+        public HubListViewModel(IHubService hubService, IPreferences preferences, INavigationService navigationService)
             : base(navigationService)
         {
             _hubService = Guard
@@ -29,12 +39,16 @@ namespace DbViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            AddHubCommand = ReactiveCommand.CreateFromTask(ExecuteAddHub);
+            _preferences = Guard.Argument(preferences, nameof(preferences))
+                .NotNull()
+                .Value;
 
-            // TODO: <James Thomas: 3/14/21> Move preferences to DI 
-            HubAddress = Preferences.Get(LastHubAddressKey, "http://127.0.0.1:5020");
-            ReloadHubsCommand = ReactiveCommand.CreateFromTask(ExecuteReloadHubs);
-            ViewSelectedHubCommand = ReactiveCommand.CreateFromTask<HubItemViewModel>(ExecuteViewSelectedHub);
+            AddHubCommand = ReactiveCommand.CreateFromTask(ExecuteAddHubAsync);
+
+            HubAddress = _preferences.Get(LastHubAddressKey, "http://127.0.0.1:5020");
+
+            ReloadHubsCommand = ReactiveCommand.CreateFromTask(ExecuteReloadHubsAsync);
+            ViewSelectedHubCommand = ReactiveCommand.CreateFromTask<HubItemViewModel>(ExecuteViewSelectedHubAsync);
         }
 
         public ReactiveCommand<Unit, Unit> AddHubCommand { get; }
@@ -47,49 +61,68 @@ namespace DbViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _hubAddress, value);
         }
 
-        public void OnNavigatedFrom(INavigationParameters parameters)
-        {
-
-        }
-
-        public async void OnNavigatedTo(INavigationParameters parameters)
-        {
-            await ExecuteReloadHubs();
-        }
-
         public ObservableCollection<HubItemViewModel> KnownHubs
         {
             get => _knownHubs;
             set => this.RaiseAndSetIfChanged(ref _knownHubs, value);
         }
 
-        private async Task ExecuteAddHub()
+        public void OnNavigatedFrom(INavigationParameters parameters)
         {
-            if (string.IsNullOrEmpty(HubAddress))
+        }
+
+        public async void OnNavigatedTo(INavigationParameters parameters)
+        {
+            try
             {
-                return;
+                await ExecuteReloadHubsAsync(CancellationToken.None).ConfigureAwait(false);
             }
-
-            var hubUri = new Uri(HubAddress);
-
-            var hubInfo = await _hubService.TryAddHubAsync(hubUri);
-
-            if (hubInfo != null)
+            catch (Exception ex)
             {
-                hubInfo.HostAddress = HubAddress;
-
-                AddHubToView(hubInfo);
-
-                Preferences.Set(LastHubAddressKey, HubAddress);
+                _logger.Error(ex, nameof(OnNavigatedTo));
             }
         }
 
-        private async Task ExecuteReloadHubs()
+        private async Task ExecuteAddHubAsync(CancellationToken cancellationToken)
         {
-            var hubInfos = await _hubService.ListAllKnownHubsAsync();
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            if (hubInfos == null)
-                return;
+                if (string.IsNullOrEmpty(HubAddress) || 
+                    KnownHubs.Any(h => h.HostAddress.Equals(HubAddress, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return;
+                }
+
+                var hubUri = new Uri(HubAddress);
+
+                var hubInfo = await _hubService.TryAddHubAsync(hubUri, cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (hubInfo != null)
+                {
+                    hubInfo.HostAddress = HubAddress;
+
+                    AddHubToView(hubInfo);
+
+                    _preferences.Set(LastHubAddressKey, HubAddress);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, nameof(ExecuteAddHubAsync));
+            }
+        }
+
+        private async Task ExecuteReloadHubsAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var hubInfos = await _hubService.ListAllKnownHubsAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            if (hubInfos == null) return;
 
             var hubViewModels = hubInfos.Select(hubInfo => new HubItemViewModel(hubInfo));
 
@@ -105,25 +138,19 @@ namespace DbViewer.ViewModels
         {
             var hubViewModel = new HubItemViewModel(hubInfo);
 
-            RunOnUi(() =>
-            {
-                KnownHubs.Add(hubViewModel);
-            });
+            RunOnUi(() => { KnownHubs.Add(hubViewModel); });
         }
 
-        private Task ExecuteViewSelectedHub(HubItemViewModel hubVm)
+        private Task ExecuteViewSelectedHubAsync(HubItemViewModel hubVm, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var navParams = new NavigationParameters
             {
-                { nameof(HubDetailViewModel.HubId_NavParam), hubVm.HubId }
+                {nameof(HubDetailViewModel.HubIdNavParam), hubVm.HubId}
             };
 
             return NavigationService.NavigateAsync(nameof(HubDetailPage), navParams);
         }
-
-        private string _hubAddress;
-
-        private ObservableCollection<HubItemViewModel> _knownHubs =
-            new ObservableCollection<HubItemViewModel>();
     }
 }

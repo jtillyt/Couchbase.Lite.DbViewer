@@ -1,43 +1,49 @@
 ﻿using Akavache;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace DbViewer.Services
+namespace DbViewer.DataStores
 {
-    public class HubCacheService : IHubCacheService
+    public class HubDatastore : IHubDatastore
     {
-        private const string Hub_Cache_Key = "Hub_Cache";
-        private Dictionary<string, HubInfo> _inMemoryRegistry = new Dictionary<string, HubInfo>();
-        private object _synclock = new object();
+        private const string HubCacheKey = "HubCache";
 
-        public HubCacheService()
+        private readonly Dictionary<string, HubInfo> _inMemoryRegistry = new Dictionary<string, HubInfo>();
+        private readonly object _synclock = new object();
+
+        public HubDatastore()
         {
             CacheUpdated = new BehaviorSubject<IEnumerable<HubInfo>>(new List<HubInfo>());
         }
 
         public IObserver<IEnumerable<HubInfo>> CacheUpdated { get; }
 
-        public async Task DeleteHub(string hubId)
+        public async Task DeleteHubAsync(string hubId, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             lock (_synclock)
             {
                 _inMemoryRegistry.Remove(hubId);
             }
 
-            await SaveAll();
+            await SaveAllAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<List<HubInfo>> ListAll()
+        public async Task<List<HubInfo>> ListAllAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_inMemoryRegistry == null || !_inMemoryRegistry.Any())
             {
                 var vals = await BlobCache.LocalMachine
-                                          .GetOrCreateObject(Hub_Cache_Key, () => new List<HubInfo>());
+                                          .GetOrCreateObject(HubCacheKey, () => new List<HubInfo>());
 
                 foreach (var val in vals)
                 {
@@ -53,15 +59,20 @@ namespace DbViewer.Services
 
             return DictToList();
         }
-        public async Task<HubInfo> GetCachedHub(string hubId)
+
+        public async Task<HubInfo> GetCachedHubAsync(string hubId, CancellationToken cancellationToken)
         {
-            var all = await ListAll();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var all = await ListAllAsync(cancellationToken).ConfigureAwait(false);
 
             return all.FirstOrDefault(hub => hub.Id == hubId);
         }
 
-        public async Task SaveHub(HubInfo hubInfo)
+        public Task SaveHubAsync(HubInfo hubInfo, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             lock (_synclock)
             {
                 if (_inMemoryRegistry.ContainsKey(hubInfo.Id))
@@ -74,12 +85,17 @@ namespace DbViewer.Services
                 }
             }
 
-            await SaveAll();
+            return SaveAllAsync(cancellationToken);
         }
 
 
-        public async Task SaveAll() => await BlobCache.LocalMachine
-                           .InsertObject(Hub_Cache_Key, DictToList());
+        public async Task SaveAllAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await BlobCache.LocalMachine
+                           .InsertObject(HubCacheKey, DictToList());
+        }
 
         private List<HubInfo> DictToList()
         {

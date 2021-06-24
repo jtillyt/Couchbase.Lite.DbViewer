@@ -1,5 +1,5 @@
 ﻿using Dawn;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using ReactiveUI;
 
 namespace DbViewer.ViewModels
@@ -34,7 +34,7 @@ namespace DbViewer.ViewModels
             {
                 this.RaiseAndSetIfChanged(ref _value, value);
 
-                if (ServiceProperty.Value != value)
+                if (!string.Equals(ServiceProperty.Value, value))
                 {
                     ServiceProperty.Value = value;
                 }

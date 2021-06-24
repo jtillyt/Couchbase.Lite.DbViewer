@@ -1,11 +1,14 @@
 ﻿using Akavache;
-using DbViewer.Configuration;
+using DbViewer.DataStores;
+using DbViewer.Repos;
 using DbViewer.Services;
 using DbViewer.ViewModels;
 using DbViewer.Views;
-using DryIoc;
 using Prism.Ioc;
+using Serilog;
 using Xamarin.Essentials;
+using Xamarin.Essentials.Implementation;
+using Xamarin.Essentials.Interfaces;
 using Xamarin.Forms;
 
 namespace DbViewer
@@ -15,6 +18,12 @@ namespace DbViewer
         public App()
         {
             InitializeComponent();
+
+            var logger = new LoggerConfiguration()
+                        //.WriteTo.Console(Serilog.Events.LogEventLevel.Verbose)
+                        .CreateLogger();
+
+            Log.Logger = logger;
 
             Application.Current.UserAppTheme = OSAppTheme.Light;
         }
@@ -46,10 +55,11 @@ namespace DbViewer
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<IConfigurationService,ConfigurationService>();
             containerRegistry.RegisterSingleton<IHubService,HubService>();
-            containerRegistry.RegisterSingleton<IDatabaseCacheService, DatabaseCacheService>();
-            containerRegistry.RegisterSingleton<IHubCacheService, HubCacheService>();
+            containerRegistry.RegisterSingleton<IDatabaseDatastore, DatabaseDatastore>();
+            containerRegistry.RegisterSingleton<IHubDatastore, HubDatastore>();
+            containerRegistry.RegisterSingleton<IHubRepo, HubRepo>();
+            containerRegistry.RegisterSingleton<IPreferences, PreferencesImplementation>();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<CachedDatabaseListPage, CachedDatabaseListViewModel>();

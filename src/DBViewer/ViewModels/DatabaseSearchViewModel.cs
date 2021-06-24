@@ -1,5 +1,6 @@
 ﻿using Dawn;
-using DbViewer.Services;
+using DbViewer.DataStores;
+using DbViewer.Models;
 using DbViewer.Views;
 using Newtonsoft.Json;
 using Prism.Navigation;
@@ -8,19 +9,23 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DbViewer.ViewModels
 {
     public class DatabaseSearchViewModel : NavigationViewModelBase, INavigatedAware
     {
-        internal const string DocumentIdList_Param = nameof(DocumentIdList_Param);
+        internal const string DocumentIdListParam = nameof(DocumentIdListParam);
+
+        private readonly IDatabaseDatastore _cacheService;
 
         private IEnumerable<string> _documentIdsToSearch;
+        private string _searchTitle;
+        private string _searchText = "";
+        private ObservableCollection<DocumentModel> _searchResults;
 
-        private readonly IDatabaseCacheService _cacheService;
-
-        public DatabaseSearchViewModel(IDatabaseCacheService cacheService, INavigationService navigationService)
+        public DatabaseSearchViewModel(IDatabaseDatastore cacheService, INavigationService navigationService)
             : base(navigationService)
         {
             _cacheService = Guard
@@ -28,29 +33,26 @@ namespace DbViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            SearchCommand = ReactiveCommand.CreateFromTask(ExecuteSearch);
-            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteViewSelectedDocument);
+            SearchCommand = ReactiveCommand.CreateFromTask(ExecuteSearchAsync);
+            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteViewSelectedDocumentAsync);
         }
 
         public ReactiveCommand<DocumentModel, Unit> ViewSelectedDocumentCommand { get; }
 
         public ReactiveCommand<Unit, Unit> SearchCommand { get; }
 
-        private string _searchTitle;
         public string SearchTitle
         {
             get => _searchTitle;
             set => this.RaiseAndSetIfChanged(ref _searchTitle, value);
         }
 
-        private string _searchText;
         public string SearchText
         {
             get => _searchText;
             set => this.RaiseAndSetIfChanged(ref _searchText, value);
         }
 
-        private ObservableCollection<DocumentModel> _searchResults;
         public ObservableCollection<DocumentModel> SearchResults
         {
             get => _searchResults;
@@ -75,14 +77,24 @@ namespace DbViewer.ViewModels
             {
                 CurrentDatabaseItemViewModel = parameters.GetValue<CachedDatabaseItemViewModel>(nameof(CachedDatabaseItemViewModel));
             }
-            if (parameters.ContainsKey(DocumentIdList_Param))
+            if (parameters.ContainsKey(DocumentIdListParam))
             {
-                _documentIdsToSearch = parameters.GetValue<IEnumerable<string>>(nameof(DocumentIdList_Param));
+                _documentIdsToSearch = parameters.GetValue<IEnumerable<string>>(nameof(DocumentIdListParam));
             }
         }
 
-        private Task ExecuteSearch()
+        private Task ExecuteSearchAsync(CancellationToken cancellationToken)
         {
+            RunOnUi(() =>
+            {
+                if (SearchResults != null)
+                {
+                    SearchResults.Clear();
+                }
+            });
+
+            cancellationToken.ThrowIfCancellationRequested();
+
             return Task.Run(() =>
             {
                 if (CurrentDatabaseItemViewModel == null)
@@ -108,6 +120,8 @@ namespace DbViewer.ViewModels
 
                 foreach (var documentId in documentIds)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var document = connection.GetDocumentById(documentId);
 
                     var documentText = JsonConvert.SerializeObject(document);
@@ -120,13 +134,15 @@ namespace DbViewer.ViewModels
 
                 RunOnUi(() =>
                 {
-                    SearchResults = new ObservableCollection<DocumentModel>(documentIds.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId)));
+                    SearchResults = new ObservableCollection<DocumentModel>(documentIdsWithHits.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId)));
                 });
-            });
+            }, cancellationToken);
         }
 
-        private Task ExecuteViewSelectedDocument(DocumentModel document)
+        private Task ExecuteViewSelectedDocumentAsync(DocumentModel document, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var navParams = new NavigationParameters
             {
                 { nameof(DocumentModel), document }

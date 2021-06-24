@@ -1,9 +1,6 @@
-﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace DbViewer.Views
+﻿namespace DbViewer.Views
 {
-    public partial class HubListPage : ContentPage
+    public partial class HubListPage
     {
         public HubListPage()
         {

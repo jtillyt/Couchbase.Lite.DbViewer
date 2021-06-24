@@ -13,7 +13,7 @@
                    BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
                    CornerRadius="20"
                    HasShadow="False">
-                
+
                 <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
 
                     <Grid HeightRequest="80">
@@ -25,7 +25,7 @@
                                 Text="Back"
                                 VerticalOptions="Center"
                                 WidthRequest="80" />
-                        
+
                         <Label Margin="5"
                                FontAttributes="Bold"
                                HeightRequest="40"
@@ -48,10 +48,10 @@
                     <DataTemplate x:DataType="vms:ServicePropertyViewModel">
                         <StackLayout>
 
-                            <Frame BackgroundColor="{StaticResource BackgroundSmokeColor}"
+                            <Frame Margin="0,0,0,10"
+                                   BackgroundColor="{StaticResource BackgroundSmokeColor}"
                                    CornerRadius="6"
                                    HasShadow="False"
-                                   Margin="0,0,0,10"
                                    HorizontalOptions="FillAndExpand">
                                 <StackLayout Orientation="Vertical">
 
@@ -60,13 +60,13 @@
                                            Text="{Binding DisplayName}"
                                            VerticalOptions="Center" />
 
-                                    <Label HorizontalOptions="Start"
+                                    <Label FontSize="Small"
+                                           HorizontalOptions="Start"
                                            HorizontalTextAlignment="Start"
-                                           FontSize="Small"
                                            Style="{DynamicResource ListItemMainLabel}"
                                            Text="{Binding Description}"
                                            VerticalOptions="Center" />
-                                    
+
                                     <Entry HorizontalOptions="FillAndExpand"
                                            HorizontalTextAlignment="Start"
                                            IsSpellCheckEnabled="False"
@@ -74,7 +74,7 @@
                                            Style="{DynamicResource ListItemMainLabel}"
                                            Text="{Binding Value}"
                                            VerticalOptions="Center" />
-                                    
+
                                 </StackLayout>
                             </Frame>
 
@@ -92,7 +92,7 @@
                         HorizontalOptions="FillAndExpand"
                         Style="{DynamicResource DarkColoredButton}"
                         Text="Save" />
-                
+
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

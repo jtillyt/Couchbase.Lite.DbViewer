@@ -18,6 +18,8 @@
     <Color x:Key="ColoredBackgroundDarkColor">#08574E</Color>
     <Color x:Key="ColoredBackgroundDarkerColor">#000A09</Color>
 
+    <Color x:Key="DangerTextColor">#f03535</Color>
+
 
     <OnPlatform x:Key="HeaderEntryTextColor" x:TypeArguments="Color">
         <On Platform="iOS" Value="{StaticResource DarkestText}" />
@@ -26,8 +28,8 @@
     </OnPlatform>
 
     <OnPlatform x:Key="HeaderEntryTextHintColor" x:TypeArguments="Color">
-        <On Platform="iOS" Value="{StaticResource DarkestText}" />
-        <On Platform="UWP" Value="{StaticResource DarkestText}" />
+        <On Platform="iOS" Value="{StaticResource BodyTextColor}" />
+        <On Platform="UWP" Value="{StaticResource BodyTextColor}" />
         <On Platform="Android" Value="{StaticResource ColoredBackgroundLightestColor}" />
     </OnPlatform>
 

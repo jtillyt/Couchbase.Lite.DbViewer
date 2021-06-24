@@ -1,24 +1,28 @@
 ﻿using Dawn;
 using DbViewer.Api;
+using DbViewer.DataStores;
 using DbViewer.Models;
 using DbViewer.Shared;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using Refit;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DbViewer.Services
 {
     public class HubService : IHubService
     {
-        private Dictionary<Uri, IDbHubHttpClient> _hubClients = new Dictionary<Uri, IDbHubHttpClient>();
+        private readonly Dictionary<Uri, IDbHubHttpClient> _hubClients = new Dictionary<Uri, IDbHubHttpClient>();
 
-        private IDatabaseCacheService _dbCacheService;
-        private IHubCacheService _hubCacheService;
+        private readonly ILogger _logger = Log.ForContext<HubService>();
+        private readonly IDatabaseDatastore _dbCacheService;
+        private readonly IHubDatastore _hubCacheService;
 
-        public HubService(IDatabaseCacheService dbCacheService, IHubCacheService hubCacheService)
+        public HubService(IDatabaseDatastore dbCacheService, IHubDatastore hubCacheService)
         {
             _dbCacheService = Guard.Argument(dbCacheService, nameof(dbCacheService))
                                    .NotNull()
@@ -31,23 +35,28 @@ namespace DbViewer.Services
 
         public DateTimeOffset LastRefreshTime { get; set; }
 
-        public async Task<DownloadResult> DownloadDatabaseAsync(Uri hubUri, DatabaseInfo databaseInfo)
+        public async Task<DownloadResult> DownloadDatabaseAsync(Uri hubUri, DatabaseInfo databaseInfo, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var connection = GetConnection(hubUri);
 
-            var downloadResult = new DownloadResult();
-            downloadResult.DatabaseInfo = databaseInfo;
+            var downloadResult = new DownloadResult
+            {
+                DatabaseInfo = databaseInfo
+            };
 
             Stream stream = null;
 
             try
             {
-                var httpResponseMessage = await connection.GetDatabase(databaseInfo.DisplayDatabaseName);
-                stream = await httpResponseMessage.Content.ReadAsStreamAsync();
+                var httpResponseMessage = await connection.GetDatabaseAsync(databaseInfo.DisplayDatabaseName, cancellationToken).ConfigureAwait(false);
+                stream = await httpResponseMessage.Content.ReadAsStreamAsync()
+                                                  .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-
+                _logger.Error(ex, nameof(DownloadDatabaseAsync));
             }
 
             if (stream == null)
@@ -55,13 +64,18 @@ namespace DbViewer.Services
 
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 databaseInfo.RequestAddress = hubUri;
-                await _dbCacheService.SaveFromStream(stream, databaseInfo);
+
+                await _dbCacheService.SaveFromStreamAsync(stream, databaseInfo, cancellationToken)
+                                     .ConfigureAwait(false);
+
                 downloadResult.WasSuccesful = true;
             }
             catch (Exception ex)
             {
-
+                _logger.Error(ex, nameof(DownloadDatabaseAsync));
             }
 
             return downloadResult;
@@ -69,9 +83,7 @@ namespace DbViewer.Services
 
         public IDbHubHttpClient GetConnection(Uri hubUri)
         {
-            IDbHubHttpClient client = null;
-
-            if (!_hubClients.TryGetValue(hubUri, out client))
+            if (!_hubClients.TryGetValue(hubUri, out var client))
             {
                 try
                 {
@@ -86,21 +98,20 @@ namespace DbViewer.Services
                 }
                 catch (Exception ex)
                 {
-
+                    _logger.Error(ex, nameof(GetConnection));
                 }
             }
 
             return client;
         }
 
+        public Task<IEnumerable<DatabaseInfo>> ListAllHubDatabasesAsync(Uri hubUri, CancellationToken cancellationToken) => GetConnection(hubUri).ListAllAsync(cancellationToken);
 
-        public Task<IEnumerable<DatabaseInfo>> ListAllHubDatabasesAsync(Uri hubUri) => GetConnection(hubUri).ListAll();
+        public Task<HubInfo> GetCachedHubAsync(string hubId, CancellationToken cancellationToken) => _hubCacheService.GetCachedHubAsync(hubId, cancellationToken);
 
-        public Task<HubInfo> GetCachedHubAsync(string hubId) => _hubCacheService.GetCachedHub(hubId);
+        public Task<List<HubInfo>> ListAllKnownHubsAsync(CancellationToken cancellationToken) => _hubCacheService.ListAllAsync(cancellationToken);
 
-        public Task<List<HubInfo>> ListAllKnownHubsAsync() => _hubCacheService.ListAll();
-
-        public async Task<HubInfo> TryAddHubAsync(Uri hubUri)
+        public async Task<HubInfo> TryAddHubAsync(Uri hubUri, CancellationToken cancellationToken)
         {
             var connection = GetConnection(hubUri);
 
@@ -108,41 +119,48 @@ namespace DbViewer.Services
 
             try
             {
-                hubInfo = await connection.GetHubInfo();
+                hubInfo = await connection.GetHubInfoAsync(cancellationToken)
+                                          .ConfigureAwait(false);
+
                 hubInfo.HostAddress = hubUri.ToString();
 
-                await _hubCacheService.SaveHub(hubInfo);
+                await _hubCacheService.SaveHubAsync(hubInfo, cancellationToken)
+                                      .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-
+                _logger.Error(ex, nameof(TryAddHubAsync));
             }
 
             return hubInfo;
         }
 
-        public async Task<bool> UpdateHubAsync(HubInfo hubInfo)
+        public async Task<bool> UpdateHubAsync(HubInfo hubInfo, CancellationToken cancellationToken)
         {
             var uri = new Uri(hubInfo.HostAddress);
             var connection = GetConnection(uri);
 
             try
             {
-                await connection.UpdateHub(hubInfo);
+                await connection.UpdateHubAsync(hubInfo, cancellationToken)
+                                .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, nameof(UpdateHubAsync));
                 return false;
             }
 
             try
             {
-                await _hubCacheService.SaveHub(hubInfo);
+                await _hubCacheService.SaveHubAsync(hubInfo, cancellationToken)
+                                      .ConfigureAwait(false);
+
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                _logger.Error(ex, nameof(UpdateHubAsync));
             }
 
             return false;

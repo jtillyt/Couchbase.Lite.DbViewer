@@ -1,10 +1,8 @@
-﻿using Couchbase.Lite;
-using Dawn;
-using DbViewer.Models;
+﻿using Dawn;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace DbViewer.ViewModels
+namespace DbViewer.Models
 {
     public class DocumentModel : INotifyPropertyChanged
     {
@@ -21,8 +19,6 @@ namespace DbViewer.ViewModels
                 .Value;
         }
 
-        public Document Document { get; }
-
         public CachedDatabase Database { get; }
 
         public string DocumentId
@@ -30,7 +26,7 @@ namespace DbViewer.ViewModels
             get => _documentId;
             set
             {
-                if (_documentId != value)
+                if (!string.Equals(_documentId, value))
                 {
                     _documentId = value;
 
@@ -48,15 +44,7 @@ namespace DbViewer.ViewModels
 
         public class Comparer : IComparer<DocumentModel>
         {
-            public int Compare(DocumentModel x, DocumentModel y)
-            {
-                if (x.DocumentId == null || y.DocumentId == null)
-                {
-                    return 0;
-                }
-
-                return string.Compare(x.DocumentId, y.DocumentId, true);
-            }
+            public int Compare(DocumentModel x, DocumentModel y) => string.Compare(x.DocumentId, y.DocumentId, true);
         }
     }
 }

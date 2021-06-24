@@ -1,8 +1,6 @@
-﻿using Xamarin.Forms;
-
-namespace DbViewer.Views
+﻿namespace DbViewer.Views
 {
-    public partial class HubSettingsPage : ContentPage
+    public partial class HubSettingsPage
     {
         public HubSettingsPage()
         {

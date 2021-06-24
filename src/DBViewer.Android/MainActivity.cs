@@ -17,16 +17,17 @@ namespace DbViewer.Droid
 
             InitializePlugins(savedInstanceState);
 
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
-            if (App.Current.Resources.TryGetValue("ColoredBackgroundMediumColor", out object mainColorObj))
+
+            if (Prism.PrismApplicationBase.Current.Resources.TryGetValue("ColoredBackgroundMediumColor", out object mainColorObj))
             {
                 var color = (Xamarin.Forms.Color)mainColorObj;
                 Window.SetStatusBarColor(Android.Graphics.Color.ParseColor(color.ToHex()));
             }
         }
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 

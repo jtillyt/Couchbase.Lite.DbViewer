@@ -2,9 +2,10 @@
 <ContentPage x:Class="DbViewer.Views.DatabaseBrowserPage"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DbViewer.Models"
              xmlns:vms="clr-namespace:DbViewer.ViewModels"
-             BackgroundColor="White"
-             x:DataType="vms:DatabaseBrowserViewModel">
+             x:DataType="vms:DatabaseBrowserViewModel"
+             BackgroundColor="White">
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
 
@@ -54,17 +55,17 @@
                     </Label>
 
                     <StackLayout Orientation="Horizontal">
-                        <Entry Style="{StaticResource HeaderEntry}"
-                               Placeholder="Filter {Comma,Separated,Values}"
+                        <Entry Placeholder="Filter {Comma,Separated,Values}"
+                               Style="{StaticResource HeaderEntry}"
                                Text="{Binding FilterText}" />
                     </StackLayout>
                 </StackLayout>
             </Frame>
 
-            <ListView Style="{StaticResource DocumentListView}"
-                      CachingStrategy="RecycleElementAndDataTemplate"
+            <ListView CachingStrategy="RecycleElementAndDataTemplate"
                       IsGroupingEnabled="True"
-                      ItemsSource="{Binding Documents}">
+                      ItemsSource="{Binding Documents}"
+                      Style="{StaticResource DocumentListView}">
                 <ListView.GroupHeaderTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -82,16 +83,16 @@
                                        VerticalOptions="Center"
                                        VerticalTextAlignment="Center" />
                             </StackLayout>
-                            
+
                         </ViewCell>
                     </DataTemplate>
                 </ListView.GroupHeaderTemplate>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            
-                            <Label Style="{StaticResource DocumentListViewItem}"
-                                   x:DataType="vms:DocumentModel"
+
+                            <Label x:DataType="models:DocumentModel"
+                                   Style="{StaticResource DocumentListViewItem}"
                                    Text="{Binding DocumentId}">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />

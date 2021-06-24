@@ -1,8 +1,6 @@
-﻿using Xamarin.Forms;
-
-namespace DbViewer.Views
+﻿namespace DbViewer.Views
 {
-    public partial class HubDetailPage : ContentPage
+    public partial class HubDetailPage 
     {
         public HubDetailPage()
         {

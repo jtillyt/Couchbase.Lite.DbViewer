@@ -1,5 +1,4 @@
-﻿using DbViewer.Services;
-using Windows.Foundation;
+﻿using Windows.Foundation;
 using Windows.UI.ViewManagement;
 
 namespace DbViewer.UWP

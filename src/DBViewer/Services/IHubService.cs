@@ -3,8 +3,9 @@ using DbViewer.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DbViewer.Shared.Configuration;
 using DbViewer.Api;
+using System.Threading;
+using DbViewer.Shared.Dtos;
 
 namespace DbViewer.Services
 {
@@ -12,16 +13,16 @@ namespace DbViewer.Services
     {
         IDbHubHttpClient GetConnection(Uri hubUri);
 
-        Task<HubInfo> TryAddHubAsync(Uri hubUri);
+        Task<HubInfo> TryAddHubAsync(Uri hubUri, CancellationToken cancellationToken);
 
-        Task<HubInfo> GetCachedHubAsync(string hubId);
+        Task<HubInfo> GetCachedHubAsync(string hubId, CancellationToken cancellationToken);
 
-        Task<IEnumerable<DatabaseInfo>> ListAllHubDatabasesAsync(Uri hubUri);
+        Task<IEnumerable<DatabaseInfo>> ListAllHubDatabasesAsync(Uri hubUri, CancellationToken cancellationToken);
 
-        Task<DownloadResult> DownloadDatabaseAsync(Uri hubUri, DatabaseInfo databaseInfo);
+        Task<DownloadResult> DownloadDatabaseAsync(Uri hubUri, DatabaseInfo databaseInfo, CancellationToken cancellationToken);
 
-        Task<List<HubInfo>> ListAllKnownHubsAsync();
+        Task<List<HubInfo>> ListAllKnownHubsAsync(CancellationToken cancellationToken);
 
-        Task<bool> UpdateHubAsync(HubInfo hubInfo);
+        Task<bool> UpdateHubAsync(HubInfo hubInfo, CancellationToken cancellationToken);
     }
 }

@@ -13,7 +13,6 @@ namespace DbViewer.iOS
         }
     }
 
-
     public class PreserveAttribute : Attribute
     {
     }

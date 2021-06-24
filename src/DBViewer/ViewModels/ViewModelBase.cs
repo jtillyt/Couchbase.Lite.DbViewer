@@ -6,7 +6,7 @@ namespace DbViewer.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {
-        public System.Reactive.Disposables.CompositeDisposable Disposables {get; } = new System.Reactive.Disposables.CompositeDisposable();
+        public System.Reactive.Disposables.CompositeDisposable Disposables { get; } = new System.Reactive.Disposables.CompositeDisposable();
 
 
         protected void RunOnUi(Action action)

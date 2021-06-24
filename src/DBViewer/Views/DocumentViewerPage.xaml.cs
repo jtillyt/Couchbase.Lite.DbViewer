@@ -1,10 +1,9 @@
-﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms.Xaml;
 
 namespace DbViewer.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DocumentViewerPage : ContentPage
+    public partial class DocumentViewerPage
     {
         public DocumentViewerPage()
         {

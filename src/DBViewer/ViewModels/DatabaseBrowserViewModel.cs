@@ -1,7 +1,5 @@
-using Dawn;
 using DbViewer.Extensions;
 using DbViewer.Models;
-using DbViewer.Services;
 using DbViewer.Views;
 using DynamicData;
 using DynamicData.PLinq;
@@ -14,6 +12,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
@@ -21,45 +20,37 @@ namespace DbViewer.ViewModels
 {
     public class DatabaseBrowserViewModel : NavigationViewModelBase, INavigatedAware
     {
+        private const string FilterSearchKey = "FilterSearch";
+
         private const string UnknownFolder = "- Ungrouped -";
         private const string NoGroupsFolder = "Documents";
+
         private const int HumanEntryThrottleMs = 250;
 
-        private string[] _possibleSplitDelims = { "::", "_" };
+        private readonly string[] _possibleSplitDelims = { "::", "_" };
+
+        private readonly ReadOnlyObservableCollection<DocumentGroupViewModel> _documents;
 
         private CachedDatabaseItemViewModel _currentDatabaseItemViewModel;
-        private ReadOnlyObservableCollection<DocumentGroupViewModel> _documents;
 
         private readonly ISourceCache<DocumentModel, string> _documentCache =
             new SourceCache<DocumentModel, string>(x => x.DocumentId);
 
-        private const string FilterSearch_Key = "FilterSearch";
-        private const string DocumentSplit_Key = "DocumentSplit";
         private string _databaseName;
-        private string _splitChars = null;
+        private string _splitChars;
         private string _downloadTime;
-        private string _filterText = null;
+        private string _filterText;
 
-        private readonly IDatabaseCacheService _cacheService;
-
-        public DatabaseBrowserViewModel(IDatabaseCacheService cacheService, INavigationService navigationService)
+        public DatabaseBrowserViewModel(INavigationService navigationService)
             : base(navigationService)
         {
-            _cacheService = Guard
-                .Argument(cacheService, nameof(cacheService))
-                .NotNull()
-                .Value;
-
             this.WhenAnyValue(x => x.FilterText)
                 .Throttle(TimeSpan.FromMilliseconds(HumanEntryThrottleMs))
                 .Subscribe(_ => SaveUserState())
                 .DisposeWith(Disposables);
 
             var currentDatabaseChanged =
-                this.WhenAnyValue(x => x.CurrentDatabaseItemViewModel)
-                .Where(x => x != null)
-                .Publish()
-                .RefCount();
+                this.WhenAnyValue(x => x.CurrentDatabaseItemViewModel).Where(x => x != null).Publish().RefCount();
 
             currentDatabaseChanged
                 .Select(x => x.Database.RemoteDatabaseInfo.DisplayDatabaseName)
@@ -75,21 +66,20 @@ namespace DbViewer.ViewModels
             currentDatabaseChanged
                 .Do(x => x.Database.Connect())
                 .Where(x => x.Database.ActiveConnection.IsConnected)
-                .Subscribe(x =>
-                {
-                    var docs = x.Database.ActiveConnection.ListAllDocumentIds(true);
-                    var docVms = docs.Select(docId => new DocumentModel(x.Database, docId));
-
-                    FindGroupChar(docs.Take(10));
-
-                    _documentCache.Edit(cache =>
+                .Subscribe(
+                    x =>
                     {
-                        cache.AddOrUpdate(docVms);
-                    });
-                })
+                        var docs = x.Database.ActiveConnection.ListAllDocumentIds(true);
+                        var docVms = docs.Select(docId => new DocumentModel(x.Database, docId));
+
+                        FindGroupChar(docs.Take(10));
+
+                        _documentCache.Edit(
+                            cache => { cache.AddOrUpdate(docVms); });
+                    })
                 .DisposeWith(Disposables);
 
-            IObservable<Func<DocumentModel, bool>> filterChanged =
+            var filterChanged =
                 this.WhenAnyValue(x => x.FilterText)
                     .Throttle(TimeSpan.FromMilliseconds(HumanEntryThrottleMs))
                     .Select(Filter);
@@ -106,49 +96,19 @@ namespace DbViewer.ViewModels
                 .Subscribe()
                 .DisposeWith(Disposables);
 
-            RefreshCommand = ReactiveCommand.Create(ExecuteDatabaseRefresh, outputScheduler: RxApp.MainThreadScheduler);
-            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteViewSelectedDocument);
-            ViewDatabaseSearchCommand = ReactiveCommand.CreateFromTask(ExecuteViewDatabaseSearch);
-            FilterText = Preferences.Get(FilterSearch_Key, null);
-        }
-
-        private void FindGroupChar(IEnumerable<string> samples)
-        {
-            if (samples == null)
-            {
-                return;
-            }
-
-            foreach (var delim in from sample in samples
-                                  from delim in _possibleSplitDelims
-                                  let index = sample.IndexOf(delim)
-                                  where index > 0
-                                  select delim)
-            {
-                _splitChars = delim;
-                break;
-            }
-        }
-
-        private static string GetGroupNameFromDocumentId(string documentId, string splitChar)
-        {
-            if (string.IsNullOrWhiteSpace(splitChar))
-            {
-                return NoGroupsFolder;
-            }
-
-            if (string.IsNullOrWhiteSpace(documentId))
-            {
-                return UnknownFolder;
-            }
-
-            var split = documentId.Split(splitChar.ToCharArray());
-
-            return split.Length > 1 ? split.First() : UnknownFolder;
+            RefreshCommand = ReactiveCommand.CreateFromTask(
+                ExecuteDatabaseRefreshAsync,
+                outputScheduler: RxApp.MainThreadScheduler);
+            ViewSelectedDocumentCommand =
+                ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteViewSelectedDocumentAsync);
+            ViewDatabaseSearchCommand = ReactiveCommand.CreateFromTask(ExecuteViewDatabaseSearchAsync);
+            FilterText = Preferences.Get(FilterSearchKey, null);
         }
 
         public ReactiveCommand<Unit, Unit> ViewDatabaseSearchCommand { get; set; }
+
         public ReactiveCommand<DocumentModel, Unit> ViewSelectedDocumentCommand { get; }
+
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
 
         public string FilterText
@@ -185,7 +145,6 @@ namespace DbViewer.ViewModels
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
-
         }
 
         public void OnNavigatedTo(INavigationParameters parameters)
@@ -193,14 +152,34 @@ namespace DbViewer.ViewModels
             // TODO: <James Thomas: 3/18/21> Standardize params
             if (parameters.ContainsKey(nameof(CachedDatabaseItemViewModel)))
             {
-                CurrentDatabaseItemViewModel = parameters.GetValue<CachedDatabaseItemViewModel>(nameof(CachedDatabaseItemViewModel));
+                CurrentDatabaseItemViewModel = parameters.GetValue<CachedDatabaseItemViewModel>(
+                    nameof(CachedDatabaseItemViewModel));
             }
+        }
+
+        private static string GetGroupNameFromDocumentId(string documentId, string splitChar)
+        {
+            if (string.IsNullOrWhiteSpace(splitChar))
+            {
+                return NoGroupsFolder;
+            }
+
+            if (string.IsNullOrWhiteSpace(documentId))
+            {
+                return UnknownFolder;
+            }
+
+            var split = documentId.Split(splitChar.ToCharArray());
+
+            return split.Length > 1 ? split.First() : UnknownFolder;
         }
 
         private static Func<DocumentModel, bool> Filter(string arg) => model =>
         {
             if (string.IsNullOrWhiteSpace(arg))
+            {
                 return true;
+            }
 
             var sections = arg.Split(',');
 
@@ -209,7 +188,9 @@ namespace DbViewer.ViewModels
             foreach (var section in sections)
             {
                 if (string.IsNullOrWhiteSpace(section))
+                {
                     continue;
+                }
 
                 var cleanedSection = section.Trim().ToLowerInvariant();
 
@@ -222,26 +203,62 @@ namespace DbViewer.ViewModels
             return false;
         };
 
-        private void ExecuteDatabaseRefresh()
+        private void FindGroupChar(IEnumerable<string> samples)
         {
+            if (samples == null)
+            {
+                return;
+            }
+
+            foreach (var delim in from sample in samples
+                                  from delim in _possibleSplitDelims
+                                  let index = sample.IndexOf(delim)
+                                  where index > 0
+                                  select delim)
+            {
+                _splitChars = delim;
+                break;
+            }
+        }
+
+        private Task ExecuteDatabaseRefreshAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
             // TODO: <James Thomas: 5/29/21> Add DB refresh and test
+            return Task.CompletedTask;
         }
 
         private void SaveUserState()
         {
-            Preferences.Set(FilterSearch_Key, FilterText);
+            Preferences.Set(FilterSearchKey, FilterText);
         }
 
-        private async Task ExecuteViewSelectedDocument(DocumentModel document) =>
-            await NavigationService.NavigateAsync(nameof(DocumentViewerPage), (nameof(DocumentModel), document), (nameof(CachedDatabase), CurrentDatabaseItemViewModel.Database));
-
-        private Task ExecuteViewDatabaseSearch()
+        private Task ExecuteViewSelectedDocumentAsync(DocumentModel document, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return NavigationService.NavigateAsync(
+                nameof(DocumentViewerPage),
+                (nameof(DocumentModel), document),
+                (nameof(CachedDatabase), CurrentDatabaseItemViewModel.Database));
+        }
+
+        private Task ExecuteViewDatabaseSearchAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var documentsToSearch = Documents.SelectMany(dg => dg.Select(d => d.DocumentId));
             var navParams = new NavigationParameters
             {
-                { nameof(CachedDatabaseItemViewModel), CurrentDatabaseItemViewModel },
-                { nameof(DatabaseSearchViewModel.DocumentIdList_Param), documentsToSearch }
+                {
+                    nameof(CachedDatabaseItemViewModel),
+                    CurrentDatabaseItemViewModel
+                },
+                {
+                    nameof(DatabaseSearchViewModel.DocumentIdListParam),
+                    documentsToSearch
+                }
             };
 
             return NavigationService.NavigateAsync(nameof(DatabaseSearchPage), navParams);

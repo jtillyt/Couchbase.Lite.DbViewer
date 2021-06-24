@@ -1,6 +1,5 @@
 ﻿using Dawn;
 using DbViewer.Shared;
-using DbViewer.Services;
 using System;
 using System.IO;
 using Newtonsoft.Json;
@@ -10,7 +9,7 @@ namespace DbViewer.Models
 {
     public class CachedDatabase
     {
-        private object _synclock = new object();
+        private readonly object _synclock = new object();
 
         public CachedDatabase()
         {
@@ -94,11 +93,6 @@ namespace DbViewer.Models
         /// The full path to the zip file that was downloaded.
         /// </summary>
         [JsonIgnore]
-        public string ArchiveFullPath => LocalDatabasePathFull + ".zip";
-
-        /// <summary>
-        /// Tracking whether we've already successfully unzipped
-        /// </summary>
-        public bool IsUnzipped { get; set; }
+        public string ArchiveFullPath => $"{LocalDatabasePathFull}.zip";
     }
 }

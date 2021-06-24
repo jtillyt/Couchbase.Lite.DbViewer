@@ -1,4 +1,5 @@
 using DbViewer.Extensions;
+using DbViewer.Models;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;

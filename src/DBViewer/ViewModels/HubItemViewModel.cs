@@ -1,26 +1,23 @@
 ﻿using Dawn;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using ReactiveUI;
 
 namespace DbViewer.ViewModels
 {
     public class HubItemViewModel : ReactiveObject
     {
-        private readonly HubInfo _hubInfo;
-
         public HubItemViewModel(HubInfo hubInfo)
         {
-            _hubInfo = Guard.Argument(hubInfo, nameof(hubInfo))
-                              .NotNull()
-                              .Value;
+            Guard.Argument(hubInfo, nameof(hubInfo))
+                .NotNull();
 
-
-            DisplayName = _hubInfo.HubName;
-            HostAddress = _hubInfo.HostAddress;
-            HubId = _hubInfo.Id;
+            DisplayName = hubInfo.HubName;
+            HostAddress = hubInfo.HostAddress;
+            HubId = hubInfo.Id;
         }
 
         private string _displayName;
+
         public string DisplayName
         {
             get => _displayName;
@@ -28,6 +25,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _hostAddress;
+
         public string HostAddress
         {
             get => _hostAddress;
@@ -35,6 +33,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _hubId;
+
         public string HubId
         {
             get => _hubId;

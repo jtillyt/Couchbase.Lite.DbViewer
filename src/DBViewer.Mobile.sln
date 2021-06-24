@@ -18,7 +18,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbViewer.Android", "DbViewe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbViewer.iOS", "DbViewer.iOS\DbViewer.iOS.csproj", "{D1F693EE-93F2-4C30-95DF-5FB98AE87422}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbViewer.Shared", "DbViewer.Shared\DbViewer.Shared.csproj", "{9C7EDEB0-90FB-413E-AA89-7AC602CC20C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbViewer.Shared", "DbViewer.Shared\DbViewer.Shared.csproj", "{9C7EDEB0-90FB-413E-AA89-7AC602CC20C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{585877A7-F8C8-4B9D-B9DE-FF56A39CE80F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

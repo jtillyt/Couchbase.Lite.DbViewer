@@ -65,20 +65,22 @@
                             ItemsSource="{Binding KnownHubs}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vms:HubItemViewModel">
-                        <Frame HasShadow="False" HorizontalOptions="FillAndExpand" 
-                               BackgroundColor="{StaticResource BackgroundSmokeColor}" 
-                               CornerRadius="6">
+                        <Frame BackgroundColor="{StaticResource BackgroundSmokeColor}"
+                               CornerRadius="6"
+                               HasShadow="False"
+                               HorizontalOptions="FillAndExpand">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedHubCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
                             <StackLayout Orientation="Vertical">
                                 <Label Style="{DynamicResource ListItemMainLabel}"
-                                           Text="{Binding DisplayName}"
-                                           VerticalOptions="Center" />
-                                <Label Style="{DynamicResource ListItemMainLabel}"
-                                           Text="{Binding HostAddress}"
-                                           VerticalOptions="Center" 
-                                           FontSize="Small" />
+                                       FontAttributes="Bold"
+                                       Text="{Binding DisplayName}"
+                                       VerticalOptions="Center" />
+                                <Label FontSize="Small"
+                                       Style="{DynamicResource ListItemMainLabel}"
+                                       Text="{Binding HostAddress}"
+                                       VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
                     </DataTemplate>

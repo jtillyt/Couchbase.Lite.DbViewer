@@ -2,6 +2,7 @@
 using ReactiveUI;
 using System.Diagnostics;
 using System.Reactive;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DbViewer.ViewModels
@@ -19,9 +20,11 @@ namespace DbViewer.ViewModels
 
         protected INavigationService NavigationService { get; }
 
-        private async Task ExecuteBackAsync()
+        private async Task ExecuteBackAsync(CancellationToken cancellationToken)
         {
-            var result = await NavigationService.GoBackAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = await NavigationService.GoBackAsync().ConfigureAwait(false);
 
             if (!result.Success)
             {

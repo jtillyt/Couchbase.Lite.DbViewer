@@ -1,8 +1,6 @@
-﻿using Xamarin.Forms;
-
-namespace DbViewer.Views
+﻿namespace DbViewer.Views
 {
-    public partial class ServiceSettingsPage : ContentPage
+    public partial class ServiceSettingsPage 
     {
         public ServiceSettingsPage()
         {

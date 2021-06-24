@@ -9,27 +9,45 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using System.Threading;
+using Serilog;
 
-namespace DbViewer.Services
+namespace DbViewer.DataStores
 {
-    public class DatabaseCacheService : IDatabaseCacheService
+    public class DatabaseDatastore : IDatabaseDatastore
     {
-        private const string Database_Cache_Key = "Database_Cache";
+        private const string DatabaseCacheKey = "Database_Cache";
 
-        public DatabaseCacheService()
+        private readonly ILogger _logger = Log.ForContext<DatabaseDatastore>();
+
+        public DatabaseDatastore()
         {
             CacheUpdated = new BehaviorSubject<CachedDatabaseRegistry>(new CachedDatabaseRegistry());
         }
 
-        public IObserver<CachedDatabaseRegistry> CacheUpdated { get; }
+        public IObservable<CachedDatabaseRegistry> CacheUpdated { get; }
 
-        public async Task SaveFromStream(Stream databaseDownloadStream, DatabaseInfo databaseInfo)
+        public async Task DeleteDatabaseAsync(CachedDatabase database, CancellationToken cancellationToken)
         {
-            var registry = await GetRegistry();
+            cancellationToken.ThrowIfCancellationRequested();
 
-            CachedDatabase dbItem = registry.DatabaseCollection
+            var registry = await GetRegistryAsync(cancellationToken);
+
+            registry.DatabaseCollection.RemoveAll(db => db.LocalDatabasePathFull == database.LocalDatabasePathFull);
+
+            SaveRegistry(registry);
+        }
+
+        public async Task SaveFromStreamAsync(Stream databaseDownloadStream, DatabaseInfo databaseInfo, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var registry = await GetRegistryAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            var dbItem = registry.DatabaseCollection
                                             .FirstOrDefault(
-                                    db => db.RemoteDatabaseInfo.DisplayDatabaseName == databaseInfo.DisplayDatabaseName);
+                                    db => string.Equals(db.RemoteDatabaseInfo.DisplayDatabaseName, databaseInfo.DisplayDatabaseName));
 
             if (dbItem == null || !Directory.Exists(dbItem.LocalDatabasePathRoot))
             {
@@ -42,8 +60,6 @@ namespace DbViewer.Services
                 dbItem.ActiveConnection?.Disconnect();
             }
 
-            dbItem.IsUnzipped = false;
-
             if (File.Exists(dbItem.ArchiveFullPath))
             {
                 File.Delete(dbItem.ArchiveFullPath);
@@ -55,10 +71,7 @@ namespace DbViewer.Services
                 fileStream.Close();
             }
 
-            if (UnzipDbStream(dbItem))
-            {
-                dbItem.IsUnzipped = true;
-            }
+            UnzipDbStream(dbItem);
 
             dbItem.DownloadTime = DateTimeOffset.Now;
             SaveRegistry(registry);
@@ -77,6 +90,7 @@ namespace DbViewer.Services
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, nameof(UnzipDbStream));
                 return false;
             }
 
@@ -89,6 +103,7 @@ namespace DbViewer.Services
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, nameof(UnzipDbStream));
                 return false;
             }
 
@@ -118,34 +133,36 @@ namespace DbViewer.Services
         private void SaveRegistry(CachedDatabaseRegistry registry)
         {
             BlobCache.LocalMachine
-                     .InsertObject(Database_Cache_Key, registry)
+                     .InsertObject(DatabaseCacheKey, registry)
                      .Subscribe(
             _ =>
             {
-                CacheUpdated.OnNext(registry);
+                ((ISubject<CachedDatabaseRegistry>)CacheUpdated).OnNext(registry);
             });
         }
 
-        public async Task<CachedDatabaseRegistry> GetRegistry()
+        public async Task<CachedDatabaseRegistry> GetRegistryAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_inMemoryRegistry == null)
             {
                 try
                 {
                     _inMemoryRegistry = await BlobCache.LocalMachine
-                                                       .GetOrCreateObject(Database_Cache_Key, () => new CachedDatabaseRegistry());
+                                                       .GetOrCreateObject(DatabaseCacheKey, () => new CachedDatabaseRegistry());
 
                     Cleanup(_inMemoryRegistry);
                 }
                 catch (Exception ex)
                 {
-
+                    _logger.Error(ex, nameof(GetRegistryAsync));
                 }
             }
 
             return _inMemoryRegistry;
         }
 
-        private CachedDatabaseRegistry _inMemoryRegistry = null;
+        private CachedDatabaseRegistry _inMemoryRegistry;
     }
 }

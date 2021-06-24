@@ -40,12 +40,10 @@
                     <StackLayout Margin="10" Orientation="Horizontal">
                         <Entry Margin="10"
                                HeightRequest="50"
+                               Style="{StaticResource HeaderEntry}"
                                HorizontalOptions="FillAndExpand"
                                Placeholder="Search Text"
                                PlaceholderColor="WhiteSmoke"
-                               IsSpellCheckEnabled="False"
-                               IsTextPredictionEnabled="False"
-                               Keyboard="Text"
                                Text="{Binding SearchText}"
                                TextColor="Black" />
 

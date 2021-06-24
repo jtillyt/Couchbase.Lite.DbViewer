@@ -96,6 +96,9 @@
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="PlaceholderColor" Value="{StaticResource HeaderEntryTextHintColor}" />
         <Setter Property="TextColor" Value="{DynamicResource HeaderEntryTextColor}"/>
+        <Setter Property="IsSpellCheckEnabled" Value="False"/>
+        <Setter Property="IsTextPredictionEnabled" Value="False"/>
+        <Setter Property="Keyboard" Value="Plain"/>
     </Style>
 
     <Style x:Key="DarkColoredButton" TargetType="Button">
@@ -136,6 +139,5 @@
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
-
     </Style>
 </ResourceDictionary>

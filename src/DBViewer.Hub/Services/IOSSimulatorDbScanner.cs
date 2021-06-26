@@ -1,6 +1,6 @@
 ﻿using Dawn;
 using DbViewer.Shared;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

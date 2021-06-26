@@ -1,5 +1,5 @@
 ﻿using Dawn;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using System.Collections.Generic;
 using System.Reflection;
 

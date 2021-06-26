@@ -1,5 +1,6 @@
 ﻿using DbViewer.Hub.Services;
 using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using FluentAssertions;
 using Newtonsoft.Json;
 using System;
@@ -28,7 +29,7 @@ namespace DbViewer.Hub.Tests.Configuration
 
             var hubJson = JsonConvert.SerializeObject(hub);
 
-            var receivedHub = JsonConvert.DeserializeObject<Shared.Configuration.HubInfo>(hubJson);
+            var receivedHub = JsonConvert.DeserializeObject<HubInfo>(hubJson);
 
             receivedHub.Should()
                        .NotBeNull();
@@ -76,9 +77,9 @@ namespace DbViewer.Hub.Tests.Configuration
                        .NotBeNullOrEmpty();
         }
 
-        public static Shared.Configuration.HubInfo BuildSimpleHub(uint mockId = 1)
+        public static HubInfo BuildSimpleHub(uint mockId = 1)
         {
-            var configuration = new Shared.Configuration.HubInfo();
+            var configuration = new HubInfo();
 
             configuration.Id = Guid.NewGuid().ToString();
             configuration.HubName = $"Test Hub {mockId}";

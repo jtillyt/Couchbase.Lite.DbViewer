@@ -1,4 +1,4 @@
-﻿using DbViewer.Shared.Configuration;
+﻿using DbViewer.Shared.Dtos;
 using System.Collections.Generic;
 
 namespace DbViewer.Hub.Services

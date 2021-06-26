@@ -7,10 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using DbViewer.Shared.Configuration;
 using Dawn;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DbViewer.Hub.Controllers
 {

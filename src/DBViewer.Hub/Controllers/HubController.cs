@@ -1,6 +1,6 @@
 ﻿using Dawn;
 using DbViewer.Hub.Services;
-using DbViewer.Shared.Configuration;
+using DbViewer.Shared.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

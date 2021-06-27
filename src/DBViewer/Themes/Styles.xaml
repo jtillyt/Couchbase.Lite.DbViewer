@@ -92,7 +92,7 @@
         <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
         <Setter Property="HeightRequest" Value="50"/>
         <Setter Property="Margin" Value="40,10,40,0"/>
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Start" />
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="PlaceholderColor" Value="{StaticResource HeaderEntryTextHintColor}" />
         <Setter Property="TextColor" Value="{DynamicResource HeaderEntryTextColor}"/>

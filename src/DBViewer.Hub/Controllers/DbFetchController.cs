@@ -1,13 +1,12 @@
-﻿using DbViewer.Shared;
+﻿using Dawn;
 using DbViewer.Hub.Services;
-using ImTools;
+using DbViewer.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using Dawn;
 using System.Linq;
 
 namespace DbViewer.Hub.Controllers
@@ -55,7 +54,7 @@ namespace DbViewer.Hub.Controllers
         {
             var listDbs = ListAllDbs();
 
-            var dbInfo = listDbs.FindFirst(db => db.DisplayDatabaseName.Equals(displayName, StringComparison.OrdinalIgnoreCase));
+            var dbInfo = listDbs.FirstOrDefault(db => db.DisplayDatabaseName.Equals(displayName, StringComparison.OrdinalIgnoreCase));
 
             if (dbInfo == null)
                 return null;

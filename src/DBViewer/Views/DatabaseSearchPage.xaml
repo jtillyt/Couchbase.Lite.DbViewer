@@ -60,30 +60,25 @@
                 </StackLayout>
             </Frame>
 
-            <ListView CachingStrategy="RecycleElementAndDataTemplate"
-                      IsGroupingEnabled="False"
-                      ItemsSource="{Binding SearchResults}"
+            <CollectionView 
+                ItemsSource="{Binding SearchResults}"
+                ItemSizingStrategy="MeasureFirstItem"
                       Style="{StaticResource DocumentListView}">
-                <ListView.ItemTemplate>
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
 
-                            <Label Margin="30,10"
-                                   x:DataType="models:DocumentModel"
-                                   FontSize="18"
-                                   Text="{Binding DocumentId}"
-                                   TextColor="Black"
-                                   VerticalOptions="Center"
-                                   VerticalTextAlignment="Center">
+                            <Label x:DataType="models:DocumentModel"
+                                   Margin="30,10"
+                                   Style="{StaticResource DocumentListViewItem}"
+                                   Text="{Binding DocumentId}">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
                                 </Label.GestureRecognizers>
                             </Label>
 
-                        </ViewCell>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
         </StackLayout>
     </ContentPage.Content>

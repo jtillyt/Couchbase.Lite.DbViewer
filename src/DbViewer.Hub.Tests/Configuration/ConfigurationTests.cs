@@ -89,10 +89,11 @@ namespace DbViewer.Hub.Tests.Configuration
 
         public static ServiceInfo BuildSimpleService(uint mockId = 1)
         {
-            var service = new ServiceInfo();
-
-            service.Id = Guid.NewGuid().ToString();
-            service.ServiceName = $"Test Service {mockId}";
+            var service = new ServiceInfo
+            {
+                Id = Guid.NewGuid().ToString(),
+                ServiceName = $"Test Service {mockId}"
+            };
 
             return service;
         }

@@ -112,7 +112,7 @@ namespace DbViewer.Hub.Services
             return scanners;
         }
 
-        private string GetPath(bool ensure = false)
+        private static string GetPath(bool ensure = false)
         {
             var filePath = Path.Combine(DataFolder, HubInfoFilePath);
 

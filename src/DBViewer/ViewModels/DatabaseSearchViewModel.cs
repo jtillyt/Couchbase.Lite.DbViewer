@@ -1,14 +1,19 @@
 ﻿using Dawn;
 using DbViewer.DataStores;
+using DbViewer.Extensions;
 using DbViewer.Models;
 using DbViewer.Views;
+using DynamicData;
 using Newtonsoft.Json;
 using Prism.Navigation;
 using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +28,11 @@ namespace DbViewer.ViewModels
         private IEnumerable<string> _documentIdsToSearch;
         private string _searchTitle;
         private string _searchText = "";
-        private ObservableCollection<DocumentModel> _searchResults;
+
+        private readonly ReadOnlyObservableCollection<DocumentModel> _searchResults;
+
+        private readonly ISourceCache<DocumentModel, string> _documentCache =
+         new SourceCache<DocumentModel, string>(x => x.DocumentId);
 
         public DatabaseSearchViewModel(IDatabaseDatastore cacheService, INavigationService navigationService)
             : base(navigationService)
@@ -33,8 +42,18 @@ namespace DbViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            SearchCommand = ReactiveCommand.CreateFromTask(ExecuteSearchAsync);
-            ViewSelectedDocumentCommand = ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteViewSelectedDocumentAsync);
+            SearchCommand = ReactiveCommand.CreateFromTask(ExecuteSearchAsync, outputScheduler: RxApp.MainThreadScheduler);
+
+            _documentCache
+               .Connect()
+               .RefCount()
+               .ObserveOn(RxApp.MainThreadScheduler)
+               .Bind(out _searchResults)
+               .LogManagedThread("Search - After Bind")
+               .Subscribe()
+               .DisposeWith(Disposables);
+
+            ViewSelectedDocumentCommand = ReactiveCommand.Create<DocumentModel>(ExecuteViewSelectedDocument);
         }
 
         public ReactiveCommand<DocumentModel, Unit> ViewSelectedDocumentCommand { get; }
@@ -53,11 +72,7 @@ namespace DbViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _searchText, value);
         }
 
-        public ObservableCollection<DocumentModel> SearchResults
-        {
-            get => _searchResults;
-            set => this.RaiseAndSetIfChanged(ref _searchResults, value);
-        }
+        public ReadOnlyObservableCollection<DocumentModel> SearchResults => _searchResults;
 
         private CachedDatabaseItemViewModel _currentDatabaseItemViewModel;
         public CachedDatabaseItemViewModel CurrentDatabaseItemViewModel
@@ -83,72 +98,87 @@ namespace DbViewer.ViewModels
             }
         }
 
-        private Task ExecuteSearchAsync(CancellationToken cancellationToken)
+        private async Task ExecuteSearchAsync(CancellationToken cancellationToken)
         {
-            RunOnUi(() =>
-            {
-                if (SearchResults != null)
-                {
-                    SearchResults.Clear();
-                }
-            });
-
             cancellationToken.ThrowIfCancellationRequested();
 
+            if (CurrentDatabaseItemViewModel == null)
+            {
+                return;
+            }
+
+            var documentIdsWithHits = await SearchDbAsync(SearchText, cancellationToken).ConfigureAwait(false);
+
+            var docModels = documentIdsWithHits.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId));
+
+            RunOnUi(() =>
+            {
+                _documentCache.Edit((editor) =>
+                {
+                    editor.Clear();
+                    editor.AddOrUpdate(docModels);
+                });
+            });
+        }
+
+        private Task<List<string>> SearchDbAsync(string searchText, CancellationToken cancellationToken)
+        {
             return Task.Run(() =>
             {
-                if (CurrentDatabaseItemViewModel == null)
-                {
-                    return;
-                }
+                var documentIdsWithHits = new List<string>();
 
                 var database = CurrentDatabaseItemViewModel.Database;
                 var isConnected = database.Connect();
 
                 if (!isConnected)
                 {
-                    return;
+                    return documentIdsWithHits;
                 }
 
                 var connection = database.ActiveConnection;
 
                 var documentIds = connection.ListAllDocumentIds();
 
-                var searchTextCorrected = SearchText.ToLower();
+                var searchTextCorrected = searchText.ToLower();
 
-                var documentIdsWithHits = new List<string>();
 
+                var count = 0;
                 foreach (var documentId in documentIds)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var document = connection.GetDocumentById(documentId);
-
-                    var documentText = JsonConvert.SerializeObject(document);
-
-                    if (documentText.ToLower().Contains(searchTextCorrected))
+                    using (var document = connection.GetDocumentById(documentId))
                     {
-                        documentIdsWithHits.Add(documentId);
+                        var documentText = JsonConvert.SerializeObject(document);
+
+                        if (documentText.ToLower().Contains(searchTextCorrected))
+                        {
+                            documentIdsWithHits.Add(documentId);
+                            count++;
+
+                            if (count == 500)
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
 
-                RunOnUi(() =>
-                {
-                    SearchResults = new ObservableCollection<DocumentModel>(documentIdsWithHits.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId)));
-                });
-            }, cancellationToken);
+                return documentIdsWithHits;
+            });
         }
 
-        private Task ExecuteViewSelectedDocumentAsync(DocumentModel document, CancellationToken cancellationToken)
+        private void ExecuteViewSelectedDocument(DocumentModel document)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             var navParams = new NavigationParameters
             {
                 { nameof(DocumentModel), document }
             };
 
-            return NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
+            RunOnUi(() =>
+            {
+                NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
+            });
         }
     }
 }

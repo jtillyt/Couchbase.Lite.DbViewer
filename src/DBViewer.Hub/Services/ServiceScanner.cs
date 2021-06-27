@@ -34,11 +34,13 @@ namespace DbViewer.Hub.Services
                     if (propAtt == null)
                         continue;
 
-                    var serviceProp = new ServicePropertyInfo();
-                    serviceProp.Key = propAtt.Key;
-                    serviceProp.Value = propAtt.DefaultValue;
-                    serviceProp.DisplayName = propAtt.DisplayName;
-                    serviceProp.Description = propAtt.Description;
+                    var serviceProp = new ServicePropertyInfo
+                    {
+                        Key = propAtt.Key,
+                        Value = propAtt.DefaultValue,
+                        DisplayName = propAtt.DisplayName,
+                        Description = propAtt.Description
+                    };
 
                     serviceType.Properties.Add(serviceProp);
                 }

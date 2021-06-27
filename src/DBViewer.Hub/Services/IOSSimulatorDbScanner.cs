@@ -71,8 +71,10 @@ namespace DbViewer.Hub.Services
         private string GetCurrentSimulatorDataPath()
         {
             var psi = BuildCurrentSimCommandCommand();
-            var process = new Process();
-            process.StartInfo = psi;
+            var process = new Process
+            {
+                StartInfo = psi
+            };
             process.Start();
             string result = process.StandardOutput.ReadToEnd();
             process.WaitForExit();

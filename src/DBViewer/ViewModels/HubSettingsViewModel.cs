@@ -30,7 +30,7 @@ namespace DbViewer.ViewModels
         private readonly ILogger _logger = Log.ForContext<HubSettingsViewModel>();
         private readonly IHubService _hubService;
 
-        private ServiceDefinitionListItemViewModel _selectedScanner;
+        private ServiceDefinitionListItemViewModel _selectedScannerType;
         private HubInfo _hubInfo;
         private string _hubName;
         private string _status;
@@ -43,7 +43,7 @@ namespace DbViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            var canAddService = this.WhenAnyValue(x => x.SelectedScanner).Select(x => x != null);
+            var canAddService = this.WhenAnyValue(x => x.SelectedScannerType).Select(x => x != null);
 
             ViewSelectedServiceCommand = ReactiveCommand.CreateFromTask<ScanServiceListItemViewModel>(
                                          ExecuteViewSelectedServiceAsync)
@@ -51,7 +51,11 @@ namespace DbViewer.ViewModels
 
             AddScannerCommand = ReactiveCommand.CreateFromTask(ExecuteAddScannerAsync, canAddService)
                                                .DisposeWith(Disposables);
+
+            DeleteScannerCommand = ReactiveCommand.CreateFromTask<ScanServiceListItemViewModel>(ExecuteDeleteScannerAsync)
+                                               .DisposeWith(Disposables);
         }
+
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
@@ -99,6 +103,8 @@ namespace DbViewer.ViewModels
 
         public ReactiveCommand<Unit, Unit> AddScannerCommand { get; }
 
+        public ReactiveCommand<ScanServiceListItemViewModel, Unit> DeleteScannerCommand { get; }
+
         public ObservableCollection<ServiceDefinitionListItemViewModel> AvailableScanners
         {
             get => _availableScanners;
@@ -107,17 +113,17 @@ namespace DbViewer.ViewModels
 
         public string HubName { get => _hubName; set => this.RaiseAndSetIfChanged(ref _hubName, value); }
 
-        public ServiceDefinitionListItemViewModel SelectedScanner
+        public ServiceDefinitionListItemViewModel SelectedScannerType
         {
-            get => _selectedScanner;
-            set => this.RaiseAndSetIfChanged(ref _selectedScanner, value);
+            get => _selectedScannerType;
+            set => this.RaiseAndSetIfChanged(ref _selectedScannerType, value);
         }
 
         public string Status { get => _status; set => this.RaiseAndSetIfChanged(ref _status, value); }
 
         public ReactiveCommand<ScanServiceListItemViewModel, Unit> ViewSelectedServiceCommand { get; }
 
-         private void AddServiceViewModel(ServiceInfo serviceInfo)
+        private void AddServiceViewModel(ServiceInfo serviceInfo)
         {
             if (serviceInfo == null)
             {
@@ -146,12 +152,13 @@ namespace DbViewer.ViewModels
 
         private async Task ExecuteAddScannerAsync(CancellationToken cancellationToken)
         {
-            if (SelectedScanner == null)
+            //TODO: Evaluate if needed with command.canexecute gaurd in place; else message user.
+            if (SelectedScannerType == null)
             {
                 return;
             }
 
-            var activeService = CreateActiveServiceFromType(SelectedScanner.ServiceDefinition);
+            var activeService = CreateActiveServiceFromType(SelectedScannerType.ServiceDefinition);
             _hubInfo.ActiveServices.Add(activeService);
 
             var result = await _hubService.UpdateHubAsync(_hubInfo, cancellationToken).ConfigureAwait(false);
@@ -159,6 +166,21 @@ namespace DbViewer.ViewModels
             if (result)
             {
                 AddServiceViewModel(activeService);
+            }
+        }
+
+        private async Task ExecuteDeleteScannerAsync(ScanServiceListItemViewModel scanServiceViewModel, CancellationToken cancellationToken)
+        {
+            _hubInfo.ActiveServices.Remove(scanServiceViewModel.ServiceInfo);
+
+            var result = await _hubService.UpdateHubAsync(_hubInfo, cancellationToken).ConfigureAwait(false);
+
+            if (result)
+            {
+                RunOnUi(() =>
+                {
+                    ActiveScanners.Remove(scanServiceViewModel);
+                });
             }
         }
 

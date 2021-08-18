@@ -30,8 +30,8 @@ namespace DbViewer.Hub
             services.AddLogging(logs=>logs.AddConsole());
 
             services.AddSingleton<IHubService,HubService>();
-            services.AddSingleton<LocalDbScanner>();
-            services.AddSingleton<IOSSimulatorDbScanner>();
+            services.AddTransient<LocalDbScanner>();
+            services.AddTransient<IOSSimulatorDbScanner>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

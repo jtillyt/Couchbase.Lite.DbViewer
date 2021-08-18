@@ -56,15 +56,39 @@
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedServiceCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
                                 </Frame.GestureRecognizers>
-                                <StackLayout Orientation="Vertical">
-
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="100"/>
+                                    </Grid.ColumnDefinitions>
                                     <Label HorizontalOptions="Start"
                                            Style="{DynamicResource ListItemMainLabel}"
                                            Text="{Binding DisplayName}"
                                            VerticalOptions="Center" />
-                                </StackLayout>
+                                    <Label Grid.Row="1"
+                                           Grid.ColumnSpan="2"
+                                           HorizontalOptions="Start"
+                                           Style="{DynamicResource List}"
+                                           Text="{Binding Description}"
+                                           VerticalOptions="Center" />
+                                    <Button Grid.Column="1"
+                                            Grid.RowSpan="2"
+                                            BackgroundColor="{StaticResource DangerTextColor}"
+                                            Command="{Binding BindingContext.DeleteScannerCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}"
+                                            CornerRadius="3"
+                                            FontSize="Small"
+                                            HeightRequest="40"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="EndAndExpand"
+                                            Text="X"
+                                            TextColor="White"
+                                            WidthRequest="40" />
+                                </Grid>
                             </Frame>
-
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -86,7 +110,7 @@
                             ItemDisplayBinding="{Binding DisplayName}"
                             ItemsSource="{Binding AvailableScanners}"
                             SelectedIndex="0"
-                            SelectedItem="{Binding SelectedScanner}" />
+                            SelectedItem="{Binding SelectedScannerType}" />
                 </Frame>
 
                 <Button Margin="0,10,10,10"

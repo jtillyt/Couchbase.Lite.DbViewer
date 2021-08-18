@@ -149,7 +149,16 @@ namespace DbViewer.ViewModels
 
                     using (var document = connection.GetDocumentById(documentId))
                     {
-                        var documentText = JsonConvert.SerializeObject(document);
+                        var documentText = string.Empty;
+
+                        try
+                        {
+                            documentText = JsonConvert.SerializeObject(document);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
 
                         if (documentText.ToLower().Contains(searchTextCorrected))
                         {

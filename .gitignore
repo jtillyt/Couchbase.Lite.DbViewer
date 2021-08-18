@@ -353,3 +353,5 @@ MigrationBackup/
 
 # macOS
 .DS_Store
+
+src/DbViewer.Hub/Data/HubInfo.json

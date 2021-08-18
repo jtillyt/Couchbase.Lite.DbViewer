@@ -13,13 +13,7 @@ namespace DbViewer.ViewModels
                               .NotNull()
                               .Value;
 
-            DisplayName = ServiceInfo.ServiceName;
-
-            //TODO: This is fragile but needed in the short term
-            if (ServiceInfo.ServiceTypeId == ServiceConstants.LocalDatabaseScannerServiceTypeId)
-            {
-                Description = serviceInfo.Properties[0].Value;
-            }
+            UpdateFromModel();
         }
 
         public ServiceInfo ServiceInfo { get; }
@@ -36,6 +30,17 @@ namespace DbViewer.ViewModels
         {
             get => _description;
             set => this.RaiseAndSetIfChanged(ref _description, value);
+        }
+
+        public void UpdateFromModel()
+        {
+            DisplayName = ServiceInfo.ServiceName;
+
+            //TODO: This is fragile but needed in the short term
+            if (ServiceInfo.ServiceTypeId == ServiceConstants.LocalDatabaseScannerServiceTypeId)
+            {
+                Description = ServiceInfo.Properties[0].Value;
+            }
         }
     }
 }

@@ -88,6 +88,16 @@ namespace DbViewer.ViewModels
                         AvailableScanners.AddRange(availableScannerViewModels);
                     });
                 }
+                else
+                {
+                    if (ActiveScanners?.Count > 0)
+                    {
+                        foreach(var scannerViewModel in ActiveScanners)
+                        {
+                            scannerViewModel.UpdateFromModel();
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {

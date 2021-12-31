@@ -80,5 +80,25 @@ namespace DbViewer.Models
         {
             return _database.GetDocument(id);
         }
+
+        public void SaveDocument(MutableDocument document)
+        {
+            _database.Save(document);
+        }
+
+        public void Compact()
+        {
+            _database.PerformMaintenance(MaintenanceType.Compact);
+        }
+
+        public void DeleteDocumentById(string id)
+        {
+            var document = GetDocumentById(id);
+
+            if (document != null)
+            {
+                _database.Delete(document);
+            }
+        }
     }
 }

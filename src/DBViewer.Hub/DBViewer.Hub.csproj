@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Couchbase.Lite" Version="2.8.6" />
     <PackageReference Include="Dawn.Guard" Version="1.12.0" />
     <PackageReference Include="DryIoc" Version="4.7.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -32,6 +33,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbViewer.Shared\DbViewer.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

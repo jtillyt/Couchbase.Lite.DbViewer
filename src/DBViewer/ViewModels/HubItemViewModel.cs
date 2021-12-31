@@ -39,5 +39,6 @@ namespace DbViewer.ViewModels
             get => _hubId;
             set => this.RaiseAndSetIfChanged(ref _hubId, value);
         }
+
     }
 }

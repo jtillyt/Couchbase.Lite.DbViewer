@@ -1,4 +1,6 @@
+using DbViewer.Hub.Couchbase;
 using DbViewer.Hub.Services;
+using DbViewer.Hub.Repos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
+using DbViewer.Hub.DbProvider;
 
 namespace DbViewer.Hub
 {
@@ -29,9 +31,11 @@ namespace DbViewer.Hub
             });
             services.AddLogging(logs=>logs.AddConsole());
 
+            services.AddSingleton<IDatabaseConnection,DatabaseConnection>();
             services.AddSingleton<IHubService,HubService>();
-            services.AddTransient<LocalDbScanner>();
-            services.AddTransient<IOSSimulatorDbScanner>();
+            services.AddSingleton<IDatabaseProviderRepository, DatabaseProviderRepository>();
+            services.AddTransient<StaticDirectoryDbProvider>();
+            services.AddTransient<IOSSimulatorDbProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

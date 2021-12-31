@@ -4,10 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vms="clr-namespace:DbViewer.ViewModels"
              x:DataType="vms:HubListViewModel"
-             BackgroundColor="White">
+             BackgroundColor="White"
+             x:Name="LayoutRoot">
     <ContentPage.Content>
 
-        <StackLayout BackgroundColor="white">
+        <StackLayout BackgroundColor="White">
 
             <Frame Margin="0,-20,0,0"
                    Padding="5,30"
@@ -65,24 +66,42 @@
                             ItemsSource="{Binding KnownHubs}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="vms:HubItemViewModel">
-                        <Frame BackgroundColor="{StaticResource BackgroundSmokeColor}"
-                               CornerRadius="6"
+                        <!-- Spacing doesn't work between items without content view -->
+                        <ContentView>
+                            <Frame BackgroundColor="{StaticResource BackgroundSmokeColor}"
+                               CornerRadius="5"
+                               Margin="15"
+                               Padding="12"
                                HasShadow="False"
                                HorizontalOptions="FillAndExpand">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedHubCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
-                            </Frame.GestureRecognizers>
-                            <StackLayout Orientation="Vertical">
-                                <Label Style="{DynamicResource ListItemMainLabel}"
-                                       FontAttributes="Bold"
-                                       Text="{Binding DisplayName}"
-                                       VerticalOptions="Center" />
-                                <Label FontSize="Small"
-                                       Style="{DynamicResource ListItemMainLabel}"
-                                       Text="{Binding HostAddress}"
-                                       VerticalOptions="Center" />
-                            </StackLayout>
-                        </Frame>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedHubCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <Grid ColumnDefinitions="*,50">
+                                    <StackLayout Orientation="Vertical">
+                                        <Label Style="{DynamicResource ListItemMainLabel}"
+                                               FontAttributes="Bold"
+                                               Text="{Binding DisplayName}"
+                                               VerticalOptions="Center" />
+                                        <Label FontSize="Small"
+                                               Style="{DynamicResource ListItemMainLabel}"
+                                               Text="{Binding HostAddress}"
+                                               VerticalOptions="Center" />
+                                    </StackLayout>
+                                    <Button BackgroundColor="{StaticResource DangerTextColor}"
+                                            Command="{Binding BindingContext.DeleteSelectedHubCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}"
+                                            Grid.Column="1"
+                                            CornerRadius="3"
+                                            FontSize="Small"
+                                            HeightRequest="40"
+                                            VerticalOptions="CenterAndExpand"
+                                            HorizontalOptions="End"
+                                            Text="X"
+                                            TextColor="White"
+                                            WidthRequest="40" />
+                                </Grid>
+                            </Frame>
+                        </ContentView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

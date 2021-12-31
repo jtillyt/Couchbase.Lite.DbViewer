@@ -1,4 +1,5 @@
-﻿using Dawn;
+﻿using Couchbase.Lite;
+using Dawn;
 using DbViewer.DataStores;
 using DbViewer.Extensions;
 using DbViewer.Models;
@@ -149,11 +150,14 @@ namespace DbViewer.ViewModels
 
                     using (var document = connection.GetDocumentById(documentId))
                     {
+                       
                         var documentText = string.Empty;
 
                         try
                         {
-                            documentText = JsonConvert.SerializeObject(document);
+                            var cleanedDocument = document.CleanAttachments();
+
+                            documentText = JsonConvert.SerializeObject(cleanedDocument);
                         }
                         catch (Exception ex)
                         {

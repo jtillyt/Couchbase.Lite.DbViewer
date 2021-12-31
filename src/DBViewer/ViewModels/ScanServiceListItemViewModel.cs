@@ -37,7 +37,7 @@ namespace DbViewer.ViewModels
             DisplayName = ServiceInfo.ServiceName;
 
             //TODO: This is fragile but needed in the short term
-            if (ServiceInfo.ServiceTypeId == ServiceConstants.LocalDatabaseScannerServiceTypeId)
+            if (ServiceInfo.ServiceTypeId == ServiceConstants.StaticDatabaseLocatorServiceTypeId)
             {
                 Description = ServiceInfo.Properties[0].Value;
             }

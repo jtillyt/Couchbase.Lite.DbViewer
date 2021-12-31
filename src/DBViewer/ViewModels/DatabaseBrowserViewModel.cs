@@ -1,10 +1,14 @@
+using Dawn;
 using DbViewer.Extensions;
 using DbViewer.Models;
+using DbViewer.Services;
+using DbViewer.Shared.Dtos;
 using DbViewer.Views;
 using DynamicData;
 using DynamicData.PLinq;
 using Prism.Navigation;
 using ReactiveUI;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,6 +24,10 @@ namespace DbViewer.ViewModels
 {
     public class DatabaseBrowserViewModel : NavigationViewModelBase, INavigatedAware
     {
+        private static ILogger _logger = Log.ForContext<DatabaseBrowserViewModel>();
+
+        private readonly IHubService _hubService;
+
         private const string FilterSearchKey = "FilterSearch";
 
         private const string UnknownFolder = "- Ungrouped -";
@@ -41,9 +49,13 @@ namespace DbViewer.ViewModels
         private string _downloadTime;
         private string _filterText;
 
-        public DatabaseBrowserViewModel(INavigationService navigationService)
+        public DatabaseBrowserViewModel(INavigationService navigationService, IHubService hubService)
             : base(navigationService)
         {
+            _hubService = Guard.Argument(hubService, nameof(hubService))
+                               .NotNull()
+                               .Value;
+
             this.WhenAnyValue(x => x.FilterText)
                 .Throttle(TimeSpan.FromMilliseconds(HumanEntryThrottleMs))
                 .Subscribe(_ => SaveUserState())
@@ -68,15 +80,19 @@ namespace DbViewer.ViewModels
                 .Where(x => x.Database.ActiveConnection.IsConnected)
                 .Subscribe(
                     x =>
-                    {
-                        var docs = x.Database.ActiveConnection.ListAllDocumentIds(true);
-                        var docVms = docs.Select(docId => new DocumentModel(x.Database, docId));
+                {
+                    var localDatabasePath = x.Database.LocalDatabasePathFull.Replace(@"\", @"/");
+                    var databaseInfo = new { localDatabasePath, x.Database.RemoteDatabaseInfo.DisplayDatabaseName };
+                    _logger.Verbose("Current database has changed to {@DatabaseInfo}", databaseInfo);
 
-                        FindGroupChar(docs.Take(10));
+                    var docs = x.Database.ActiveConnection.ListAllDocumentIds(true);
+                    var docVms = docs.Select(docId => new DocumentModel(x.Database, docId));
 
-                        _documentCache.Edit(
-                            cache => { cache.AddOrUpdate(docVms); });
-                    })
+                    FindGroupChar(docs.Take(10));
+
+                    _documentCache.Edit(
+                        cache => { cache.AddOrUpdate(docVms); });
+                })
                 .DisposeWith(Disposables);
 
             var filterChanged =
@@ -99,15 +115,21 @@ namespace DbViewer.ViewModels
             RefreshCommand = ReactiveCommand.CreateFromTask(
                 ExecuteDatabaseRefreshAsync,
                 outputScheduler: RxApp.MainThreadScheduler);
+
             ViewSelectedDocumentCommand =
                 ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteViewSelectedDocumentAsync);
+
             ViewDatabaseSearchCommand = ReactiveCommand.CreateFromTask(ExecuteViewDatabaseSearchAsync);
+
+            DeleteDocumentCommand = ReactiveCommand.CreateFromTask<DocumentModel>(ExecuteDeleteDocumentAsync);
+
             FilterText = Preferences.Get(FilterSearchKey, null);
         }
 
         public ReactiveCommand<Unit, Unit> ViewDatabaseSearchCommand { get; set; }
 
         public ReactiveCommand<DocumentModel, Unit> ViewSelectedDocumentCommand { get; }
+        public ReactiveCommand<DocumentModel, Unit> DeleteDocumentCommand { get; }
 
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
 
@@ -243,6 +265,28 @@ namespace DbViewer.ViewModels
                 (nameof(DocumentModel), document),
                 (nameof(CachedDatabase), CurrentDatabaseItemViewModel.Database));
         }
+        private async Task ExecuteDeleteDocumentAsync(DocumentModel document, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            try
+            {
+                var deletedDocument = await _hubService.DeleteDocument(document.Database.RemoteDatabaseInfo, document.DocumentId, cancellationToken);
+
+                if (deletedDocument)
+                {
+                    var documentGroup = Documents.FirstOrDefault(group => group.Any(doc => doc.DocumentId == document.DocumentId));
+
+                    documentGroup.Remove(document);
+                }
+
+                CurrentDatabaseItemViewModel.Database.ActiveConnection.DeleteDocumentById(document.DocumentId);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Unable to delete document");
+            }
+        }
 
         private Task ExecuteViewDatabaseSearchAsync(CancellationToken cancellationToken)
         {
@@ -263,5 +307,6 @@ namespace DbViewer.ViewModels
 
             return NavigationService.NavigateAsync(nameof(DatabaseSearchPage), navParams);
         }
+
     }
 }

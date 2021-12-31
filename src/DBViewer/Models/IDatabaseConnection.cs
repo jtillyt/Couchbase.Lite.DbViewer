@@ -9,6 +9,9 @@ namespace DbViewer.Models
         bool Connect(string dbDirectory, string dbName);
         List<string> ListAllDocumentIds(bool sort = false);
         Document GetDocumentById(string id);
+        void DeleteDocumentById(string id);
         bool Disconnect();
+        void SaveDocument(MutableDocument document);
+        void Compact();
     }
 }

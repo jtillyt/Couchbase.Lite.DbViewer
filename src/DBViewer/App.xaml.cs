@@ -1,10 +1,12 @@
 ﻿using Akavache;
 using DbViewer.DataStores;
+using DbViewer.Dialogs;
 using DbViewer.Repos;
 using DbViewer.Services;
 using DbViewer.ViewModels;
 using DbViewer.Views;
 using Prism.Ioc;
+using Prism.Plugin.Popups;
 using Serilog;
 using Xamarin.Essentials;
 using Xamarin.Essentials.Implementation;
@@ -20,8 +22,11 @@ namespace DbViewer
             InitializeComponent();
 
             var logger = new LoggerConfiguration()
-                        //.WriteTo.Console(Serilog.Events.LogEventLevel.Verbose)
-                        .CreateLogger();
+#if DEBUG
+                .MinimumLevel.Verbose()
+                .WriteTo.Debug(Serilog.Events.LogEventLevel.Verbose)
+#endif
+                .CreateLogger();
 
             Log.Logger = logger;
 
@@ -31,7 +36,7 @@ namespace DbViewer
         protected override void OnStart()
         {
         }
-        
+
         protected override void OnSleep()
         {
         }
@@ -55,11 +60,13 @@ namespace DbViewer
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IHubService,HubService>();
+            containerRegistry.RegisterSingleton<IHubService, HubService>();
             containerRegistry.RegisterSingleton<IDatabaseDatastore, DatabaseDatastore>();
             containerRegistry.RegisterSingleton<IHubDatastore, HubDatastore>();
             containerRegistry.RegisterSingleton<IHubRepo, HubRepo>();
             containerRegistry.RegisterSingleton<IPreferences, PreferencesImplementation>();
+
+            containerRegistry.RegisterPopupDialogService();
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<CachedDatabaseListPage, CachedDatabaseListViewModel>();
@@ -70,6 +77,8 @@ namespace DbViewer
             containerRegistry.RegisterForNavigation<HubDetailPage, HubDetailViewModel>();
             containerRegistry.RegisterForNavigation<HubSettingsPage, HubSettingsViewModel>();
             containerRegistry.RegisterForNavigation<ServiceSettingsPage, ServiceSettingsViewModel>();
+
+            containerRegistry.RegisterDialog<GeneralMessageDialog, GeneralMessageDialogViewModel>(DialogNames.General);
         }
     }
 }

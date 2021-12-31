@@ -2,7 +2,6 @@
 using DbViewer.Api;
 using DbViewer.DataStores;
 using DbViewer.Models;
-using DbViewer.Shared;
 using DbViewer.Shared.Dtos;
 using Refit;
 using Serilog;
@@ -135,6 +134,38 @@ namespace DbViewer.Services
             return hubInfo;
         }
 
+        public async Task<bool> TryDeleteHub(string hubId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var hubInfo = await _hubCacheService.GetCachedHubAsync(hubId, cancellationToken)
+                                                    .ConfigureAwait(false);
+
+                var hubUri = new Uri(hubInfo.HostAddress);
+
+                if (_hubClients.TryGetValue(hubUri, out var client))
+                {
+                    _hubClients.Remove(hubUri);
+
+                    client = null;
+
+                    LastRefreshTime = DateTimeOffset.Now;
+                }
+
+                await _hubCacheService.DeleteHubAsync(hubInfo.Id, cancellationToken)
+                                      .ConfigureAwait(false);
+
+                await _hubCacheService.SaveAllAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, nameof(TryDeleteHub));
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<bool> UpdateHubAsync(HubInfo hubInfo, CancellationToken cancellationToken)
         {
             var uri = new Uri(hubInfo.HostAddress);
@@ -164,6 +195,28 @@ namespace DbViewer.Services
             }
 
             return false;
+        }
+
+        public Task<DocumentInfo> SaveDocument(DocumentInfo documentInfo, CancellationToken cancellationToken)
+        {
+            var connection = GetConnection(documentInfo.DatabaseInfo.RequestAddress);
+
+
+            return connection.SaveDocument(documentInfo, cancellationToken);
+        }
+
+        public Task<DocumentInfo> FetchDocument(DatabaseInfo databaseInfo, string documentId, CancellationToken cancellationToken)
+        {
+            var connection = GetConnection(databaseInfo.RequestAddress);
+
+            return connection.GetDocument(new DocumentRequest(databaseInfo, documentId), cancellationToken);
+        }
+
+        public Task<bool> DeleteDocument(DatabaseInfo databaseInfo, string documentId, CancellationToken cancellationToken)
+        {
+            var connection = GetConnection(databaseInfo.RequestAddress);
+
+            return connection.DeleteDocument(new DocumentRequest(databaseInfo, documentId), cancellationToken);
         }
     }
 }

@@ -82,6 +82,7 @@
                                        TextColor="Black"
                                        VerticalOptions="Center"
                                        VerticalTextAlignment="Center" />
+
                             </StackLayout>
 
                         </ViewCell>
@@ -90,15 +91,30 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-
-                            <Label x:DataType="models:DocumentModel"
+                            <StackLayout x:DataType="models:DocumentModel"
+                                         Orientation="Horizontal"
+                                         VerticalOptions="Center">
+                                <Label x:DataType="models:DocumentModel"
                                    Style="{StaticResource DocumentListViewItem}"
                                    Text="{Binding DocumentId}">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
-                                </Label.GestureRecognizers>
-                            </Label>
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
 
+                                <Button x:DataType="models:DocumentModel"
+                                        BackgroundColor="{StaticResource DangerTextColor}"
+                                        Command="{Binding BindingContext.DeleteDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}"
+                                        CornerRadius="3"
+                                        FontSize="Micro"
+                                        HorizontalOptions="EndAndExpand"
+                                        VerticalOptions="CenterAndExpand"
+                                        Text="X"
+                                        Padding="0"
+                                        Margin="0,0,20,0"
+                                        TextColor="White"
+                                        WidthRequest="25" />
+                            </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

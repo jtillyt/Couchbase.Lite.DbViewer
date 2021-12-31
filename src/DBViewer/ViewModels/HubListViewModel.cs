@@ -45,14 +45,18 @@ namespace DbViewer.ViewModels
 
             AddHubCommand = ReactiveCommand.CreateFromTask(ExecuteAddHubAsync);
 
+            DeleteSelectedHubCommand = ReactiveCommand.CreateFromTask<HubItemViewModel>(ExecuteDeleteHubAsync);
+
             HubAddress = _preferences.Get(LastHubAddressKey, "http://127.0.0.1:5020");
 
             ReloadHubsCommand = ReactiveCommand.CreateFromTask(ExecuteReloadHubsAsync);
+
             ViewSelectedHubCommand = ReactiveCommand.CreateFromTask<HubItemViewModel>(ExecuteViewSelectedHubAsync);
         }
 
         public ReactiveCommand<Unit, Unit> AddHubCommand { get; }
         public ReactiveCommand<Unit, Unit> ReloadHubsCommand { get; }
+        public ReactiveCommand<HubItemViewModel, Unit> DeleteSelectedHubCommand { get; }
         public ReactiveCommand<HubItemViewModel, Unit> ViewSelectedHubCommand { get; }
 
         public string HubAddress
@@ -112,6 +116,17 @@ namespace DbViewer.ViewModels
             catch (Exception ex)
             {
                 _logger.Error(ex, nameof(ExecuteAddHubAsync));
+            }
+        }
+
+        private async Task ExecuteDeleteHubAsync(HubItemViewModel hubItemViewModel, CancellationToken cancellationToken)
+        {
+            var result = await _hubService.TryDeleteHub(hubItemViewModel.HubId, cancellationToken)
+                                          .ConfigureAwait(false);
+
+            if (result)
+            {
+                KnownHubs.Remove(hubItemViewModel);
             }
         }
 

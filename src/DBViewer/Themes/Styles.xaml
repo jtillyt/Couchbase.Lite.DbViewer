@@ -140,4 +140,15 @@
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
+
+    <Style x:Key="HubListView" TargetType="ListView">
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="Margin" Value="20,10" />
+        <Setter Property="HasUnevenRows" Value="False" />
+        <Setter Property="IsPullToRefreshEnabled" Value="False" />
+        <Setter Property="IsRefreshing" Value="False" />
+        <Setter Property="SelectionMode" Value="None" />
+        <Setter Property="SeparatorVisibility" Value="None" />
+    </Style>
+    
 </ResourceDictionary>

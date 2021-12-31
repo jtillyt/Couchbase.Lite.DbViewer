@@ -1,4 +1,8 @@
 ﻿using Dawn;
+using DbViewer.Hub.Couchbase;
+using DbViewer.Hub.DbProvider;
+using DbViewer.Hub.Repos;
+using DbViewer.Shared.Couchbase;
 using DbViewer.Shared.Dtos;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -15,19 +19,24 @@ namespace DbViewer.Hub.Services
         private const string HubInfoFilePath = "HubInfo.json";
 
         private readonly ILogger<HubService> _logger;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IDatabaseConnection _databaseConnection;
+        private readonly IDatabaseProviderRepository _databaseProviderRepository;
 
         private HubInfo _hubInfo;
 
-        public HubService(ILogger<HubService> logger, IServiceProvider serviceProvider)
+        public HubService(ILogger<HubService> logger, IDatabaseProviderRepository databaseProviderRepository, IDatabaseConnection databaseConnection)
         {
             _logger = Guard.Argument(logger, nameof(logger))
                            .NotNull()
                            .Value;
 
-            _serviceProvider = Guard.Argument(serviceProvider, nameof(serviceProvider))
-                                    .NotNull()
-                                    .Value;
+            _databaseConnection = Guard.Argument(databaseConnection, nameof(databaseConnection))
+                                       .NotNull()
+                                       .Value;
+
+            _databaseProviderRepository = Guard.Argument(databaseProviderRepository, nameof(databaseProviderRepository))
+                                               .NotNull()
+                                               .Value;
         }
 
         public HubInfo GetLatestHub()
@@ -38,7 +47,6 @@ namespace DbViewer.Hub.Services
             {
                 return _hubInfo;
             }
-
 
             var path = GetPath();
 
@@ -77,39 +85,85 @@ namespace DbViewer.Hub.Services
             _hubInfo = hubInfo;
         }
 
-        public List<IDbScanner> GetAllDbScanners()
+
+        public DocumentInfo SaveDocumentToDatabase(DocumentInfo documentInfo)
         {
-            var hubInfo = GetLatestHub();
+            var dbProvider = _databaseProviderRepository.GetOrCreate(documentInfo.DatabaseInfo?.ProviderInfo, GetLatestHub());
+            var rootDatabasePath = dbProvider.GetCurrentDatabaseRootPath(documentInfo.DatabaseInfo);
 
-            var scanners = new List<IDbScanner>();
+            var isConnected = _databaseConnection.Connect(rootDatabasePath, documentInfo.DatabaseInfo.DisplayDatabaseName);
 
-            var serviceTypes = hubInfo.ServiceDefinitions;
-
-            foreach (var serviceInfo in hubInfo.ActiveServices)
+            // TODO: <James Thomas: 6/27/21> Switch to full response object instead of null
+            if (!isConnected)
             {
-                var matchingType = serviceTypes.FirstOrDefault(st => st.Id == serviceInfo.ServiceTypeId);
-
-                if (matchingType == null)
-                {
-                    continue;
-                }
-
-                var serviceType = Type.GetType(matchingType.FullyQualifiedAssemblyTypeName);
-
-                var service = _serviceProvider.GetService(serviceType);
-
-                if (service is IDbScanner scanner)
-                {
-                    scanners.Add(scanner);
-
-                    if (service is IService hubService)
-                    {
-                        hubService.InitiateService(serviceInfo);
-                    }
-                }
+                return null;
             }
 
-            return scanners;
+            var document = _databaseConnection.GetDocumentById(documentInfo.DocumentId);
+
+            var dictionary = CbUtils.ParseTo<Dictionary<string, object>>(documentInfo.DataAsJson);
+
+            var mutableDoc = document.ToMutable();
+            mutableDoc.SetData(dictionary);
+
+            _databaseConnection.SaveDocument(mutableDoc);
+
+            mutableDoc.Dispose();
+
+            _databaseConnection.Disconnect();
+
+            return GetDocumentById(documentInfo.DatabaseInfo, documentInfo.DocumentId);
+        }
+
+        public DocumentInfo GetDocumentById(DatabaseInfo databaseInfo, string documentId)
+        {
+            var dbProvider = _databaseProviderRepository.GetOrCreate(databaseInfo?.ProviderInfo, GetLatestHub());
+            var rootDatabasePath = dbProvider.GetCurrentDatabaseRootPath(databaseInfo);
+
+            var isConnected = _databaseConnection.Connect(rootDatabasePath, databaseInfo.DisplayDatabaseName);
+
+            // TODO: <James Thomas: 6/27/21> Switch to full response object instead of null
+            if (!isConnected)
+            {
+                return null;
+            }
+
+            var document = _databaseConnection.GetDocumentById(documentId);
+
+            var updatedJson = JsonConvert.SerializeObject(document, Formatting.Indented);
+
+            var documentInfo = new DocumentInfo(databaseInfo, documentId, document.RevisionID, updatedJson);
+
+            document.Dispose();
+
+            _databaseConnection.Disconnect();
+
+            return documentInfo;
+        }
+
+        public bool DeleteDocument(DatabaseInfo databaseInfo, string documentId)
+        {
+            _logger.LogDebug($"Deleting document with id '{documentId}'...");
+
+
+            var dbProvider = _databaseProviderRepository.GetOrCreate(databaseInfo?.ProviderInfo, GetLatestHub());
+            var rootDatabasePath = dbProvider.GetCurrentDatabaseRootPath(databaseInfo);
+
+            var isConnected = _databaseConnection.Connect(rootDatabasePath, databaseInfo.DisplayDatabaseName);
+
+            // TODO: <James Thomas: 6/27/21> Switch to full response object instead of null
+            if (!isConnected)
+            {
+                return false;
+            }
+
+            _databaseConnection.DeleteDocumentById(documentId);
+
+            _databaseConnection.Disconnect();
+
+            _logger.LogDebug($"Deleted document with id '{documentId}'.");
+
+            return true;
         }
 
         private static string GetPath(bool ensure = false)
@@ -127,14 +181,14 @@ namespace DbViewer.Hub.Services
         private HubInfo CreateNew()
         {
             var serviceTypes = ServiceScanner.GetServicesForAssembly(GetType().Assembly);
-            var localDbScanner = serviceTypes.FirstOrDefault(st => st.FullyQualifiedAssemblyTypeName == typeof(LocalDbScanner).AssemblyQualifiedName);
+            var staticDirectoryScanner = serviceTypes.FirstOrDefault(st => st.FullyQualifiedAssemblyTypeName == typeof(StaticDirectoryDbProvider).AssemblyQualifiedName);
 
             var hubInfo = new HubInfo
             {
                 HubName = $"{Environment.MachineName} - Hub",
                 Id = Guid.NewGuid().ToString(),
                 ServiceDefinitions = serviceTypes,
-                ActiveServices = localDbScanner == null ? new List<ServiceInfo>() : new List<ServiceInfo>() { CreateServiceFromDefinition(localDbScanner) }
+                ActiveServices = staticDirectoryScanner == null ? new List<ServiceInfo>() : new List<ServiceInfo>() { CreateServiceFromDefinition(staticDirectoryScanner) }
             };
 
             return hubInfo;
@@ -156,5 +210,7 @@ namespace DbViewer.Hub.Services
 
             return serviceInfo;
         }
+
+
     }
 }

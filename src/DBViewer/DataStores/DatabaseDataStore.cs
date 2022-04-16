@@ -33,6 +33,13 @@ namespace DbViewer.DataStores
 
             var registry = await GetRegistryAsync(cancellationToken);
 
+            var dbs = registry.DatabaseCollection.Where(db => db.LocalDatabasePathFull == database.LocalDatabasePathFull);
+
+            foreach(var db in dbs)
+            {
+                db.ActiveConnection?.Disconnect();
+            }
+
             registry.DatabaseCollection.RemoveAll(db => db.LocalDatabasePathFull == database.LocalDatabasePathFull);
 
             SaveRegistry(registry);

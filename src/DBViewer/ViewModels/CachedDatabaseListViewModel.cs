@@ -38,11 +38,14 @@ namespace DbViewer.ViewModels
             ViewHubCommand = ReactiveCommand.CreateFromTask(ExecuteViewHubAsync);
             ViewSelectedDatabaseCommand = ReactiveCommand.CreateFromTask<CachedDatabaseItemViewModel>(
                 ExecuteViewSelectedDatabaseAsync);
+            EditSelectedDatabaseCommand = ReactiveCommand.CreateFromTask<CachedDatabaseItemViewModel>(
+                ExecuteEditSelectedDatabaseAsync);
         }
 
         public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
 
         public ReactiveCommand<Unit, Unit> ViewHubCommand { get; }
+        public ReactiveCommand<CachedDatabaseItemViewModel, Unit> EditSelectedDatabaseCommand { get; }
 
         public ReactiveCommand<CachedDatabaseItemViewModel, Unit> ViewSelectedDatabaseCommand { get; }
 
@@ -121,6 +124,22 @@ namespace DbViewer.ViewModels
             };
 
             return NavigationService.NavigateAsync(nameof(DatabaseBrowserPage), navParams);
+        }
+
+        private Task ExecuteEditSelectedDatabaseAsync(CachedDatabaseItemViewModel cachedDatabaseItemViewModel,
+    CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var navParams = new NavigationParameters
+            {
+                {
+                    nameof(CachedDatabaseItemViewModel),
+                    cachedDatabaseItemViewModel
+                }
+            };
+
+            return NavigationService.NavigateAsync(nameof(CachedDatabaseEditPage), navParams);
         }
     }
 }

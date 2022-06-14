@@ -13,7 +13,7 @@ namespace DbViewer.Models
 
         public CachedDatabase()
         {
-            
+
         }
 
         public CachedDatabase(DatabaseInfo remoteDatabaseInfo, DateTimeOffset downloadTime)
@@ -75,6 +75,8 @@ namespace DbViewer.Models
         public DatabaseInfo RemoteDatabaseInfo { get; set; }
 
         public DateTimeOffset DownloadTime { get; set; }
+
+        public string UserDefinedDisplayName { get; set; }
 
         /// <summary>
         /// The path to the directory that contains the database folder. Couchbase uses this with the subdirectory being the 'name'

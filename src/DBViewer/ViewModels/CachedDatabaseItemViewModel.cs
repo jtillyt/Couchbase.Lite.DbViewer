@@ -29,8 +29,8 @@ namespace DbViewer.ViewModels
                   .NotNull()
                   .Value;
 
-            DisplayName = Database.RemoteDatabaseInfo?
-                                        .DisplayDatabaseName;
+            DisplayName = Database.UserDefinedDisplayName ?? Database.RemoteDatabaseInfo?
+                                                                     .DisplayDatabaseName;
 
             HubAddress = GetHubAddressString(Database);
 

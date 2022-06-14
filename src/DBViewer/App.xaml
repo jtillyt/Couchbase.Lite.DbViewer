@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
-             x:Class="DbViewer.App">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<prism:PrismApplication x:Class="DbViewer.App"
+                        xmlns="http://xamarin.com/schemas/2014/forms"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:prism="http://prismlibrary.com">
     <Application.Resources>
-        <ResourceDictionary Source="Themes/Styles.xaml"/>
+        <ResourceDictionary Source="Themes/Styles.xaml" />
     </Application.Resources>
 </prism:PrismApplication>

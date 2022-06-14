@@ -112,18 +112,18 @@
                                     </Label.GestureRecognizers>
                                 </Label>
 
-                                <Button x:DataType="models:DocumentModel"
+                                <Button Margin="0,0,20,0"
+                                        Padding="0"
+                                        x:DataType="models:DocumentModel"
                                         BackgroundColor="{StaticResource DangerTextColor}"
                                         Command="{Binding BindingContext.DeleteDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                         CommandParameter="{Binding .}"
                                         CornerRadius="3"
                                         FontSize="Micro"
                                         HorizontalOptions="EndAndExpand"
-                                        VerticalOptions="CenterAndExpand"
                                         Text="X"
-                                        Padding="0"
-                                        Margin="0,0,20,0"
                                         TextColor="White"
+                                        VerticalOptions="CenterAndExpand"
                                         WidthRequest="25" />
                             </StackLayout>
                         </ViewCell>

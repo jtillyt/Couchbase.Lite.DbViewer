@@ -18,7 +18,9 @@
     <Color x:Key="ColoredBackgroundDarkColor">#08574E</Color>
     <Color x:Key="ColoredBackgroundDarkerColor">#000A09</Color>
 
-    <Color x:Key="DangerTextColor">#f03535</Color>
+    <!--  using colors from https://blog.getbootstrap.com/2020/06/16/bootstrap-5-alpha/  -->
+    <Color x:Key="DangerTextColor">#dc3543</Color>
+    <Color x:Key="SecondaryColor">#007bff</Color>
 
 
     <OnPlatform x:Key="HeaderEntryTextColor" x:TypeArguments="Color">
@@ -90,15 +92,15 @@
     <Style x:Key="HeaderEntry" TargetType="Entry">
         <Setter Property="FontFamily" Value="{StaticResource RegularFontFamily}" />
         <Setter Property="FontSize" Value="{StaticResource BodyFontSize}" />
-        <Setter Property="HeightRequest" Value="50"/>
-        <Setter Property="Margin" Value="40,10,40,0"/>
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="Margin" Value="40,10,40,0" />
         <Setter Property="HorizontalTextAlignment" Value="Start" />
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="PlaceholderColor" Value="{StaticResource HeaderEntryTextHintColor}" />
-        <Setter Property="TextColor" Value="{DynamicResource HeaderEntryTextColor}"/>
-        <Setter Property="IsSpellCheckEnabled" Value="False"/>
-        <Setter Property="IsTextPredictionEnabled" Value="False"/>
-        <Setter Property="Keyboard" Value="Plain"/>
+        <Setter Property="TextColor" Value="{DynamicResource HeaderEntryTextColor}" />
+        <Setter Property="IsSpellCheckEnabled" Value="False" />
+        <Setter Property="IsTextPredictionEnabled" Value="False" />
+        <Setter Property="Keyboard" Value="Plain" />
     </Style>
 
     <Style x:Key="DarkColoredButton" TargetType="Button">
@@ -150,5 +152,5 @@
         <Setter Property="SelectionMode" Value="None" />
         <Setter Property="SeparatorVisibility" Value="None" />
     </Style>
-    
+
 </ResourceDictionary>

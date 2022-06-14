@@ -70,6 +70,7 @@ namespace DbViewer
 
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<CachedDatabaseListPage, CachedDatabaseListViewModel>();
+            containerRegistry.RegisterForNavigation<CachedDatabaseEditPage, CachedDatabaseEditViewModel>();
             containerRegistry.RegisterForNavigation<DatabaseBrowserPage, DatabaseBrowserViewModel>();
             containerRegistry.RegisterForNavigation<DatabaseSearchPage, DatabaseSearchViewModel>();
             containerRegistry.RegisterForNavigation<DocumentViewerPage, DocumentViewerViewModel>();

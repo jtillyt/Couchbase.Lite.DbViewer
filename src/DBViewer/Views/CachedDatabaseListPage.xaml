@@ -59,6 +59,16 @@
                                                 Text="X"
                                                 TextColor="White"
                                                 WidthRequest="40" />
+                                        <Button BackgroundColor="{StaticResource SecondaryColor}"
+                                                Command="{Binding BindingContext.EditSelectedDatabaseCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                CommandParameter="{Binding .}"
+                                                CornerRadius="3"
+                                                FontSize="Small"
+                                                HeightRequest="40"
+                                                HorizontalOptions="End"
+                                                Text="Edit"
+                                                TextColor="White"
+                                                WidthRequest="60" />
                                         <Button BackgroundColor="{StaticResource ColoredBackgroundLightColor}"
                                                 Command="{Binding GetLatestCommand}"
                                                 CornerRadius="3"

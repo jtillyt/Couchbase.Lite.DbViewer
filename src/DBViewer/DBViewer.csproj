@@ -57,6 +57,9 @@
     <Compile Update="Dialogs\GeneralMessageDialog.xaml.cs">
       <DependentUpon>GeneralMessageDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\CachedDatabaseEditPage.xaml.cs">
+      <DependentUpon>CachedDatabaseEditPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\ServiceSettingsPage.xaml.cs">
       <DependentUpon>ServiceSettingsPage.xaml</DependentUpon>
     </Compile>

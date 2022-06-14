@@ -15,5 +15,6 @@ namespace DbViewer.DataStores
         Task DeleteDatabaseAsync(CachedDatabase database, CancellationToken cancellationToken);
         Task<CachedDatabaseRegistry> GetRegistryAsync(CancellationToken cancellationToken);
         Task SaveFromStreamAsync(Stream databaseDownloadStream, DatabaseInfo databaseInfo, CancellationToken cancellationToken);
+        void SaveDatabase(CachedDatabase cachedDatabase, CancellationToken cancellationToken);
     }
 }

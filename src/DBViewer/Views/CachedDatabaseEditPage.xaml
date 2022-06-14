@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="DbViewer.Views.CachedDatabaseEditPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vms="clr-namespace:DbViewer.ViewModels"
+             x:DataType="vms:CachedDatabaseEditViewModel"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="white">
+
+            <Frame Margin="0,-20,0,0"
+                   Padding="5,20"
+                   BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}"
+                   CornerRadius="20"
+                   HasShadow="False">
+
+                <StackLayout BackgroundColor="{DynamicResource ColoredBackgroundMediumColor}">
+
+                    <Grid HeightRequest="80">
+
+                        <Button Command="{Binding BackCommand}"
+                                HeightRequest="40"
+                                HorizontalOptions="Start"
+                                Style="{DynamicResource HeaderButton}"
+                                Text="Back"
+                                VerticalOptions="Center"
+                                WidthRequest="80" />
+
+                        <Label Margin="5"
+                               FontAttributes="Bold"
+                               HeightRequest="40"
+                               HorizontalOptions="CenterAndExpand"
+                               Style="{DynamicResource PageHeaderLabel}"
+                               Text="{Binding DisplayName}"
+                               VerticalOptions="Start"
+                               VerticalTextAlignment="Center" />
+                    </Grid>
+
+                    <Label Style="{DynamicResource MainBodyLabel}" Text="Edit cached DB properties" />
+
+                </StackLayout>
+            </Frame>
+            <StackLayout VerticalOptions="CenterAndExpand">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Cached Name: " />
+                    <Entry Text="{Binding DisplayName}" />
+                </StackLayout>
+            </StackLayout>
+            <StackLayout HeightRequest="90" Orientation="Horizontal" VerticalOptions="End">
+
+                <Button Margin="5"
+                        Command="{Binding SaveCommand}"
+                        CornerRadius="10"
+                        FontSize="24"
+                        HeightRequest="60"
+                        HorizontalOptions="FillAndExpand"
+                        Style="{DynamicResource DarkColoredButton}"
+                        Text="Save" />
+
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

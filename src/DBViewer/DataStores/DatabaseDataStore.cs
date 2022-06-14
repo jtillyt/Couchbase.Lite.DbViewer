@@ -54,7 +54,8 @@ namespace DbViewer.DataStores
 
             var dbItem = registry.DatabaseCollection
                                             .FirstOrDefault(
-                                    db => string.Equals(db.RemoteDatabaseInfo.DisplayDatabaseName, databaseInfo.DisplayDatabaseName));
+                                    db => string.Equals(db.RemoteDatabaseInfo.DisplayDatabaseName, databaseInfo.DisplayDatabaseName) && 
+                                          string.Equals(db.RemoteDatabaseInfo.HubId, databaseInfo.HubId));
 
             if (dbItem == null || !Directory.Exists(dbItem.LocalDatabasePathRoot))
             {
@@ -168,6 +169,11 @@ namespace DbViewer.DataStores
             }
 
             return _inMemoryRegistry;
+        }
+
+        public void SaveDatabase(CachedDatabase cachedDatabase, CancellationToken cancellationToken)
+        {
+            SaveRegistry(_inMemoryRegistry);
         }
 
         private CachedDatabaseRegistry _inMemoryRegistry;

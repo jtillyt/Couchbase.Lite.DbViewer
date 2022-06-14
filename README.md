@@ -16,18 +16,21 @@ Couchbase.Lite is not available on all platforms such as MacOS. This means that 
 - [x] Read Couchbase.Lite DBs
 - [x] Provide Hub for receiving databases from remote systems
 - [x] Add/Remove Edit Database Scanners from client
+- [X] Allow update of database records 
+- [X] Save documents / allow updating among all cached DBs
 - [ ] Cache managment (Delete,Rename,Duplicate)
-- [ ] Allow update of database records 
-- [ ] Save documents / allow adding updating among all cached DBs
 - [ ] Allow creation of new database
 - [ ] Add Hub functionality to add/overrwrite database remotely
-  
+- [ ] Export All JSON
+- [ ] Compare Docs in Database
+- [ ] Create custom document viewers
+
 ## Client Platforms
 - [x] Windows
 - [x] Android
 - [x] iOS
 - [ ] Linux
-- [ ] Mac (Hopefully coming soon)
+- [ ] Mac (When .NET MAUI is a little more solid)
 
 ## Hub Platforms
 - [x] Windows
@@ -48,27 +51,12 @@ Couchbase.Lite is not available on all platforms such as MacOS. This means that 
 <br>
 
 ## Client Viewer
-  The client does the parsing of Couchbase.Lite files. Windows desktop (UWP), Android and iOS are currently being supported.  You can also connect to Hubs to relay files around between platforms and open Couchbase.Lite DBs located on platforms that aren't supported.
+  The client does the parsing and displaying of the documents within Couchbase.Lite databases. Windows desktop (UWP), Android and iOS are currently being supported.  You can also connect to Hubs to relay files around between platforms and open Couchbase.Lite DBs located on platforms that aren't supported.
 
-Setting up Hubs is also now all done on the client after connecting.
+Setting up Hubs is also now all done using the client after connecting.
 
 # Setting up Hub
-Download the latest binary for the Hub here: [Releases](https://github.com/jaytilly/Couchbase.Lite.DbViewer/releases)
-
-
-## Mac and Linux
-After downloading and unzipping the folder, you will need to set permissions to run the `Hub` executable. Example (you may want to use less permissive options): 
-
-``` chmod +x Hub ```
-
-Then run the app with privilages:
-
-```sudo .\Hub ```
-
-You might also need to go through the process of allowing a binary to run that is from an unknown developer if you have Gatekeeper enabled on Mac.  
-
-[Open Mac Gatekeeper Help](https://support.apple.com/en-us/HT202491)
-
+The Hub is setup using the client. All that needs to be done is to open the `DbViewer.Hub.sln` solution and start the Hub.
 <br>
 
 # Using the Client
@@ -92,18 +80,18 @@ The Hub comes with a sample DB that we are going to download here. No additional
 <br>
 <br>
 
-# Adding Scanners
-The sample database uses a scanner that looks in the same directory as the Hub.  You can add additional databases by adding and configuring additional scanners.
+# Adding Database Locators
+DbViewer has idea of a locator that allows for different database scenarios such as pointing to static directories or automatically finding iOS simulator folders using XCode.
 
-## iOS DB Scanner
-The iOS DB Scanner uses XCode to find the location of a particular simulator OR allows you to always scan the active `booted` simulator. You will just need to supply the bundle-id, simulatorid (or `booted`) and the relative path to the root app.
+## iOS Simulator Provider
+The iOS DB Provider uses XCode to find the location of a particular simulator OR allows you to always scan the active `booted` simulator. You will just need to supply the bundle-id, simulatorid (or `booted`) and the relative path to the root app.
 
 <img src="docs/media/SettingUpIosSimulator.gif" width="300" />
 
 <br>
 <br>
 
-## LocalDirectory Scanner
-This is a simple path scanner. You only need to provide the path to the location of the Couchbase.Lite root directory.
+## Static Directory Locator
+This simply points to a path that won't change. You only need to provide the path to the location of the Couchbase.Lite root directory.
 
 <img src="docs/media/SettingUpLocalDirectoryScanner.gif" width="300" />

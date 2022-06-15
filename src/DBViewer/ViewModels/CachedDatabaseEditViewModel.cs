@@ -1,10 +1,16 @@
-﻿using Dawn;
+﻿using Couchbase.Lite;
+using Dawn;
 using DbViewer.DataStores;
+using DbViewer.Extensions;
 using DbViewer.Models;
 using DbViewer.Services;
+using ICSharpCode.SharpZipLib.Zip;
+using Newtonsoft.Json;
 using Prism.Navigation;
+using Prism.Plugin.Popups;
 using ReactiveUI;
 using System;
+using System.IO;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +23,7 @@ namespace DbViewer.ViewModels
         private readonly IDatabaseDatastore _databaseCacheService;
 
         public CachedDatabaseEditViewModel(INavigationService navigationService, IDatabaseDatastore databaseCacheService, IHubService hubService)
-            :base(navigationService)
+            : base(navigationService)
         {
             _hubService = Guard.Argument(hubService, nameof(hubService))
                   .NotNull()
@@ -27,10 +33,11 @@ namespace DbViewer.ViewModels
                   .NotNull()
                   .Value;
 
-            SaveCommand = ReactiveCommand.CreateFromTask(ExecuteSaveAsync);
+            ExportCommand = ReactiveCommand.CreateFromTask(ExecuteExportAsync);
         }
 
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+        public ReactiveCommand<Unit, Unit> ExportCommand { get; }
 
         public CachedDatabase Database { get; set; }
 
@@ -50,6 +57,13 @@ namespace DbViewer.ViewModels
         {
             get => _hubAddress;
             set => this.RaiseAndSetIfChanged(ref _hubAddress, value);
+        }
+
+        private string _exportPath;
+        public string ExportPath
+        {
+            get => _exportPath;
+            set => this.RaiseAndSetIfChanged(ref _exportPath, value);
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
@@ -75,6 +89,54 @@ namespace DbViewer.ViewModels
 
             DisplayName = cachedDatabase.UserDefinedDisplayName ?? cachedDatabase.RemoteDatabaseInfo?
                                                                                  .DisplayDatabaseName;
+        }
+
+        private Task ExecuteExportAsync(CancellationToken cancellationToken)
+        {
+            return Task.Run(() =>
+            {
+                var dirPath = Path.Combine(_cachedDatabase.LocalDatabasePathRoot, Guid.NewGuid().ToString());
+
+                RunOnUi(()=>{ ExportPath = dirPath; });
+
+                try
+                {
+                    _cachedDatabase.Connect();
+
+                    var connection = _cachedDatabase.ActiveConnection;
+
+                    Directory.CreateDirectory(dirPath);
+
+                    foreach (var documentId in connection.ListAllDocumentIds(false))
+                    {
+                        using (var document = connection.GetDocumentById(documentId))
+                        {
+
+                            var documentText = string.Empty;
+
+                            try
+                            {
+                                var id = document.Id.Replace("::", "_")+".json";
+                                var docPath = Path.Combine(dirPath, id);
+                                var cleanedDocument = document.CleanAttachments();
+
+                                documentText = JsonConvert.SerializeObject(cleanedDocument);
+                                File.WriteAllText(docPath, documentText);
+
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    _cachedDatabase.Disconnect();
+                }
+
+            });
         }
 
         private async Task ExecuteSaveAsync(CancellationToken cancellationToken)

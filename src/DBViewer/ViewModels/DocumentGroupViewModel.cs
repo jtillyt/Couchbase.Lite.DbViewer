@@ -24,12 +24,13 @@ namespace DbViewer.ViewModels
                 .Connect()
                 .RefCount();
 
-            groupCollection.LogManagedThread("Group - Before Bind")
+            groupCollection
+                //.LogManagedThread("Group - Before Bind")
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .SubscribeOn(RxApp.MainThreadScheduler)
                 .Sort(_comparer)
                 .Bind(this)
-                .LogManagedThread("Group - AfterBind")
+                //.LogManagedThread("Group - AfterBind")
                 .Subscribe()
                 .DisposeWith(_compositeDisposable);
         }

@@ -73,6 +73,11 @@ namespace DbViewer.DataStores
                 File.Delete(dbItem.ArchiveFullPath);
             }
 
+            if (!Directory.Exists(dbItem.LocalDatabasePathRoot))
+            {
+                Directory.CreateDirectory(dbItem.LocalDatabasePathRoot);
+            }
+
             using (var fileStream = new FileStream(dbItem.ArchiveFullPath, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 databaseDownloadStream.CopyTo(fileStream);

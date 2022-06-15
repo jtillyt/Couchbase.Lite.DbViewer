@@ -109,11 +109,9 @@ namespace DbViewer.ViewModels
         private async Task ExecuteSaveAsync(CancellationToken cancellationToken)
         {
             var errorMessage = "";
-            JObject json = null;
-
             try
             {
-                json = JObject.Parse(DocumentText);
+                JObject.Parse(DocumentText);
             }
             catch (Exception ex)
             {
@@ -201,6 +199,7 @@ namespace DbViewer.ViewModels
             cancellationToken.ThrowIfCancellationRequested();
 
             var textRequest = new ShareTextRequest(DocumentText);
+
             await Share.RequestAsync(textRequest).ConfigureAwait(false);
         }
     }

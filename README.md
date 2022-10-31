@@ -88,6 +88,10 @@ The iOS DB Provider uses XCode to find the location of a particular simulator OR
 
 <img src="docs/media/SettingUpIosSimulator.gif" width="300" />
 
+*note:* Ensure `simctl` is installed and set for command line use
+
+<img src="docs/media/xcode-simctl-setup.png" width="900" />
+
 <br>
 <br>
 

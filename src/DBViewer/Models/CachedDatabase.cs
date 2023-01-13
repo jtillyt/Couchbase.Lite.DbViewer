@@ -82,13 +82,13 @@ namespace DbViewer.Models
         /// The path to the directory that contains the database folder. Couchbase uses this with the subdirectory being the 'name'
         /// </summary>
         [JsonIgnore]
-        public string LocalDatabasePathRoot => Path.Combine(FileSystem.AppDataDirectory, RemoteDatabaseInfo.HubId);
+        public string LocalDatabasePathRoot => Path.Combine(FileSystem.AppDataDirectory, RemoteDatabaseInfo?.HubId);
 
         /// <summary>
         /// The full path to the directoy that contains the unzipped database contents.
         /// </summary>
         [JsonIgnore]
-        public string LocalDatabasePathFull => Path.Combine(LocalDatabasePathRoot, RemoteDatabaseInfo.FullDatabaseName);
+        public string LocalDatabasePathFull => Path.Combine(LocalDatabasePathRoot, RemoteDatabaseInfo?.FullDatabaseName);
 
 
         /// <summary>

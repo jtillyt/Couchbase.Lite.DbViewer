@@ -101,7 +101,14 @@ namespace DbViewer.ViewModels
 
             var cleanedDocument = _couchbaseDocument.CleanAttachments();
 
-            var jsonOutput = JsonConvert.SerializeObject(cleanedDocument, Formatting.Indented);
+            var jsonSettings = new JsonSerializerSettings
+            {
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
+                Formatting = Formatting.Indented
+            };
+
+            var jsonOutput = JsonConvert.SerializeObject(cleanedDocument, jsonSettings);
 
             return jsonOutput;
         }

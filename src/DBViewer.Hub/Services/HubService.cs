@@ -128,6 +128,8 @@ namespace DbViewer.Hub.Services
                 return null;
             }
 
+            var documents = _databaseConnection.ListAllDocumentIds();
+
             var document = _databaseConnection.GetDocumentById(documentId);
 
             var updatedJson = JsonConvert.SerializeObject(document, Formatting.Indented);

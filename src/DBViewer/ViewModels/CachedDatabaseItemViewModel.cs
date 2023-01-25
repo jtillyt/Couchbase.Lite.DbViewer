@@ -67,9 +67,7 @@ namespace DbViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _hubAddress, value);
         }
 
-        private Task ExecuteDeleteAsync(CancellationToken cancellationToken) => _databaseCacheService.DeleteDatabaseAsync(Database, cancellationToken);
-
-        private async Task ExecuteGetLatestAsync(CancellationToken cancellationToken)
+        public async Task ExecuteGetLatestAsync(CancellationToken cancellationToken)
         {
             var remoteInfo = Database.RemoteDatabaseInfo;
 
@@ -84,6 +82,9 @@ namespace DbViewer.ViewModels
                 });
             }
         }
+
+        private Task ExecuteDeleteAsync(CancellationToken cancellationToken) => _databaseCacheService.DeleteDatabaseAsync(Database, cancellationToken);
+
 
         private static string GetDownloadTimeString(DateTime dateTime)
         {

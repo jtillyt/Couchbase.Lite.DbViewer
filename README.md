@@ -41,6 +41,7 @@ Couchbase.Lite is not available on all platforms such as MacOS. This means that 
 
 <br>
 
+
 # Components and Getting Started
 ## Hub
   The hub is the central point that apps can send their DBs to for other clients to share. They can also be used to scan the local machine for databases.  The hub is a super simple http server that serves the couchbase files.
@@ -58,6 +59,8 @@ Setting up Hubs is also now all done using the client after connecting.
 # Setting up Hub
 The Hub is setup using the client. All that needs to be done is to open the `DbViewer.Hub.sln` solution and start the Hub.
 <br>
+
+*Note: If using a Mac with an M1/M2 processor, make sure that you are using the x86 .Net 6 SDK due to lack of ARM support in Couchbase. Some IDEs (such as Rider) will require you to select this manually.*
 
 # Using the Client
 When starting the app, you will be met with a blank screen since we have not yet added any Couchbase.Lite database. We will first need to connect to a Hub, set it up if we haven't yet, and then we can start downloading and viewing databases.

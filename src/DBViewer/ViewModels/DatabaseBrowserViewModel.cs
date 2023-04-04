@@ -12,6 +12,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -76,7 +77,7 @@ namespace DbViewer.ViewModels
                 .DisposeWith(Disposables);
 
             currentDatabaseChanged
-                .Do(x => x.Database.Connect())
+                .Do(x => x.Database.ConnectToRemote())
                 .Where(x => x.Database.ActiveConnection.IsConnected)
                 .Subscribe(ReloadFromCurrentCachedDbViewModel)
                 .DisposeWith(Disposables);
@@ -172,11 +173,11 @@ namespace DbViewer.ViewModels
                 throw new InvalidOperationException(nameof(currentDbViewModel));
             }
 
-            var localDatabasePath = currentDbViewModel.Database.LocalDatabasePathFull.Replace(@"\", @"/");
+            var localDatabasePath = currentDbViewModel.Database.LocalDatabasePathFull.Replace('\\', Path.DirectorySeparatorChar);
             var databaseInfo = new { localDatabasePath, currentDbViewModel.Database.RemoteDatabaseInfo.DisplayDatabaseName };
             _logger.Verbose("Current database has changed to {@DatabaseInfo}", databaseInfo);
 
-            currentDbViewModel.Database.Connect();
+            currentDbViewModel.Database.ConnectToRemote();
             var docs = currentDbViewModel.Database.ActiveConnection.ListAllDocumentIds(true);
             var docVms = docs.Select(docId => new DocumentModel(currentDbViewModel.Database, docId));
 

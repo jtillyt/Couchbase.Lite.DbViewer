@@ -1,4 +1,5 @@
 ﻿using Couchbase.Lite;
+using Couchbase.Lite.Query;
 using Dawn;
 using DbViewer.DataStores;
 using DbViewer.Extensions;
@@ -11,6 +12,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -129,7 +131,7 @@ namespace DbViewer.ViewModels
                 var documentIdsWithHits = new List<string>();
 
                 var database = CurrentDatabaseItemViewModel.Database;
-                var isConnected = database.Connect();
+                var isConnected = database.ConnectToRemote();
 
                 if (!isConnected)
                 {
@@ -137,6 +139,20 @@ namespace DbViewer.ViewModels
                 }
 
                 var connection = database.ActiveConnection;
+
+                var docIdMissings = QueryBuilder
+                             .Select(SelectResult.Expression(Meta.ID))
+                             .From(database.ActiveConnection.ActiveSource)
+                             .Where(Expression.Property("$MdfdById").IsNullOrMissing())
+                             .Execute()
+                             .Select(i => i.GetString("id"))
+                             .Where(docId => docId != null)
+                             .ToList();
+
+                foreach (var docId in docIdMissings)
+                {
+                    Debug.WriteLine(docId);
+                }
 
                 var documentIds = connection.ListAllDocumentIds();
 
@@ -150,7 +166,7 @@ namespace DbViewer.ViewModels
 
                     using (var document = connection.GetDocumentById(documentId))
                     {
-                       
+
                         var documentText = string.Empty;
 
                         try

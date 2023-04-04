@@ -76,6 +76,8 @@ namespace DbViewer.Models
             return docIds;
         }
 
+        public IDataSourceAs ActiveSource => DataSource.Database(_database);
+       
         public Document GetDocumentById(string id)
         {
             return _database.GetDocument(id);

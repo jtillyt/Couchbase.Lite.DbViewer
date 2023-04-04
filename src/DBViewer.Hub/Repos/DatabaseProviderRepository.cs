@@ -1,5 +1,4 @@
-﻿using Couchbase.Lite.DI;
-using Dawn;
+﻿using Dawn;
 using DbViewer.Hub.DbProvider;
 using DbViewer.Hub.Services;
 using DbViewer.Shared.Dtos;

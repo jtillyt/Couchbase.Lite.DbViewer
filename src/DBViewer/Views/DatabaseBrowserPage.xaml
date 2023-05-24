@@ -36,13 +36,22 @@
                                VerticalOptions="Center"
                                VerticalTextAlignment="Center" />
 
-                        <Button Command="{Binding ViewDatabaseSearchCommand}"
-                                HeightRequest="40"
-                                HorizontalOptions="End"
-                                Style="{DynamicResource HeaderButton}"
-                                Text="Search"
-                                VerticalOptions="Center"
-                                WidthRequest="80" />
+                        <StackLayout Orientation="Horizontal"
+                                     HorizontalOptions="End">
+                            <Button Command="{Binding RefreshCommand}"
+                                    HeightRequest="40"
+                                    HorizontalOptions="Start"
+                                    Style="{DynamicResource HeaderButton}"
+                                    Text="Pull Latest"
+                                    VerticalOptions="Center"
+                                    WidthRequest="120" />
+                            <Button Command="{Binding ViewDatabaseSearchCommand}"
+                                    HeightRequest="40"
+                                    Style="{DynamicResource HeaderButton}"
+                                    Text="Search"
+                                    VerticalOptions="Center"
+                                    WidthRequest="80" />
+                        </StackLayout>
                     </Grid>
 
                     <Label Style="{DynamicResource MainBodyLabel}">
@@ -95,16 +104,18 @@
                                          Orientation="Horizontal"
                                          VerticalOptions="Center">
                                 <Label x:DataType="models:DocumentModel"
-                                   Style="{StaticResource DocumentListViewItem}"
-                                   Text="{Binding DocumentId}">
+                                       Style="{StaticResource DocumentListViewItem}"
+                                       Text="{Binding DocumentId}">
                                     <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}" />
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ViewSelectedDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                              CommandParameter="{Binding .}" />
                                     </Label.GestureRecognizers>
                                 </Label>
 
                                 <Button x:DataType="models:DocumentModel"
                                         BackgroundColor="{StaticResource DangerTextColor}"
-                                        Command="{Binding BindingContext.DeleteDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding .}"
+                                        Command="{Binding BindingContext.DeleteDocumentCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                        CommandParameter="{Binding .}"
                                         CornerRadius="3"
                                         FontSize="Micro"
                                         HorizontalOptions="EndAndExpand"

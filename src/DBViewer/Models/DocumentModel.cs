@@ -1,6 +1,6 @@
-﻿using Dawn;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+using Dawn;
 
 namespace DbViewer.Models
 {

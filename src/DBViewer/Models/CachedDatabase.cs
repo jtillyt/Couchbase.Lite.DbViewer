@@ -28,7 +28,7 @@ namespace DbViewer.Models
         [JsonIgnore]
         public IDatabaseConnection ActiveConnection { get; private set; }
 
-        public bool Connect()
+        public bool ConnectToRemote()
         {
             lock (_synclock)
             {
@@ -51,7 +51,7 @@ namespace DbViewer.Models
             }
         }
 
-        public bool Disconnect()
+        public bool DisconnectFromRemote()
         {
             if (ActiveConnection != null)
             {

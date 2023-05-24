@@ -12,6 +12,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -76,23 +77,9 @@ namespace DbViewer.ViewModels
                 .DisposeWith(Disposables);
 
             currentDatabaseChanged
-                .Do(x => x.Database.Connect())
+                .Do(x => x.Database.ConnectToRemote())
                 .Where(x => x.Database.ActiveConnection.IsConnected)
-                .Subscribe(
-                    x =>
-                {
-                    var localDatabasePath = x.Database.LocalDatabasePathFull.Replace(@"\", @"/");
-                    var databaseInfo = new { localDatabasePath, x.Database.RemoteDatabaseInfo.DisplayDatabaseName };
-                    _logger.Verbose("Current database has changed to {@DatabaseInfo}", databaseInfo);
-
-                    var docs = x.Database.ActiveConnection.ListAllDocumentIds(true);
-                    var docVms = docs.Select(docId => new DocumentModel(x.Database, docId));
-
-                    FindGroupChar(docs.Take(10));
-
-                    _documentCache.Edit(
-                        cache => { cache.AddOrUpdate(docVms); });
-                })
+                .Subscribe(ReloadFromCurrentCachedDbViewModel)
                 .DisposeWith(Disposables);
 
             var filterChanged =
@@ -107,6 +94,7 @@ namespace DbViewer.ViewModels
                 .Group(x => GetGroupNameFromDocumentId(x.DocumentId, _splitChars))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Transform(x => new DocumentGroupViewModel(x, x.Key))
+                .Sort(new DocumentGroupViewModel.DocumentGroupViewModelComparer())
                 .Bind(out _documents)
                 .LogManagedThread("Browser - After Bind")
                 .Subscribe()
@@ -179,6 +167,34 @@ namespace DbViewer.ViewModels
             }
         }
 
+        private void ReloadFromCurrentCachedDbViewModel(CachedDatabaseItemViewModel currentDbViewModel)
+        {
+            if (currentDbViewModel == null)
+            {
+                throw new InvalidOperationException(nameof(currentDbViewModel));
+            }
+
+            var localDatabasePath = currentDbViewModel.Database.LocalDatabasePathFull.Replace('\\', Path.DirectorySeparatorChar);
+            var databaseInfo = new { localDatabasePath, currentDbViewModel.Database.RemoteDatabaseInfo.DisplayDatabaseName };
+            _logger.Verbose("Current database has changed to {@DatabaseInfo}", databaseInfo);
+
+            currentDbViewModel.Database.ConnectToRemote();
+            var docs = currentDbViewModel.Database.ActiveConnection.ListAllDocumentIds(true);
+            var docVms = docs.Select(docId => new DocumentModel(currentDbViewModel.Database, docId));
+
+            var existingDocumentIds = Documents.SelectMany(dm => dm).Select(doc => doc.DocumentId);
+            var removeIds = existingDocumentIds.Except(docs);
+
+            FindGroupChar(docs.Take(10));
+
+            _documentCache.Edit(
+                cache =>
+                {
+                    cache.AddOrUpdate(docVms);
+                    cache.RemoveKeys(removeIds);
+                });
+        }
+
         private static string GetGroupNameFromDocumentId(string documentId, string splitChar)
         {
             if (string.IsNullOrWhiteSpace(splitChar))
@@ -243,12 +259,16 @@ namespace DbViewer.ViewModels
             }
         }
 
-        private Task ExecuteDatabaseRefreshAsync(CancellationToken cancellationToken)
+        private async Task ExecuteDatabaseRefreshAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            // TODO: <James Thomas: 5/29/21> Add DB refresh and test
-            return Task.CompletedTask;
+            if (CurrentDatabaseItemViewModel != null)
+            {
+                await CurrentDatabaseItemViewModel.ExecuteGetLatestAsync(cancellationToken);
+                ReloadFromCurrentCachedDbViewModel(CurrentDatabaseItemViewModel);
+                this.DownloadTime = CurrentDatabaseItemViewModel.DownloadTime;
+            }
         }
 
         private void SaveUserState()

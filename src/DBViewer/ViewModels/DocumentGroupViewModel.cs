@@ -4,6 +4,7 @@ using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 
@@ -38,6 +39,17 @@ namespace DbViewer.ViewModels
         public void Dispose()
         {
             _compositeDisposable.Dispose();
+        }
+
+        public class DocumentGroupViewModelComparer : IComparer<DocumentGroupViewModel>
+        {
+            public int Compare(DocumentGroupViewModel x, DocumentGroupViewModel y)
+            {
+                if (x == y) return 0;
+                if (x?.GroupName == null || y?.GroupName == null) return 1;
+
+                return string.Compare(x.GroupName, y.GroupName, true);
+            }
         }
     }
 }

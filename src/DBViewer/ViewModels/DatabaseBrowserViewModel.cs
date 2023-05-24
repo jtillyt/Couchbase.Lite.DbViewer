@@ -94,6 +94,7 @@ namespace DbViewer.ViewModels
                 .Group(x => GetGroupNameFromDocumentId(x.DocumentId, _splitChars))
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Transform(x => new DocumentGroupViewModel(x, x.Key))
+                .Sort(new DocumentGroupViewModel.DocumentGroupViewModelComparer())
                 .Bind(out _documents)
                 .LogManagedThread("Browser - After Bind")
                 .Subscribe()

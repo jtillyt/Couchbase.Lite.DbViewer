@@ -41,6 +41,9 @@ Couchbase.Lite is not available on all platforms such as MacOS. This means that 
 
 <br>
 
+## **Important**: This viewer is for CBLite 3.x. You can view earlier DBs with it but if you update your DB using this tool, it will become a CBLite 3.x DB. You should be able to fork and create a DB with a lesser CB dependency or checkout a commit earlier than commit with message: 'Updating couchbase lite to 3.0.8'.
+
+<br/>
 
 # Components and Getting Started
 ## Hub

@@ -112,7 +112,8 @@ namespace DbViewer.ViewModels
 
             var documentIdsWithHits = await SearchDbAsync(SearchText, cancellationToken).ConfigureAwait(false);
 
-            var docModels = documentIdsWithHits.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId));
+            var docModels = documentIdsWithHits.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId))
+                                               .OrderBy(vm=>vm.DocumentId);
 
             RunOnUi(() =>
             {

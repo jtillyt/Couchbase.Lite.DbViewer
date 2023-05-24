@@ -42,9 +42,9 @@
                                     HeightRequest="40"
                                     HorizontalOptions="Start"
                                     Style="{DynamicResource HeaderButton}"
-                                    Text="Refresh"
+                                    Text="Pull Latest"
                                     VerticalOptions="Center"
-                                    WidthRequest="80" />
+                                    WidthRequest="120" />
                             <Button Command="{Binding ViewDatabaseSearchCommand}"
                                     HeightRequest="40"
                                     Style="{DynamicResource HeaderButton}"

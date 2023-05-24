@@ -355,3 +355,4 @@ MigrationBackup/
 .DS_Store
 
 src/DbViewer.Hub/Data/HubInfo.json
+/GitExtensions.settings

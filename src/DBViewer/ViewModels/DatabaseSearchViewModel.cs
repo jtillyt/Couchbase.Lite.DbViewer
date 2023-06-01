@@ -141,24 +141,9 @@ namespace DbViewer.ViewModels
 
                 var connection = database.ActiveConnection;
 
-                var docIdMissings = QueryBuilder
-                             .Select(SelectResult.Expression(Meta.ID))
-                             .From(database.ActiveConnection.ActiveSource)
-                             .Where(Expression.Property("$MdfdById").IsNullOrMissing())
-                             .Execute()
-                             .Select(i => i.GetString("id"))
-                             .Where(docId => docId != null)
-                             .ToList();
-
-                foreach (var docId in docIdMissings)
-                {
-                    Debug.WriteLine(docId);
-                }
-
                 var documentIds = connection.ListAllDocumentIds();
 
                 var searchTextCorrected = searchText.ToLower();
-
 
                 var count = 0;
                 foreach (var documentId in documentIds)

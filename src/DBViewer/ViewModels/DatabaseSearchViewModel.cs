@@ -1,15 +1,4 @@
-﻿using Couchbase.Lite;
-using Couchbase.Lite.Query;
-using Dawn;
-using DbViewer.DataStores;
-using DbViewer.Extensions;
-using DbViewer.Models;
-using DbViewer.Views;
-using DynamicData;
-using Newtonsoft.Json;
-using Prism.Navigation;
-using ReactiveUI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -19,23 +8,23 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Couchbase.Lite;
+using Dawn;
+using DbViewer.DataStores;
+using DbViewer.Extensions;
+using DbViewer.Models;
+using DbViewer.Views;
+using DevLab.JmesPath;
+using DynamicData;
+using Newtonsoft.Json;
+using Prism.Navigation;
+using ReactiveUI;
 
 namespace DbViewer.ViewModels
 {
     public class DatabaseSearchViewModel : NavigationViewModelBase, INavigatedAware
     {
-        internal const string DocumentIdListParam = nameof(DocumentIdListParam);
 
-        private readonly IDatabaseDatastore _cacheService;
-
-        private IEnumerable<string> _documentIdsToSearch;
-        private string _searchTitle;
-        private string _searchText = "";
-
-        private readonly ReadOnlyObservableCollection<DocumentModel> _searchResults;
-
-        private readonly ISourceCache<DocumentModel, string> _documentCache =
-         new SourceCache<DocumentModel, string>(x => x.DocumentId);
 
         public DatabaseSearchViewModel(IDatabaseDatastore cacheService, INavigationService navigationService)
             : base(navigationService)
@@ -57,6 +46,11 @@ namespace DbViewer.ViewModels
                .DisposeWith(Disposables);
 
             ViewSelectedDocumentCommand = ReactiveCommand.Create<DocumentModel>(ExecuteViewSelectedDocument);
+
+            this.WhenAnyValue(vm=>vm.UseAdvancedSearch)
+                .Select(val=>val?"JMES Query (ex.. FieldName=='val'&&FieldName2=='val2')":"Search Text")
+                .BindTo(this, x=>x.PlaceholderText)
+                .DisposeWith(Disposables);
         }
 
         public ReactiveCommand<DocumentModel, Unit> ViewSelectedDocumentCommand { get; }
@@ -73,6 +67,18 @@ namespace DbViewer.ViewModels
         {
             get => _searchText;
             set => this.RaiseAndSetIfChanged(ref _searchText, value);
+        }
+
+        public bool UseAdvancedSearch
+        {
+            get => _useAdvancedSearch;
+            set => this.RaiseAndSetIfChanged(ref _useAdvancedSearch, value);
+        }
+
+        public string PlaceholderText
+        {
+            get => _placeHolderText;
+            set => this.RaiseAndSetIfChanged(ref _placeHolderText, value);
         }
 
         public ReadOnlyObservableCollection<DocumentModel> SearchResults => _searchResults;
@@ -113,7 +119,7 @@ namespace DbViewer.ViewModels
             var documentIdsWithHits = await SearchDbAsync(SearchText, cancellationToken).ConfigureAwait(false);
 
             var docModels = documentIdsWithHits.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId))
-                                               .OrderBy(vm=>vm.DocumentId);
+                                               .OrderBy(vm => vm.DocumentId);
 
             RunOnUi(() =>
             {
@@ -143,7 +149,6 @@ namespace DbViewer.ViewModels
 
                 var documentIds = connection.ListAllDocumentIds();
 
-                var searchTextCorrected = searchText.ToLower();
 
                 var count = 0;
                 foreach (var documentId in documentIds)
@@ -158,29 +163,74 @@ namespace DbViewer.ViewModels
                         try
                         {
                             var cleanedDocument = document.CleanAttachments();
-
                             documentText = JsonConvert.SerializeObject(cleanedDocument);
+
                         }
                         catch (Exception ex)
                         {
 
                         }
 
-                        if (documentText.ToLower().Contains(searchTextCorrected))
+                        try
                         {
-                            documentIdsWithHits.Add(documentId);
-                            count++;
-
-                            if (count == 500)
+                            if (IsMatch(documentText, searchText))
                             {
-                                break;
+                                documentIdsWithHits.Add(documentId);
+                                count++;
+
+                                if (count == 500)
+                                {
+                                    break;
+                                }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("Search cancelled due to exception");
+                            break;
                         }
                     }
                 }
 
                 return documentIdsWithHits;
             });
+        }
+
+        private bool IsMatch(string documentText, string searchText)
+        {
+            return UseAdvancedSearch ? ContainsAdvanced(documentText, searchText) : ContainsSimple(documentText, searchText);
+        }
+
+        private bool ContainsSimple(string documentText, string searchText)
+        {
+            var searchTextCorrected = searchText.ToLower();
+            return documentText.ToLower().Contains(searchTextCorrected);
+        }
+
+        private bool ContainsAdvanced(string documentText, string searchText)
+        {
+            try
+            {
+                var jmes = new JmesPath();
+                var result = jmes.Transform(documentText, searchText);
+
+                if (result == null)
+                {
+                    return false;
+                }
+
+                if (bool.TryParse(result, out bool boolValue))
+                {
+                    return boolValue;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error with advanced search: {ex}");
+                throw;
+            }
         }
 
         private void ExecuteViewSelectedDocument(DocumentModel document)
@@ -195,5 +245,20 @@ namespace DbViewer.ViewModels
                 NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
             });
         }
+
+        internal const string DocumentIdListParam = nameof(DocumentIdListParam);
+
+        private readonly IDatabaseDatastore _cacheService;
+        private bool _useAdvancedSearch;
+
+        private IEnumerable<string> _documentIdsToSearch;
+        private string _searchTitle;
+        private string _searchText = "";
+        private string _placeHolderText = "Search Text";
+
+        private readonly ReadOnlyObservableCollection<DocumentModel> _searchResults;
+
+        private readonly ISourceCache<DocumentModel, string> _documentCache =
+         new SourceCache<DocumentModel, string>(x => x.DocumentId);
     }
 }

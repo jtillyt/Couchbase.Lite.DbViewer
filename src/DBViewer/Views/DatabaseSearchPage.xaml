@@ -7,7 +7,7 @@
              x:DataType="vms:DatabaseSearchViewModel"
              BackgroundColor="White">
     <ContentPage.Content>
-        <StackLayout BackgroundColor="White">
+        <StackLayout BackgroundColor="White" VerticalOptions="FillAndExpand">
 
             <Frame Margin="0,-20,0,0"
                    Padding="15,10"
@@ -99,7 +99,10 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
+            <ProgressBar Progress="{Binding Progress}"
+                         HeightRequest="10"
+                         HorizontalOptions="FillAndExpand"
+                         ProgressColor="{DynamicResource ColoredBackgroundMediumColor}" BackgroundColor="DarkGray" Margin="20,0" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -1,5 +1,4 @@
 ﻿using Dawn;
-using DbViewer.Models;
 using DbViewer.Services;
 using DbViewer.Shared.Dtos;
 using DbViewer.Views;
@@ -11,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;

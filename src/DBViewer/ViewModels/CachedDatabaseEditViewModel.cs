@@ -14,6 +14,7 @@ using System.IO;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace DbViewer.ViewModels
 {
@@ -34,9 +35,16 @@ namespace DbViewer.ViewModels
                   .Value;
 
             ExportCommand = ReactiveCommand.CreateFromTask(ExecuteExportAsync);
+
+            CopyLocalPathCommand = ReactiveCommand.Create(ExecuteCopyLocalPath);
         }
 
+    
+
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+
+        public ReactiveCommand<Unit, Unit> CopyLocalPathCommand { get; }
+
         public ReactiveCommand<Unit, Unit> ExportCommand { get; }
 
         public CachedDatabase Database { get; set; }
@@ -57,6 +65,13 @@ namespace DbViewer.ViewModels
         {
             get => _hubAddress;
             set => this.RaiseAndSetIfChanged(ref _hubAddress, value);
+        }
+
+        private string _localDbPath;
+        public string LocalDbPath
+        {
+            get => _localDbPath;
+            set => this.RaiseAndSetIfChanged(ref _localDbPath, value);
         }
 
         private string _exportPath;
@@ -89,6 +104,8 @@ namespace DbViewer.ViewModels
 
             DisplayName = cachedDatabase.UserDefinedDisplayName ?? cachedDatabase.RemoteDatabaseInfo?
                                                                                  .DisplayDatabaseName;
+
+            LocalDbPath = cachedDatabase.LocalDatabasePathFull;
         }
 
         private Task ExecuteExportAsync(CancellationToken cancellationToken)
@@ -101,7 +118,7 @@ namespace DbViewer.ViewModels
 
                 try
                 {
-                    _cachedDatabase.Connect();
+                    _cachedDatabase.ConnectToRemote();
 
                     var connection = _cachedDatabase.ActiveConnection;
 
@@ -133,7 +150,7 @@ namespace DbViewer.ViewModels
                 }
                 finally
                 {
-                    _cachedDatabase.Disconnect();
+                    _cachedDatabase.DisconnectFromRemote();
                 }
 
             });
@@ -160,6 +177,11 @@ namespace DbViewer.ViewModels
         private static string GetHubAddressString(CachedDatabase cachedDatabase)
         {
             return cachedDatabase?.RemoteDatabaseInfo?.RequestAddress?.Host ?? "Unknown";
+        }
+
+        private void ExecuteCopyLocalPath()
+        {
+            Clipboard.SetTextAsync(LocalDbPath);
         }
 
         private string _displayName;

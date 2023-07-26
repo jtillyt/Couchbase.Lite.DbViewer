@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Couchbase.Lite" Version="3.1.0" />
+    <PackageReference Include="Couchbase.Lite" Version="3.1.1" />
     <PackageReference Include="Couchbase.Lite.Support.NetDesktop" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />

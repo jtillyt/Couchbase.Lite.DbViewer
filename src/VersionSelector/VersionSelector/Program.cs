@@ -1,10 +1,16 @@
-﻿using NuGet.Protocol.Core.Types;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Build.Construction;
+using NuGet.Common;
+using NuGet.Protocol;
+using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 using Spectre.Console;
-using NuGet.Protocol;
-using NuGet.Common;
-using System.Reflection;
-using Microsoft.Build.Construction;
 
 namespace VersionSelector
 {

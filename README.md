@@ -105,3 +105,9 @@ The iOS DB Provider uses XCode to find the location of a particular simulator OR
 This simply points to a path that won't change. You only need to provide the path to the location of the Couchbase.Lite root directory.
 
 <img src="docs/media/SettingUpLocalDirectoryScanner.gif" width="300" />
+
+# Version Selector
+Due to the high number of 3.x releases coming out and the incompatibility between them, we needed a quick way to switch all Couchbase.Lite packages.  The VersionSelector project will prompt you for the version of Couchbase Lite you'd like to use and will then find and update all projects.
+
+
+<img src="docs/media/version-selector.png" width="300" />

@@ -1,16 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Couchbase.Lite" Version="3.1.1" />
-    <PackageReference Include="Couchbase.Lite.Support.NetDesktop" Version="3.1.0" />
+    <PackageReference Include="Couchbase.Lite" Version="2.8.6" />
+    <PackageReference Include="Couchbase.Lite.Support.NetDesktop" Version="2.8.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     <PackageReference Include="ReactiveUI" Version="13.2.2" />
@@ -24,10 +20,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DbViewer.Shared\DbViewer.Shared.csproj" />
     <ProjectReference Include="..\DbViewer\DbViewer.csproj" />
   </ItemGroup>
-
 </Project>

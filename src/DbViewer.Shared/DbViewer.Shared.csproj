@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-		<Platforms>AnyCPU;x64;x86</Platforms>
-	</PropertyGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="Couchbase.Lite" Version="3.1.1" />
-	  <PackageReference Include="Dawn.Guard" Version="1.12.0" />
-	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-	</ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Couchbase.Lite" Version="2.8.6" />
+    <PackageReference Include="Dawn.Guard" Version="1.12.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 </Project>

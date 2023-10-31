@@ -1,30 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <Nullable>warnings</Nullable>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="akavache" Version="7.2.1" />
-    <PackageReference Include="Couchbase.Lite" Version="3.1.1" />
+    <PackageReference Include="Couchbase.Lite" Version="3.0.12" />
     <PackageReference Include="Dawn.Guard" Version="1.12.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
@@ -38,7 +34,7 @@
     <PackageReference Include="ReactiveUI" Version="13.2.2" />
     <PackageReference Include="Refit" Version="6.0.24" />
     <PackageReference Include="Refit.Newtonsoft.Json" Version="6.0.24" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog" Version="3.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
@@ -48,11 +44,9 @@
     <PackageReference Include="Xamarin.Essentials.Interfaces" Version="1.7.7" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2612" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DbViewer.Shared\DbViewer.Shared.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="Dialogs\GeneralMessageDialog.xaml.cs">
       <DependentUpon>GeneralMessageDialog.xaml</DependentUpon>
@@ -73,7 +67,6 @@
       <DependentUpon>HubDetailPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Update="Dialogs\GeneralMessageDialog.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -82,5 +75,4 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>

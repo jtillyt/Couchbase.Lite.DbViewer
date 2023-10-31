@@ -134,7 +134,7 @@
       <Version>7.2.1</Version>
     </PackageReference>
     <PackageReference Include="Couchbase.Lite.Support.iOS">
-      <Version>3.1.1</Version>
+      <Version>3.0.12</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>

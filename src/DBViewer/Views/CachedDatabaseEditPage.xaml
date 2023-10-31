@@ -43,40 +43,47 @@
 
                     </StackLayout>
                 </Frame>
-                
-                <StackLayout VerticalOptions="StartAndExpand"
+
+
+                <StackLayout Orientation="Horizontal"
                              Margin="10"
                              HorizontalOptions="FillAndExpand">
-                    <StackLayout Orientation="Horizontal"
+                    <Label Text="Display Name"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start" />
+                    <Entry Text="{Binding DisplayName}"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="Center"
+                           VerticalTextAlignment="Center" />
+                </StackLayout>
+
+                <Frame HasShadow="False"
+                       BorderColor="DarkGray"
+                       Margin="5">
+                    <StackLayout VerticalOptions="StartAndExpand"
                                  Margin="10"
                                  HorizontalOptions="FillAndExpand">
-                        <Label Text="Display Name"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Start" />
-                        <Entry Text="{Binding DisplayName}"
-                               HorizontalOptions="FillAndExpand"
-                               VerticalOptions="Center"
-                               VerticalTextAlignment="Center" />
+                        <StackLayout Orientation="Vertical"
+                                     VerticalOptions="End">
+                            <Button Margin="5"
+                                    Command="{Binding ExportCommand}"
+                                    CornerRadius="10"
+                                    FontSize="24"
+                                    HeightRequest="60"
+                                    HorizontalOptions="FillAndExpand"
+                                    Style="{DynamicResource DarkColoredButton}"
+                                    Text="Export JSON" />
+                            <Label Text="Export Path:"
+                                   VerticalOptions="Start"
+                                   HorizontalOptions="Start" />
+                            <Entry Text="{Binding ExportPath}"
+                                   VerticalOptions="EndAndExpand"
+                                   HorizontalOptions="FillAndExpand"
+                                   IsReadOnly="True" />
+                        </StackLayout>
                     </StackLayout>
-                    <StackLayout Orientation="Vertical"
-                                 VerticalOptions="End">
-                        <Button Margin="5"
-                                Command="{Binding ExportCommand}"
-                                CornerRadius="10"
-                                FontSize="24"
-                                HeightRequest="60"
-                                HorizontalOptions="FillAndExpand"
-                                Style="{DynamicResource DarkColoredButton}"
-                                Text="Export JSON" />
-                        <Label Text="Export Path:"
-                               VerticalOptions="Start"
-                               HorizontalOptions="Start" />
-                        <Entry Text="{Binding ExportPath}"
-                               VerticalOptions="EndAndExpand"
-                               HorizontalOptions="FillAndExpand"
-                               IsReadOnly="True" />
-                    </StackLayout>
-                </StackLayout>
+                </Frame>
+
                 <StackLayout HeightRequest="170"
                              Orientation="Vertical"
                              VerticalOptions="End">

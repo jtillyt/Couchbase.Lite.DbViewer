@@ -104,6 +104,8 @@
                                          Orientation="Horizontal"
                                          VerticalOptions="Center">
                                 <Label x:DataType="models:DocumentModel"
+                                       VerticalTextAlignment="Center"
+                                       VerticalOptions="Center"
                                        Style="{StaticResource DocumentListViewItem}"
                                        Text="{Binding DocumentId}">
                                     <Label.GestureRecognizers>
@@ -112,7 +114,7 @@
                                     </Label.GestureRecognizers>
                                 </Label>
 
-                                <Button Margin="0,0,20,0"
+                                <Button Margin="0,5,20,5"
                                         Padding="0"
                                         x:DataType="models:DocumentModel"
                                         BackgroundColor="{StaticResource DangerTextColor}"
@@ -124,7 +126,7 @@
                                         Text="X"
                                         TextColor="White"
                                         VerticalOptions="CenterAndExpand"
-                                        WidthRequest="25" />
+                                        WidthRequest="30" />
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

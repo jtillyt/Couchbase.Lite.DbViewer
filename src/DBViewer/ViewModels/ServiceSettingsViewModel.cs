@@ -1,20 +1,20 @@
-﻿using Dawn;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
+using System.Threading;
+using System.Threading.Tasks;
+using Dawn;
 using DbViewer.Services;
 using DbViewer.Shared.Dtos;
 using DynamicData;
 using Prism.Navigation;
 using ReactiveUI;
 using Serilog;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DbViewer.ViewModels
 {
-    public class ServiceSettingsViewModel : NavigationViewModelBase, INavigatedAware
+	public class ServiceSettingsViewModel : NavigationViewModelBase, INavigatedAware
     {
         public const string ServiceIdNavParam = nameof(ServiceIdNavParam);
         public const string HubIdNavParam = nameof(HubIdNavParam);

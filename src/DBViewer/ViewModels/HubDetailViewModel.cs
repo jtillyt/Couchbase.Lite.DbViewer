@@ -1,11 +1,4 @@
-﻿using Dawn;
-using DbViewer.Services;
-using DbViewer.Shared.Dtos;
-using DbViewer.Views;
-using Prism.Navigation;
-using ReactiveUI;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,11 +6,18 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dawn;
+using DbViewer.Services;
+using DbViewer.Shared.Dtos;
+using DbViewer.Views;
+using Prism.Navigation;
+using ReactiveUI;
+using Serilog;
 using Xamarin.Essentials;
 
 namespace DbViewer.ViewModels
 {
-    public class HubDetailViewModel : NavigationViewModelBase, INavigatedAware
+	public class HubDetailViewModel : NavigationViewModelBase, INavigatedAware
     {
         public const string HubIdNavParam = nameof(HubIdNavParam);
         private const string LastHubAddressKey = "LastHubAddress";

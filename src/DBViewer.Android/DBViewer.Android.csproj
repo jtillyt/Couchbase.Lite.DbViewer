@@ -75,10 +75,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="akavache">
-      <Version>9.1.20</Version>
+      <Version>7.2.1</Version>
     </PackageReference>
     <PackageReference Include="Couchbase.Lite.Support.Android">
-      <Version>3.0.12</Version>
+      <Version>3.1.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>

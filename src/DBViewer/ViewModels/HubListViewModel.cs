@@ -12,12 +12,11 @@ using DynamicData;
 using Prism.Navigation;
 using ReactiveUI;
 using Serilog;
-using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
 namespace DbViewer.ViewModels
 {
-    public class HubListViewModel : NavigationViewModelBase, INavigatedAware
+	public class HubListViewModel : NavigationViewModelBase, INavigatedAware
     {
         public const string HubIdNavParam = nameof(HubIdNavParam);
         private const string LastHubAddressKey = "LastHubAddress";

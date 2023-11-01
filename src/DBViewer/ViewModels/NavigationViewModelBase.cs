@@ -1,13 +1,13 @@
-﻿using Prism.Navigation;
-using ReactiveUI;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
+using Prism.Navigation;
+using ReactiveUI;
 
 namespace DbViewer.ViewModels
 {
-    public class NavigationViewModelBase : ViewModelBase
+	public class NavigationViewModelBase : ViewModelBase
     {
         public NavigationViewModelBase(INavigationService navigationService)
         {

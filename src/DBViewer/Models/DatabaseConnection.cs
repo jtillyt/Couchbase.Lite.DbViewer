@@ -1,13 +1,13 @@
-﻿using Couchbase.Lite;
-using Couchbase.Lite.Query;
-using Dawn;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Couchbase.Lite;
+using Couchbase.Lite.Query;
+using Dawn;
 
 namespace DbViewer.Models
 {
-    public class DatabaseConnection : IDatabaseConnection
+	public class DatabaseConnection : IDatabaseConnection
     {
         private Database _database;
 

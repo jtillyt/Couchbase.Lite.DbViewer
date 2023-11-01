@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace DbViewer.ViewModels
 {
-    public class RemoteDatabaseViewModel : ViewModelBase
+	public class RemoteDatabaseViewModel : ViewModelBase
     {
         public RemoteDatabaseViewModel(DatabaseInfo databaseInfo)
         {

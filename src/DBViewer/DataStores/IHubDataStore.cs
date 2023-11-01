@@ -5,7 +5,7 @@ using DbViewer.Shared.Dtos;
 
 namespace DbViewer.DataStores
 {
-    public interface IHubDatastore
+	public interface IHubDatastore
     {
         Task<List<HubInfo>> ListAllAsync(CancellationToken cancellationToken);
 

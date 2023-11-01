@@ -1,4 +1,10 @@
-﻿using Dawn;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Reactive;
+using System.Reactive.Disposables;
+using System.Threading;
+using System.Threading.Tasks;
+using Dawn;
 using DbViewer.DataStores;
 using DbViewer.Models;
 using DbViewer.Services;
@@ -6,16 +12,10 @@ using DbViewer.Views;
 using Prism.Navigation;
 using ReactiveUI;
 using Serilog;
-using System;
-using System.Collections.ObjectModel;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DbViewer.ViewModels
 {
-    public class CachedDatabaseListViewModel : NavigationViewModelBase, INavigatedAware
+	public class CachedDatabaseListViewModel : NavigationViewModelBase, INavigatedAware
     {
         private readonly ILogger _logger = Log.ForContext<CachedDatabaseItemViewModel>();
 

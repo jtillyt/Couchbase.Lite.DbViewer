@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace DbViewer.ViewModels
 {
-    public class ServiceDefinitionListItemViewModel : ReactiveObject
+	public class ServiceDefinitionListItemViewModel : ReactiveObject
     {
         public ServiceDefinitionListItemViewModel(ServiceDefinition serviceDefinition)
         {

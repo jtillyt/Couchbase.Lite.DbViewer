@@ -1,20 +1,20 @@
-﻿using Akavache;
-using DbViewer.Models;
-using ICSharpCode.SharpZipLib.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using System.Threading;
-using Serilog;
+using System.Threading.Tasks;
+using Akavache;
+using DbViewer.Models;
 using DbViewer.Shared.Dtos;
+using ICSharpCode.SharpZipLib.Zip;
+using Serilog;
 
 namespace DbViewer.DataStores
 {
-    public class DatabaseDatastore : IDatabaseDatastore
+	public class DatabaseDatastore : IDatabaseDatastore
     {
         private const string DatabaseCacheKey = "Database_Cache";
 

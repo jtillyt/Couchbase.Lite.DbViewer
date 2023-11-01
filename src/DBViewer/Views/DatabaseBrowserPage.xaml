@@ -132,16 +132,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
-            <!--<Button
-                Margin="5"
-                Command="{Binding ReloadCommand}"
-                CornerRadius="10"
-                FontSize="24"
-                HeightRequest="60"
-                IsEnabled="False"
-                Style="{DynamicResource DarkColoredButton}"
-                Text="Reload" />-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

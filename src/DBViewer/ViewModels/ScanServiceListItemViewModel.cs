@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace DbViewer.ViewModels
 {
-    public class ScanServiceListItemViewModel : ReactiveObject
+	public class ScanServiceListItemViewModel : ReactiveObject
     {
         public ScanServiceListItemViewModel(ServiceInfo serviceInfo)
         {

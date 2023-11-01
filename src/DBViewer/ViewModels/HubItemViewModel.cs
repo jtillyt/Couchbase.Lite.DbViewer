@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace DbViewer.ViewModels
 {
-    public class HubItemViewModel : ReactiveObject
+	public class HubItemViewModel : ReactiveObject
     {
         public HubItemViewModel(HubInfo hubInfo)
         {

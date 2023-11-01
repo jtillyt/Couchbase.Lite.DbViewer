@@ -1,13 +1,13 @@
-﻿using DbViewer.Models;
+﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Threading;
-using System;
+using System.Threading.Tasks;
+using DbViewer.Models;
 using DbViewer.Shared.Dtos;
 
 namespace DbViewer.DataStores
 {
-    public interface IDatabaseDatastore
+	public interface IDatabaseDatastore
     {
         IObservable<CachedDatabaseRegistry> CacheUpdated { get; }
 

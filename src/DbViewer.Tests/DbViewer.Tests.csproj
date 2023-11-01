@@ -5,11 +5,11 @@
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Couchbase.Lite" Version="3.0.12" />
-    <PackageReference Include="Couchbase.Lite.Support.NetDesktop" Version="3.0.12" />
+    <PackageReference Include="Couchbase.Lite" Version="3.1.1" />
+    <PackageReference Include="Couchbase.Lite.Support.NetDesktop" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
-    <PackageReference Include="ReactiveUI" Version="19.5.1" />
+    <PackageReference Include="ReactiveUI" Version="13.2.2" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

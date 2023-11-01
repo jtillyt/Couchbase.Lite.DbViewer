@@ -1,19 +1,19 @@
-﻿using Dawn;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Dawn;
 using DbViewer.Api;
 using DbViewer.DataStores;
 using DbViewer.Models;
 using DbViewer.Shared.Dtos;
 using Refit;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DbViewer.Services
 {
-    public class HubService : IHubService
+	public class HubService : IHubService
     {
         private readonly Dictionary<Uri, IDbHubHttpClient> _hubClients = new Dictionary<Uri, IDbHubHttpClient>();
 

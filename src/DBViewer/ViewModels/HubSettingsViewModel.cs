@@ -1,12 +1,4 @@
-﻿using Dawn;
-using DbViewer.Services;
-using DbViewer.Shared.Dtos;
-using DbViewer.Views;
-using DynamicData;
-using Prism.Navigation;
-using ReactiveUI;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -14,10 +6,18 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dawn;
+using DbViewer.Services;
+using DbViewer.Shared.Dtos;
+using DbViewer.Views;
+using DynamicData;
+using Prism.Navigation;
+using ReactiveUI;
+using Serilog;
 
 namespace DbViewer.ViewModels
 {
-    public class HubSettingsViewModel : NavigationViewModelBase, INavigatedAware
+	public class HubSettingsViewModel : NavigationViewModelBase, INavigatedAware
     {
         public const string HubIdNavParam = nameof(HubIdNavParam);
 

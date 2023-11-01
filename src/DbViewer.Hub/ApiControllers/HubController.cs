@@ -4,10 +4,10 @@ using DbViewer.Shared.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace DbViewer.Hub.Controllers
+namespace DbViewer.Hub.ApiControllers
 {
     [ApiController]
-    [Route("Hubs")]
+    [Route("Hubs-Old")]
     public class HubController : ControllerBase
     {
         private readonly ILogger<HubController> _logger;

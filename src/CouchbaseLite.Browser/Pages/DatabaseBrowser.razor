@@ -1,0 +1,50 @@
+﻿@page "/"
+
+<PageTitle>Couchbase Lite Browser</PageTitle>
+
+@using CouchbaseLite.Browser.Data
+@inject DatabaseService DatabaseService
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
+	<EditForm Model="@DbProps" OnValidSubmit="@LoadDatabase">
+		<MudText>Path to DB Folder:</MudText>
+		<MudInputString @bind-Value="DbProps.DatabasePath" Class="mb-4"/>
+		@*<InputText @bind-Value="DbProps.DatabasePath" />*@
+		<MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">(Re)Load Database</MudButton>
+	</EditForm>
+
+	<MudBlazor.MudList Clickable="true">
+		@if (CurrentDb?.DatabaseDocuments != null)
+		{
+			@foreach (var item in CurrentDb.DatabaseDocuments)
+			{
+				<MudBlazor.MudListItem Text=@item.DisplayName OnClick="@(()=>OnItemClicked(item))" />
+			}
+		}
+	</MudBlazor.MudList>
+</MudContainer>
+@code {
+
+
+	public DatabaseViewerProperties? DbProps { get; set; }
+	public LoadedDatabase? CurrentDb { get; set; }
+	protected override async Task OnInitializedAsync()
+	{
+		DbProps = new DatabaseViewerProperties()
+			{
+				ViewerId = Guid.NewGuid()
+			};
+	}
+
+	private void LoadDatabase()
+	{
+		CurrentDb = DatabaseService.LoadDb(DbProps);
+
+		StateHasChanged();
+	}
+
+	private void OnItemClicked(DatabaseDocument databaseDocument)
+	{
+
+	}
+}

@@ -1,112 +1,82 @@
-﻿using Dawn;
-using DbViewer.Hub.Repos;
-using DbViewer.Hub.Services;
-using DbViewer.Shared.Dtos;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
 
 namespace DbViewer.Hub.Controllers
 {
-    [ApiController]
-    [Route("Databases")]
-    public class DatabaseController : ControllerBase
-    {
-        private readonly ILogger<DatabaseController> _logger;
-        private readonly IHubService _hubService;
-        private readonly IDatabaseProviderRepository _databaseProviderRepository;
+	public class DatabaseController : Controller
+	{
+		public ActionResult Index()
+		{
+			return View();
+		}
 
-        public DatabaseController(ILogger<DatabaseController> logger, IHubService hubService, IDatabaseProviderRepository databaseProviderRepository)
-        {
-            _logger = Guard.Argument(logger, nameof(logger))
-                  .NotNull()
-                  .Value;
+		// GET: HubController/Details/5
+		public ActionResult Details(int id)
+		{
+			return View();
+		}
 
-            _hubService = Guard.Argument(hubService, nameof(hubService))
-                  .NotNull()
-                  .Value;
+		// GET: HubController/Create
+		public ActionResult Create()
+		{
+			return View();
+		}
 
-            _databaseProviderRepository = Guard.Argument(databaseProviderRepository, nameof(databaseProviderRepository))
-                                               .NotNull()
-                                               .Value;
-        }
+		// POST: HubController/Create
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Create(IFormCollection collection)
+		{
+			try
+			{
+				return RedirectToAction(nameof(Index));
+			}
+			catch
+			{
+				return View();
+			}
+		}
 
-        [HttpGet]
-        public IEnumerable<DatabaseInfo> ListAllDbs()
-        {
-            _logger.LogInformation("Fetching DB Info");
+		// GET: HubController/Edit/5
+		public ActionResult Edit(int id)
+		{
+			return View();
+		}
 
-            var hubInfo = _hubService.GetLatestHub();
-            var scanners = _databaseProviderRepository.GetAllDbScanners(hubInfo);
+		// POST: HubController/Edit/5
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Edit(int id, IFormCollection collection)
+		{
+			try
+			{
+				return RedirectToAction(nameof(Index));
+			}
+			catch
+			{
+				return View();
+			}
+		}
 
-            if (scanners == null)
-                return Enumerable.Empty<DatabaseInfo>();
+		// GET: HubController/Delete/5
+		public ActionResult Delete(int id)
+		{
+			return View();
+		}
 
-            var dbs = new List<DatabaseInfo>();
-
-            foreach(var scanner in scanners)
-            {
-               dbs.AddRange(scanner.Scan());
-            }
-
-            return dbs;
-        }
-
-        [HttpGet("Name/{displayName}")]
-        public Stream GetDatabase([FromRoute] string displayName)
-        {
-            var listDbs = ListAllDbs();
-
-            var dbInfo = listDbs.FirstOrDefault(db => db.DisplayDatabaseName.Equals(displayName, StringComparison.OrdinalIgnoreCase));
-
-            if (dbInfo == null)
-                return null;
-
-            var hubInfo = _hubService.GetLatestHub();
-
-            var dbProvider = _databaseProviderRepository.GetOrCreate(dbInfo.ProviderInfo, hubInfo);
-            var rootDatabasePath = dbProvider.GetCurrentDatabaseRootPath(dbInfo);
-
-            var dbPath = Path.Combine(rootDatabasePath, dbInfo.FullDatabaseName);
-
-            var zipPath = dbPath + ".zip";
-
-            if (System.IO.File.Exists(zipPath))
-            {
-                System.IO.File.Delete(zipPath);
-            }
-
-            ZipFile.CreateFromDirectory(dbPath, zipPath);
-
-            return !System.IO.File.Exists(zipPath) ? null : new FileStream(zipPath, FileMode.Open);
-        }
-
-        [HttpPut("Document/{documentInfo}")]
-        public  DocumentInfo SaveDocument(DocumentInfo documentInfo)
-        {
-            var updateDocumentInfo = _hubService.SaveDocumentToDatabase(documentInfo);
-
-            return updateDocumentInfo;
-        }
-
-        [HttpDelete("Document/{documentRequest}")]
-        public bool DeleteDocument(DocumentRequest documentRequest)
-        {
-            var deleteResult = _hubService.DeleteDocument(documentRequest.DatabaseInfo, documentRequest.DocumentId);
-
-            return deleteResult;
-        }
-
-        [HttpGet("Document")]
-        public  DocumentInfo GetDocument([FromBody] DocumentRequest documentRequest)
-        {
-            var documentInfo = _hubService.GetDocumentById(documentRequest.DatabaseInfo, documentRequest.DocumentId);
-
-            return documentInfo;
-        }
-    }
+		// POST: HubController/Delete/5
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Delete(int id, IFormCollection collection)
+		{
+			try
+			{
+				return RedirectToAction(nameof(Index));
+			}
+			catch
+			{
+				return View();
+			}
+		}
+	}
 }

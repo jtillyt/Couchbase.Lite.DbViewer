@@ -5,24 +5,45 @@
 @using CouchbaseLite.Browser.Data
 @inject DatabaseService DatabaseService
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
+<MudPaper class="p-3 p-md-3" style="margin:10px">
+
 	<EditForm Model="@DbProps" OnValidSubmit="@LoadDatabase">
-		<MudText>Path to DB Folder:</MudText>
-		<MudInputString @bind-Value="DbProps.DatabasePath" Class="mb-4"/>
-		@*<InputText @bind-Value="DbProps.DatabasePath" />*@
-		<MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">(Re)Load Database</MudButton>
+		<div class="d-flex flex-grow-1 gap-4">
+
+			<MudTextField @bind-Value="DbProps.DatabasePath" HelperText="Database Path" Class="d-flex flex-fill" style="margin-left:10px" />
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit" style="margin:5px">(Re)Load Database</MudButton>
+		</div>
 	</EditForm>
 
+</MudPaper>
+
+
+<MudPaper style="margin:10px">
 	<MudBlazor.MudList Clickable="true">
 		@if (CurrentDb?.DatabaseDocuments != null)
 		{
-			@foreach (var item in CurrentDb.DatabaseDocuments)
+			@foreach (var group in CurrentDb.DatabaseDocumentGroups)
 			{
-				<MudBlazor.MudListItem Text=@item.DisplayName OnClick="@(()=>OnItemClicked(item))" />
+				<MudListItem Text=@group.GroupName Icon="@Icons.Material.Filled.FormatListBulleted">
+					<NestedList>
+
+					@foreach (var doc in group.Documents)
+					{
+						<MudBlazor.MudListItem Text=@doc.DisplayName OnClick="@(()=>OnItemClicked(doc))">
+
+						</MudBlazor.MudListItem>
+					}
+					</NestedList>
+				</MudListItem>
 			}
 		}
+		else
+		{
+			<MudText>No documents found</MudText>
+		}
 	</MudBlazor.MudList>
-</MudContainer>
+</MudPaper>
+
 @code {
 
 

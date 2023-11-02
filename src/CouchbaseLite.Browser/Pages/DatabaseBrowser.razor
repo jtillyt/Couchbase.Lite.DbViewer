@@ -24,7 +24,7 @@
 		{
 			@foreach (var group in CurrentDb.DatabaseDocumentGroups)
 			{
-				<MudListItem Text=@group.GroupName Icon="@Icons.Material.Filled.FormatListBulleted">
+				<MudListItem Text=@group.GroupName Icon="@Icons.Material.Filled.FormatListBulleted" Style="background: #efefef">
 					<NestedList>
 
 					@foreach (var doc in group.Documents)

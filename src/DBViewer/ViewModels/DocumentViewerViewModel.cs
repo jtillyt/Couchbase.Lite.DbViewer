@@ -28,16 +28,17 @@ namespace DbViewer.ViewModels
         private IDatabaseConnection _databaseConnection;
         private Document _couchbaseDocument;
 
-        public DocumentViewerViewModel(INavigationService navigationService, IDialogService dialogService, IHubService hubService)
+        public DocumentViewerViewModel(INavigationService navigationService, IDialogService dialogService,
+            IHubService hubService)
             : base(navigationService)
         {
             _dialogService = Guard.Argument(dialogService, nameof(dialogService))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             _hubService = Guard.Argument(hubService, nameof(hubService))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             ShareCommand = ReactiveCommand.CreateFromTask(ExecuteShareAsync);
             SaveCommand = ReactiveCommand.CreateFromTask(ExecuteSaveAsync);
@@ -57,6 +58,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _documentText;
+
         public string DocumentText
         {
             get => _documentText;
@@ -65,7 +67,6 @@ namespace DbViewer.ViewModels
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
-
         }
 
         public void OnNavigatedTo(INavigationParameters parameters)
@@ -137,7 +138,8 @@ namespace DbViewer.ViewModels
                 return;
             }
 
-            var documentInfo = new DocumentInfo(DocumentModel.Database.RemoteDatabaseInfo, _couchbaseDocument.Id, _couchbaseDocument.RevisionID, DocumentText);
+            var documentInfo = new DocumentInfo(DocumentModel.Database.RemoteDatabaseInfo, _couchbaseDocument.Id,
+                _couchbaseDocument.RevisionID, DocumentText);
 
             try
             {
@@ -160,7 +162,6 @@ namespace DbViewer.ViewModels
             }
             catch (Exception ex)
             {
-
             }
 
             UpdateFromDocumentInfo(documentInfo);
@@ -170,7 +171,8 @@ namespace DbViewer.ViewModels
         {
             try
             {
-                var updatedDocument = await _hubService.FetchDocument(DocumentModel.Database.RemoteDatabaseInfo, _couchbaseDocument.Id, cancellationToken);
+                var updatedDocument = await _hubService.FetchDocument(DocumentModel.Database.RemoteDatabaseInfo,
+                    _couchbaseDocument.Id, cancellationToken);
 
                 if (updatedDocument == null)
                 {

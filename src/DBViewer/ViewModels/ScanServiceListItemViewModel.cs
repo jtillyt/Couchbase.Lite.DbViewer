@@ -10,8 +10,8 @@ namespace DbViewer.ViewModels
         public ScanServiceListItemViewModel(ServiceInfo serviceInfo)
         {
             ServiceInfo = Guard.Argument(serviceInfo, nameof(serviceInfo))
-                              .NotNull()
-                              .Value;
+                .NotNull()
+                .Value;
 
             UpdateFromModel();
         }
@@ -19,6 +19,7 @@ namespace DbViewer.ViewModels
         public ServiceInfo ServiceInfo { get; }
 
         private string _displayName;
+
         public string DisplayName
         {
             get => _displayName;
@@ -26,6 +27,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _description;
+
         public string Description
         {
             get => _description;

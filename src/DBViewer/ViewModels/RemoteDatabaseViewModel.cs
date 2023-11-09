@@ -9,8 +9,8 @@ namespace DbViewer.ViewModels
         public RemoteDatabaseViewModel(DatabaseInfo databaseInfo)
         {
             DatabaseInfo = Guard.Argument(databaseInfo, nameof(databaseInfo))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             DisplayName = DatabaseInfo.DisplayDatabaseName;
         }
@@ -18,6 +18,7 @@ namespace DbViewer.ViewModels
         public DatabaseInfo DatabaseInfo { get; set; }
 
         private string _displayName;
+
         public string DisplayName
         {
             get => _displayName;
@@ -25,6 +26,7 @@ namespace DbViewer.ViewModels
         }
 
         private bool _shouldDownload;
+
         public bool ShouldDownload
         {
             get => _shouldDownload;

@@ -1,6 +1,4 @@
-﻿using Couchbase.Lite;
-using Couchbase.Lite.Query;
-using Dawn;
+﻿using Dawn;
 using DbViewer.DataStores;
 using DbViewer.Extensions;
 using DbViewer.Models;
@@ -12,7 +10,6 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -35,7 +32,7 @@ namespace DbViewer.ViewModels
         private readonly ReadOnlyObservableCollection<DocumentModel> _searchResults;
 
         private readonly ISourceCache<DocumentModel, string> _documentCache =
-         new SourceCache<DocumentModel, string>(x => x.DocumentId);
+            new SourceCache<DocumentModel, string>(x => x.DocumentId);
 
         public DatabaseSearchViewModel(IDatabaseDatastore cacheService, INavigationService navigationService)
             : base(navigationService)
@@ -45,16 +42,17 @@ namespace DbViewer.ViewModels
                 .NotNull()
                 .Value;
 
-            SearchCommand = ReactiveCommand.CreateFromTask(ExecuteSearchAsync, outputScheduler: RxApp.MainThreadScheduler);
+            SearchCommand =
+                ReactiveCommand.CreateFromTask(ExecuteSearchAsync, outputScheduler: RxApp.MainThreadScheduler);
 
             _documentCache
-               .Connect()
-               .RefCount()
-               .ObserveOn(RxApp.MainThreadScheduler)
-               .Bind(out _searchResults)
-               .LogManagedThread("Search - After Bind")
-               .Subscribe()
-               .DisposeWith(Disposables);
+                .Connect()
+                .RefCount()
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Bind(out _searchResults)
+                .LogManagedThread("Search - After Bind")
+                .Subscribe()
+                .DisposeWith(Disposables);
 
             ViewSelectedDocumentCommand = ReactiveCommand.Create<DocumentModel>(ExecuteViewSelectedDocument);
         }
@@ -78,6 +76,7 @@ namespace DbViewer.ViewModels
         public ReadOnlyObservableCollection<DocumentModel> SearchResults => _searchResults;
 
         private CachedDatabaseItemViewModel _currentDatabaseItemViewModel;
+
         public CachedDatabaseItemViewModel CurrentDatabaseItemViewModel
         {
             get => _currentDatabaseItemViewModel;
@@ -86,15 +85,16 @@ namespace DbViewer.ViewModels
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
-
         }
 
         public void OnNavigatedTo(INavigationParameters parameters)
         {
             if (parameters.ContainsKey(nameof(CachedDatabaseItemViewModel)))
             {
-                CurrentDatabaseItemViewModel = parameters.GetValue<CachedDatabaseItemViewModel>(nameof(CachedDatabaseItemViewModel));
+                CurrentDatabaseItemViewModel =
+                    parameters.GetValue<CachedDatabaseItemViewModel>(nameof(CachedDatabaseItemViewModel));
             }
+
             if (parameters.ContainsKey(DocumentIdListParam))
             {
                 _documentIdsToSearch = parameters.GetValue<IEnumerable<string>>(nameof(DocumentIdListParam));
@@ -112,8 +112,9 @@ namespace DbViewer.ViewModels
 
             var documentIdsWithHits = await SearchDbAsync(SearchText, cancellationToken).ConfigureAwait(false);
 
-            var docModels = documentIdsWithHits.Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId))
-                                               .OrderBy(vm=>vm.DocumentId);
+            var docModels = documentIdsWithHits
+                .Select(docId => new DocumentModel(CurrentDatabaseItemViewModel.Database, docId))
+                .OrderBy(vm => vm.DocumentId);
 
             RunOnUi(() =>
             {
@@ -152,7 +153,6 @@ namespace DbViewer.ViewModels
 
                     using (var document = connection.GetDocumentById(documentId))
                     {
-
                         var documentText = string.Empty;
 
                         try
@@ -163,7 +163,6 @@ namespace DbViewer.ViewModels
                         }
                         catch (Exception ex)
                         {
-
                         }
 
                         if (documentText.ToLower().Contains(searchTextCorrected))
@@ -190,10 +189,7 @@ namespace DbViewer.ViewModels
                 { nameof(DocumentModel), document }
             };
 
-            RunOnUi(() =>
-            {
-                NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams);
-            });
+            RunOnUi(() => { NavigationService.NavigateAsync(nameof(DocumentViewerPage), navParams); });
         }
     }
 }

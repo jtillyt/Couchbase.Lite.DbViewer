@@ -16,8 +16,8 @@ namespace DbViewer.Models
         public bool Connect(string dbDirectory, string dbName)
         {
             Guard.Argument(dbDirectory, nameof(dbDirectory))
-                 .NotNull()
-                 .NotEmpty();
+                .NotNull()
+                .NotEmpty();
 
             if (!Directory.Exists(dbDirectory))
             {
@@ -77,7 +77,7 @@ namespace DbViewer.Models
         }
 
         public IDataSourceAs ActiveSource => DataSource.Database(_database);
-       
+
         public Document GetDocumentById(string id)
         {
             return _database.GetDocument(id);

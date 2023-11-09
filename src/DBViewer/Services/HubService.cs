@@ -24,17 +24,18 @@ namespace DbViewer.Services
         public HubService(IDatabaseDatastore dbCacheService, IHubDatastore hubCacheService)
         {
             _dbCacheService = Guard.Argument(dbCacheService, nameof(dbCacheService))
-                                   .NotNull()
-                                   .Value;
+                .NotNull()
+                .Value;
 
             _hubCacheService = Guard.Argument(hubCacheService, nameof(hubCacheService))
-                                    .NotNull()
-                                    .Value;
+                .NotNull()
+                .Value;
         }
 
         public DateTimeOffset LastRefreshTime { get; set; }
 
-        public async Task<DownloadResult> DownloadDatabaseAsync(Uri hubUri, DatabaseInfo databaseInfo, CancellationToken cancellationToken)
+        public async Task<DownloadResult> DownloadDatabaseAsync(Uri hubUri, DatabaseInfo databaseInfo,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -49,9 +50,10 @@ namespace DbViewer.Services
 
             try
             {
-                var httpResponseMessage = await connection.GetDatabaseAsync(databaseInfo.DisplayDatabaseName, cancellationToken).ConfigureAwait(false);
+                var httpResponseMessage = await connection
+                    .GetDatabaseAsync(databaseInfo.DisplayDatabaseName, cancellationToken).ConfigureAwait(false);
                 stream = await httpResponseMessage.Content.ReadAsStreamAsync()
-                                                  .ConfigureAwait(false);
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -68,9 +70,9 @@ namespace DbViewer.Services
                 databaseInfo.RequestAddress = hubUri;
 
                 await _dbCacheService.SaveFromStreamAsync(stream, databaseInfo, cancellationToken)
-                                     .ConfigureAwait(false);
+                    .ConfigureAwait(false);
 
-                downloadResult.WasSuccesful = true;
+                downloadResult.WasSuccessful = true;
             }
             catch (Exception ex)
             {
@@ -104,11 +106,15 @@ namespace DbViewer.Services
             return client;
         }
 
-        public Task<IEnumerable<DatabaseInfo>> ListAllHubDatabasesAsync(Uri hubUri, CancellationToken cancellationToken) => GetConnection(hubUri).ListAllAsync(cancellationToken);
+        public Task<IEnumerable<DatabaseInfo>>
+            ListAllHubDatabasesAsync(Uri hubUri, CancellationToken cancellationToken) =>
+            GetConnection(hubUri).ListAllAsync(cancellationToken);
 
-        public Task<HubInfo> GetCachedHubAsync(string hubId, CancellationToken cancellationToken) => _hubCacheService.GetCachedHubAsync(hubId, cancellationToken);
+        public Task<HubInfo> GetCachedHubAsync(string hubId, CancellationToken cancellationToken) =>
+            _hubCacheService.GetCachedHubAsync(hubId, cancellationToken);
 
-        public Task<List<HubInfo>> ListAllKnownHubsAsync(CancellationToken cancellationToken) => _hubCacheService.ListAllAsync(cancellationToken);
+        public Task<List<HubInfo>> ListAllKnownHubsAsync(CancellationToken cancellationToken) =>
+            _hubCacheService.ListAllAsync(cancellationToken);
 
         public async Task<HubInfo> TryAddHubAsync(Uri hubUri, CancellationToken cancellationToken)
         {
@@ -119,12 +125,12 @@ namespace DbViewer.Services
             try
             {
                 hubInfo = await connection.GetHubInfoAsync(cancellationToken)
-                                          .ConfigureAwait(false);
+                    .ConfigureAwait(false);
 
                 hubInfo.HostAddress = hubUri.ToString();
 
                 await _hubCacheService.SaveHubAsync(hubInfo, cancellationToken)
-                                      .ConfigureAwait(false);
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -139,7 +145,7 @@ namespace DbViewer.Services
             try
             {
                 var hubInfo = await _hubCacheService.GetCachedHubAsync(hubId, cancellationToken)
-                                                    .ConfigureAwait(false);
+                    .ConfigureAwait(false);
 
                 var hubUri = new Uri(hubInfo.HostAddress);
 
@@ -153,7 +159,7 @@ namespace DbViewer.Services
                 }
 
                 await _hubCacheService.DeleteHubAsync(hubInfo.Id, cancellationToken)
-                                      .ConfigureAwait(false);
+                    .ConfigureAwait(false);
 
                 await _hubCacheService.SaveAllAsync(cancellationToken);
             }
@@ -174,7 +180,7 @@ namespace DbViewer.Services
             try
             {
                 await connection.UpdateHubAsync(hubInfo, cancellationToken)
-                                .ConfigureAwait(false);
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -185,7 +191,7 @@ namespace DbViewer.Services
             try
             {
                 await _hubCacheService.SaveHubAsync(hubInfo, cancellationToken)
-                                      .ConfigureAwait(false);
+                    .ConfigureAwait(false);
 
                 return true;
             }
@@ -205,14 +211,16 @@ namespace DbViewer.Services
             return connection.SaveDocument(documentInfo, cancellationToken);
         }
 
-        public Task<DocumentInfo> FetchDocument(DatabaseInfo databaseInfo, string documentId, CancellationToken cancellationToken)
+        public Task<DocumentInfo> FetchDocument(DatabaseInfo databaseInfo, string documentId,
+            CancellationToken cancellationToken)
         {
             var connection = GetConnection(databaseInfo.RequestAddress);
 
             return connection.GetDocument(new DocumentRequest(databaseInfo, documentId), cancellationToken);
         }
 
-        public Task<bool> DeleteDocument(DatabaseInfo databaseInfo, string documentId, CancellationToken cancellationToken)
+        public Task<bool> DeleteDocument(DatabaseInfo databaseInfo, string documentId,
+            CancellationToken cancellationToken)
         {
             var connection = GetConnection(databaseInfo.RequestAddress);
 

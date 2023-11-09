@@ -29,18 +29,22 @@ namespace DbViewer.Hub.DbProvider
             Id = Guid.NewGuid().ToString();
         }
 
-        [ServiceProperty(AppBundleId_ConfigKey, "App Bundle Id", "com.your.app.bundle", "This is the BundleId found in the app's Info.plist file")]
+        [ServiceProperty(AppBundleId_ConfigKey, "App Bundle Id", "com.your.app.bundle",
+            "This is the BundleId found in the app's Info.plist file")]
         public string AppBundleId { get; set; }
 
 
-        [ServiceProperty(RelativePath_ConfigKey, "Relative Path to Database", "Documents/DataStore", "This is the relative path to where the databases are in relation to the root of the application.")]
+        [ServiceProperty(RelativePath_ConfigKey, "Relative Path to Database", "Documents/DataStore",
+            "This is the relative path to where the databases are in relation to the root of the application.")]
         public string RelativePathToData { get; set; }
 
 
-        [ServiceProperty(SimulatorId_ConfigKey, "Simulator Id", "Some-Guid-Id", "This is the simulator id that you would like to target for scanning. These can be found in XCode. Use the string 'booted' for target the active simulator")]
+        [ServiceProperty(SimulatorId_ConfigKey, "Simulator Id", "Some-Guid-Id",
+            "This is the simulator id that you would like to target for scanning. These can be found in XCode. Use the string 'booted' for target the active simulator")]
         public string SimulatorId { get; set; }
 
         public string Id { get; }
+
         public IEnumerable<DatabaseInfo> Scan()
         {
             if (!OperatingSystem.IsMacOS())
@@ -115,18 +119,20 @@ namespace DbViewer.Hub.DbProvider
         public void InitiateService(ServiceInfo serviceInfo, HubInfo hubInfo)
         {
             _serviceInfo = Guard.Argument(serviceInfo)
-                                .NotNull()
-                                .Value;
+                .NotNull()
+                .Value;
 
             _hubInfo = Guard.Argument(hubInfo)
-                            .NotNull()
-                            .Value;
+                .NotNull()
+                .Value;
 
-            _logger.LogInformation($"Initiating service {_serviceInfo.ServiceName} of type {_serviceInfo.ServiceTypeId}");
+            _logger.LogInformation(
+                $"Initiating service {_serviceInfo.ServiceName} of type {_serviceInfo.ServiceTypeId}");
 
             AppBundleId = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == AppBundleId_ConfigKey)?.Value;
             SimulatorId = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == SimulatorId_ConfigKey)?.Value;
-            RelativePathToData = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == RelativePath_ConfigKey)?.Value;
+            RelativePathToData = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == RelativePath_ConfigKey)
+                ?.Value;
         }
     }
 }

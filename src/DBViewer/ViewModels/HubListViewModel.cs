@@ -12,7 +12,6 @@ using DynamicData;
 using Prism.Navigation;
 using ReactiveUI;
 using Serilog;
-using Xamarin.Essentials;
 using Xamarin.Essentials.Interfaces;
 
 namespace DbViewer.ViewModels
@@ -93,7 +92,7 @@ namespace DbViewer.ViewModels
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (string.IsNullOrEmpty(HubAddress) || 
+                if (string.IsNullOrEmpty(HubAddress) ||
                     KnownHubs.Any(h => h.HostAddress.Equals(HubAddress, StringComparison.OrdinalIgnoreCase)))
                 {
                     return;
@@ -122,7 +121,7 @@ namespace DbViewer.ViewModels
         private async Task ExecuteDeleteHubAsync(HubItemViewModel hubItemViewModel, CancellationToken cancellationToken)
         {
             var result = await _hubService.TryDeleteHub(hubItemViewModel.HubId, cancellationToken)
-                                          .ConfigureAwait(false);
+                .ConfigureAwait(false);
 
             if (result)
             {
@@ -162,7 +161,7 @@ namespace DbViewer.ViewModels
 
             var navParams = new NavigationParameters
             {
-                {nameof(HubDetailViewModel.HubIdNavParam), hubVm.HubId}
+                { nameof(HubDetailViewModel.HubIdNavParam), hubVm.HubId }
             };
 
             return NavigationService.NavigateAsync(nameof(HubDetailPage), navParams);

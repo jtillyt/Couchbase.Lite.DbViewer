@@ -36,7 +36,7 @@ namespace DbViewer.ViewModels
         private string _status;
 
         public HubSettingsViewModel(IHubService hubService, INavigationService navigationService)
-               : base(navigationService)
+            : base(navigationService)
         {
             _hubService = Guard
                 .Argument(hubService, nameof(hubService))
@@ -46,20 +46,20 @@ namespace DbViewer.ViewModels
             var canAddService = this.WhenAnyValue(x => x.SelectedScannerType).Select(x => x != null);
 
             ViewSelectedServiceCommand = ReactiveCommand.CreateFromTask<ScanServiceListItemViewModel>(
-                                         ExecuteViewSelectedServiceAsync)
-                                                        .DisposeWith(Disposables);
+                    ExecuteViewSelectedServiceAsync)
+                .DisposeWith(Disposables);
 
             AddScannerCommand = ReactiveCommand.CreateFromTask(ExecuteAddScannerAsync, canAddService)
-                                               .DisposeWith(Disposables);
+                .DisposeWith(Disposables);
 
-            DeleteScannerCommand = ReactiveCommand.CreateFromTask<ScanServiceListItemViewModel>(ExecuteDeleteScannerAsync)
-                                               .DisposeWith(Disposables);
+            DeleteScannerCommand = ReactiveCommand
+                .CreateFromTask<ScanServiceListItemViewModel>(ExecuteDeleteScannerAsync)
+                .DisposeWith(Disposables);
         }
 
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
-
         }
 
         public async void OnNavigatedTo(INavigationParameters parameters)
@@ -73,26 +73,26 @@ namespace DbViewer.ViewModels
                     _hubInfo = await _hubService.GetCachedHubAsync(hubId, CancellationToken.None).ConfigureAwait(false);
 
                     var activeScannerViewModels = _hubInfo.ActiveServices
-                                                          .Select(service => new ScanServiceListItemViewModel(service));
+                        .Select(service => new ScanServiceListItemViewModel(service));
                     var availableScannerViewModels = _hubInfo.ServiceDefinitions
-                                                             .Select(
-                                                     service => new ServiceDefinitionListItemViewModel(service));
+                        .Select(
+                            service => new ServiceDefinitionListItemViewModel(service));
 
                     RunOnUi(
-                    () =>
-                    {
-                        ActiveScanners.Clear();
-                        AvailableScanners.Clear();
+                        () =>
+                        {
+                            ActiveScanners.Clear();
+                            AvailableScanners.Clear();
 
-                        ActiveScanners.AddRange(activeScannerViewModels);
-                        AvailableScanners.AddRange(availableScannerViewModels);
-                    });
+                            ActiveScanners.AddRange(activeScannerViewModels);
+                            AvailableScanners.AddRange(availableScannerViewModels);
+                        });
                 }
                 else
                 {
                     if (ActiveScanners?.Count > 0)
                     {
-                        foreach(var scannerViewModel in ActiveScanners)
+                        foreach (var scannerViewModel in ActiveScanners)
                         {
                             scannerViewModel.UpdateFromModel();
                         }
@@ -121,7 +121,11 @@ namespace DbViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _availableScanners, value);
         }
 
-        public string HubName { get => _hubName; set => this.RaiseAndSetIfChanged(ref _hubName, value); }
+        public string HubName
+        {
+            get => _hubName;
+            set => this.RaiseAndSetIfChanged(ref _hubName, value);
+        }
 
         public ServiceDefinitionListItemViewModel SelectedScannerType
         {
@@ -129,7 +133,11 @@ namespace DbViewer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _selectedScannerType, value);
         }
 
-        public string Status { get => _status; set => this.RaiseAndSetIfChanged(ref _status, value); }
+        public string Status
+        {
+            get => _status;
+            set => this.RaiseAndSetIfChanged(ref _status, value);
+        }
 
         public ReactiveCommand<ScanServiceListItemViewModel, Unit> ViewSelectedServiceCommand { get; }
 
@@ -141,10 +149,7 @@ namespace DbViewer.ViewModels
             }
 
             RunOnUi(
-            () =>
-            {
-                ActiveScanners.Add(new ScanServiceListItemViewModel(serviceInfo));
-            });
+                () => { ActiveScanners.Add(new ScanServiceListItemViewModel(serviceInfo)); });
         }
 
         private ServiceInfo CreateActiveServiceFromType(ServiceDefinition serviceDefinition)
@@ -179,7 +184,8 @@ namespace DbViewer.ViewModels
             }
         }
 
-        private async Task ExecuteDeleteScannerAsync(ScanServiceListItemViewModel scanServiceViewModel, CancellationToken cancellationToken)
+        private async Task ExecuteDeleteScannerAsync(ScanServiceListItemViewModel scanServiceViewModel,
+            CancellationToken cancellationToken)
         {
             _hubInfo.ActiveServices.Remove(scanServiceViewModel.ServiceInfo);
 
@@ -187,30 +193,27 @@ namespace DbViewer.ViewModels
 
             if (result)
             {
-                RunOnUi(() =>
-                {
-                    ActiveScanners.Remove(scanServiceViewModel);
-                });
+                RunOnUi(() => { ActiveScanners.Remove(scanServiceViewModel); });
             }
         }
 
         private Task ExecuteViewSelectedServiceAsync(
-                     ScanServiceListItemViewModel scanService,
-                     CancellationToken cancellationToken)
+            ScanServiceListItemViewModel scanService,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var navParams = new NavigationParameters
-                            {
-                                {
-                                    nameof(ServiceSettingsViewModel.HubIdNavParam),
-                                    _hubInfo.Id
-                                },
-                                {
-                                    nameof(ServiceSettingsViewModel.ServiceIdNavParam),
-                                    scanService.ServiceInfo.Id
-                                }
-                            };
+            {
+                {
+                    nameof(ServiceSettingsViewModel.HubIdNavParam),
+                    _hubInfo.Id
+                },
+                {
+                    nameof(ServiceSettingsViewModel.ServiceIdNavParam),
+                    scanService.ServiceInfo.Id
+                }
+            };
 
             return NavigationService.NavigateAsync(nameof(ServiceSettingsPage), navParams);
         }

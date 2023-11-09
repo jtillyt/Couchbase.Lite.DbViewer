@@ -127,7 +127,7 @@ namespace DbViewer.ViewModels
         }
 
         private Task ExecuteEditSelectedDatabaseAsync(CachedDatabaseItemViewModel cachedDatabaseItemViewModel,
-    CancellationToken cancellationToken)
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

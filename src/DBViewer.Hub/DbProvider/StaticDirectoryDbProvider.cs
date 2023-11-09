@@ -10,7 +10,8 @@ using System.Linq;
 
 namespace DbViewer.Hub.DbProvider
 {
-    [ServiceType(ServiceConstants.StaticDatabaseLocatorServiceTypeName, ServiceConstants.StaticDatabaseLocatorServiceTypeId)]
+    [ServiceType(ServiceConstants.StaticDatabaseLocatorServiceTypeName,
+        ServiceConstants.StaticDatabaseLocatorServiceTypeId)]
     public class StaticDirectoryDbProvider : IDbProvider, IService
     {
         private const string LocalPath_ConfigKey = "StaticPathLocationProvider";
@@ -28,19 +29,20 @@ namespace DbViewer.Hub.DbProvider
         public void InitiateService(ServiceInfo serviceInfo, HubInfo hubInfo)
         {
             _serviceInfo = Guard.Argument(serviceInfo)
-                                .NotNull()
-                                .Value;
+                .NotNull()
+                .Value;
 
             _hubInfo = Guard.Argument(hubInfo)
-                            .NotNull()
-                            .Value;
+                .NotNull()
+                .Value;
 
             _logger.LogInformation($"Initiating service {serviceInfo.ServiceName} of type {serviceInfo.ServiceTypeId}");
 
             LocalDirectory = _serviceInfo.Properties.FirstOrDefault(prop => prop.Key == LocalPath_ConfigKey)?.Value;
         }
 
-        [ServiceProperty(LocalPath_ConfigKey, "Static Directory", "TestDatabase", "This is the path to root directory that contains Couchbase Lite database directories.")]
+        [ServiceProperty(LocalPath_ConfigKey, "Static Directory", "TestDatabase",
+            "This is the path to root directory that contains Couchbase Lite database directories.")]
         public string LocalDirectory { get; set; }
 
         public string Id { get; }

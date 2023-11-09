@@ -9,8 +9,8 @@ namespace DbViewer.ViewModels
         public ServicePropertyViewModel(ServicePropertyInfo servicePropertyInfo)
         {
             ServiceProperty = Guard.Argument(servicePropertyInfo, nameof(servicePropertyInfo))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             DisplayName = ServiceProperty.DisplayName;
             Value = ServiceProperty.Value;
@@ -20,6 +20,7 @@ namespace DbViewer.ViewModels
         public ServicePropertyInfo ServiceProperty { get; }
 
         private string _displayName;
+
         public string DisplayName
         {
             get => _displayName;
@@ -27,6 +28,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _value;
+
         public string Value
         {
             get => _value;
@@ -42,6 +44,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _description;
+
         public string Description
         {
             get => _description;

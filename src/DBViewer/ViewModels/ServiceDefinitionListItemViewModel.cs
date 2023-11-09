@@ -9,13 +9,11 @@ namespace DbViewer.ViewModels
         public ServiceDefinitionListItemViewModel(ServiceDefinition serviceDefinition)
         {
             ServiceDefinition = Guard.Argument(serviceDefinition, nameof(serviceDefinition))
-                              .NotNull()
-                              .Value;
-
+                .NotNull()
+                .Value;
 
             DisplayName = ServiceDefinition.Name;
         }
-
 
         public ServiceDefinition ServiceDefinition { get; }
 

@@ -1,13 +1,10 @@
-﻿using Couchbase.Lite;
-using Dawn;
+﻿using Dawn;
 using DbViewer.DataStores;
 using DbViewer.Extensions;
 using DbViewer.Models;
 using DbViewer.Services;
-using ICSharpCode.SharpZipLib.Zip;
 using Newtonsoft.Json;
 using Prism.Navigation;
-using Prism.Plugin.Popups;
 using ReactiveUI;
 using System;
 using System.IO;
@@ -23,23 +20,23 @@ namespace DbViewer.ViewModels
         private readonly IHubService _hubService;
         private readonly IDatabaseDatastore _databaseCacheService;
 
-        public CachedDatabaseEditViewModel(INavigationService navigationService, IDatabaseDatastore databaseCacheService, IHubService hubService)
+        public CachedDatabaseEditViewModel(INavigationService navigationService,
+            IDatabaseDatastore databaseCacheService, IHubService hubService)
             : base(navigationService)
         {
             _hubService = Guard.Argument(hubService, nameof(hubService))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             _databaseCacheService = Guard.Argument(databaseCacheService, nameof(databaseCacheService))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             ExportCommand = ReactiveCommand.CreateFromTask(ExecuteExportAsync);
 
             CopyLocalPathCommand = ReactiveCommand.Create(ExecuteCopyLocalPath);
         }
 
-    
 
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
 
@@ -68,6 +65,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _localDbPath;
+
         public string LocalDbPath
         {
             get => _localDbPath;
@@ -75,6 +73,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _exportPath;
+
         public string ExportPath
         {
             get => _exportPath;
@@ -83,7 +82,6 @@ namespace DbViewer.ViewModels
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
-
         }
 
         public void OnNavigatedTo(INavigationParameters parameters)
@@ -103,7 +101,7 @@ namespace DbViewer.ViewModels
             DownloadTime = GetDownloadTimeString(dateTime);
 
             DisplayName = cachedDatabase.UserDefinedDisplayName ?? cachedDatabase.RemoteDatabaseInfo?
-                                                                                 .DisplayDatabaseName;
+                .DisplayDatabaseName;
 
             LocalDbPath = cachedDatabase.LocalDatabasePathFull;
         }
@@ -114,7 +112,7 @@ namespace DbViewer.ViewModels
             {
                 var dirPath = Path.Combine(_cachedDatabase.LocalDatabasePathRoot, Guid.NewGuid().ToString());
 
-                RunOnUi(()=>{ ExportPath = dirPath; });
+                RunOnUi(() => { ExportPath = dirPath; });
 
                 try
                 {
@@ -128,22 +126,19 @@ namespace DbViewer.ViewModels
                     {
                         using (var document = connection.GetDocumentById(documentId))
                         {
-
                             var documentText = string.Empty;
 
                             try
                             {
-                                var id = document.Id.Replace("::", "_")+".json";
+                                var id = document.Id.Replace("::", "_") + ".json";
                                 var docPath = Path.Combine(dirPath, id);
                                 var cleanedDocument = document.CleanAttachments();
 
                                 documentText = JsonConvert.SerializeObject(cleanedDocument);
                                 File.WriteAllText(docPath, documentText);
-
                             }
                             catch (Exception ex)
                             {
-
                             }
                         }
                     }
@@ -152,7 +147,6 @@ namespace DbViewer.ViewModels
                 {
                     _cachedDatabase.DisconnectFromRemote();
                 }
-
             });
         }
 

@@ -13,20 +13,18 @@ namespace DbViewer.Models
 
         public CachedDatabase()
         {
-
         }
 
         public CachedDatabase(DatabaseInfo remoteDatabaseInfo, DateTimeOffset downloadTime)
         {
             RemoteDatabaseInfo = Guard.Argument(remoteDatabaseInfo, nameof(remoteDatabaseInfo))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             DownloadTime = downloadTime;
         }
 
-        [JsonIgnore]
-        public IDatabaseConnection ActiveConnection { get; private set; }
+        [JsonIgnore] public IDatabaseConnection ActiveConnection { get; private set; }
 
         public bool ConnectToRemote()
         {
@@ -88,7 +86,8 @@ namespace DbViewer.Models
         /// The full path to the directoy that contains the unzipped database contents.
         /// </summary>
         [JsonIgnore]
-        public string LocalDatabasePathFull => Path.Combine(LocalDatabasePathRoot, RemoteDatabaseInfo?.FullDatabaseName);
+        public string LocalDatabasePathFull =>
+            Path.Combine(LocalDatabasePathRoot, RemoteDatabaseInfo?.FullDatabaseName);
 
 
         /// <summary>

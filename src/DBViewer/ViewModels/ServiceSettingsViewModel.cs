@@ -25,7 +25,7 @@ namespace DbViewer.ViewModels
         private string _serviceName;
 
         public ServiceSettingsViewModel(IHubService hubService, INavigationService navigationService)
-               : base(navigationService)
+            : base(navigationService)
         {
             _hubService = Guard
                 .Argument(hubService, nameof(hubService))
@@ -45,7 +45,6 @@ namespace DbViewer.ViewModels
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
-
         }
 
         public async void OnNavigatedTo(INavigationParameters parameters)
@@ -59,17 +58,18 @@ namespace DbViewer.ViewModels
 
                     _hubInfo = await _hubService.GetCachedHubAsync(hubId, CancellationToken.None).ConfigureAwait(false);
 
-                    _serviceInfo = _hubInfo.ActiveServices.FirstOrDefault(service => string.Equals(service.Id, serviceId));
+                    _serviceInfo =
+                        _hubInfo.ActiveServices.FirstOrDefault(service => string.Equals(service.Id, serviceId));
                     var servicePropVms = _serviceInfo.Properties.Select(prop => new ServicePropertyViewModel(prop));
 
                     if (_serviceInfo != null)
                     {
                         RunOnUi(
-                        () =>
-                        {
-                            ServiceName = _serviceInfo.ServiceName;
-                            ServiceProperties.AddRange(servicePropVms);
-                        });
+                            () =>
+                            {
+                                ServiceName = _serviceInfo.ServiceName;
+                                ServiceProperties.AddRange(servicePropVms);
+                            });
                     }
                 }
             }
@@ -79,7 +79,11 @@ namespace DbViewer.ViewModels
             }
         }
 
-        public string ServiceName { get => _serviceName; set => this.RaiseAndSetIfChanged(ref _serviceName, value); }
+        public string ServiceName
+        {
+            get => _serviceName;
+            set => this.RaiseAndSetIfChanged(ref _serviceName, value);
+        }
 
         private async Task ExecuteSaveServiceAsync(CancellationToken cancellationToken)
         {
@@ -95,10 +99,7 @@ namespace DbViewer.ViewModels
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                RunOnUi(() =>
-                {
-                    NavigationService.GoBackAsync().ConfigureAwait(false);
-                });
+                RunOnUi(() => { NavigationService.GoBackAsync().ConfigureAwait(false); });
             }
             else
             {

@@ -33,9 +33,10 @@ namespace DbViewer.DataStores
 
             var registry = await GetRegistryAsync(cancellationToken);
 
-            var dbs = registry.DatabaseCollection.Where(db => db.LocalDatabasePathFull == database.LocalDatabasePathFull);
+            var dbs = registry.DatabaseCollection.Where(
+                db => db.LocalDatabasePathFull == database.LocalDatabasePathFull);
 
-            foreach(var db in dbs)
+            foreach (var db in dbs)
             {
                 db.ActiveConnection?.Disconnect();
             }
@@ -45,7 +46,8 @@ namespace DbViewer.DataStores
             SaveRegistry(registry);
         }
 
-        public async Task SaveFromStreamAsync(Stream databaseDownloadStream, DatabaseInfo databaseInfo, CancellationToken cancellationToken)
+        public async Task SaveFromStreamAsync(Stream databaseDownloadStream, DatabaseInfo databaseInfo,
+            CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -53,15 +55,15 @@ namespace DbViewer.DataStores
                 .ConfigureAwait(false);
 
             var dbItem = registry.DatabaseCollection
-                                            .FirstOrDefault(
-                                    db => string.Equals(db.RemoteDatabaseInfo.DisplayDatabaseName, databaseInfo.DisplayDatabaseName) && 
-                                          string.Equals(db.RemoteDatabaseInfo.HubId, databaseInfo.HubId));
+                .FirstOrDefault(
+                    db => string.Equals(db.RemoteDatabaseInfo.DisplayDatabaseName, databaseInfo.DisplayDatabaseName) &&
+                          string.Equals(db.RemoteDatabaseInfo.HubId, databaseInfo.HubId));
 
             if (dbItem == null || !Directory.Exists(dbItem.LocalDatabasePathRoot))
             {
                 dbItem = new CachedDatabase(databaseInfo, DateTimeOffset.Now);
                 registry.DatabaseCollection
-                        .Add(dbItem);
+                    .Add(dbItem);
             }
             else
             {
@@ -137,7 +139,7 @@ namespace DbViewer.DataStores
             foreach (var badDb in dbsWithBadPaths)
             {
                 cacheRegistry.DatabaseCollection
-                             .Remove(badDb);
+                    .Remove(badDb);
             }
 
             SaveRegistry(cacheRegistry);
@@ -146,12 +148,9 @@ namespace DbViewer.DataStores
         private void SaveRegistry(CachedDatabaseRegistry registry)
         {
             BlobCache.LocalMachine
-                     .InsertObject(DatabaseCacheKey, registry)
-                     .Subscribe(
-            _ =>
-            {
-                ((ISubject<CachedDatabaseRegistry>)CacheUpdated).OnNext(registry);
-            });
+                .InsertObject(DatabaseCacheKey, registry)
+                .Subscribe(
+                    _ => { ((ISubject<CachedDatabaseRegistry>)CacheUpdated).OnNext(registry); });
         }
 
         public async Task<CachedDatabaseRegistry> GetRegistryAsync(CancellationToken cancellationToken)
@@ -163,7 +162,7 @@ namespace DbViewer.DataStores
                 try
                 {
                     _inMemoryRegistry = await BlobCache.LocalMachine
-                                                       .GetOrCreateObject(DatabaseCacheKey, () => new CachedDatabaseRegistry());
+                        .GetOrCreateObject(DatabaseCacheKey, () => new CachedDatabaseRegistry());
 
                     Cleanup(_inMemoryRegistry);
                 }

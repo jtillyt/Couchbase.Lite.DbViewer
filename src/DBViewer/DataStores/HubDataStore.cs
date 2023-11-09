@@ -43,7 +43,7 @@ namespace DbViewer.DataStores
             if (_inMemoryRegistry == null || !_inMemoryRegistry.Any())
             {
                 var vals = await BlobCache.LocalMachine
-                                          .GetOrCreateObject(HubCacheKey, () => new List<HubInfo>());
+                    .GetOrCreateObject(HubCacheKey, () => new List<HubInfo>());
 
                 foreach (var val in vals)
                 {
@@ -94,7 +94,7 @@ namespace DbViewer.DataStores
             cancellationToken.ThrowIfCancellationRequested();
 
             await BlobCache.LocalMachine
-                           .InsertObject(HubCacheKey, DictToList());
+                .InsertObject(HubCacheKey, DictToList());
         }
 
         private List<HubInfo> DictToList()
@@ -113,6 +113,5 @@ namespace DbViewer.DataStores
 
             return hubs;
         }
-
     }
 }

@@ -15,22 +15,23 @@ namespace DbViewer.ViewModels
         private readonly IHubService _hubService;
         private readonly IDatabaseDatastore _databaseCacheService;
 
-        public CachedDatabaseItemViewModel(CachedDatabase cachedDatabase, IDatabaseDatastore databaseCacheService, IHubService hubService)
+        public CachedDatabaseItemViewModel(CachedDatabase cachedDatabase, IDatabaseDatastore databaseCacheService,
+            IHubService hubService)
         {
             Database = Guard.Argument(cachedDatabase, nameof(cachedDatabase))
-                                        .NotNull()
-                                        .Value;
+                .NotNull()
+                .Value;
 
             _hubService = Guard.Argument(hubService, nameof(hubService))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             _databaseCacheService = Guard.Argument(databaseCacheService, nameof(databaseCacheService))
-                  .NotNull()
-                  .Value;
+                .NotNull()
+                .Value;
 
             DisplayName = Database.UserDefinedDisplayName ?? Database.RemoteDatabaseInfo?
-                                                                     .DisplayDatabaseName;
+                .DisplayDatabaseName;
 
             HubAddress = GetHubAddressString(Database);
 
@@ -47,6 +48,7 @@ namespace DbViewer.ViewModels
         public CachedDatabase Database { get; set; }
 
         private string _displayName;
+
         public string DisplayName
         {
             get => _displayName;
@@ -54,6 +56,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _downloadTime;
+
         public string DownloadTime
         {
             get => _downloadTime;
@@ -61,6 +64,7 @@ namespace DbViewer.ViewModels
         }
 
         private string _hubAddress;
+
         public string HubAddress
         {
             get => _hubAddress;
@@ -71,19 +75,18 @@ namespace DbViewer.ViewModels
         {
             var remoteInfo = Database.RemoteDatabaseInfo;
 
-            var result = await _hubService.DownloadDatabaseAsync(remoteInfo.RequestAddress, remoteInfo, cancellationToken)
-                                          .ConfigureAwait(false);
+            var result = await _hubService
+                .DownloadDatabaseAsync(remoteInfo.RequestAddress, remoteInfo, cancellationToken)
+                .ConfigureAwait(false);
 
-            if (result.WasSuccesful)
+            if (result.WasSuccessful)
             {
-                RunOnUi(() =>
-                {
-                    DownloadTime = GetDownloadTimeString(DateTime.Now);
-                });
+                RunOnUi(() => { DownloadTime = GetDownloadTimeString(DateTime.Now); });
             }
         }
 
-        private Task ExecuteDeleteAsync(CancellationToken cancellationToken) => _databaseCacheService.DeleteDatabaseAsync(Database, cancellationToken);
+        private Task ExecuteDeleteAsync(CancellationToken cancellationToken) =>
+            _databaseCacheService.DeleteDatabaseAsync(Database, cancellationToken);
 
 
         private static string GetDownloadTimeString(DateTime dateTime)

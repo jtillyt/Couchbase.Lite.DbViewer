@@ -2,8 +2,8 @@
 {
     public static class DialogNames
     {
-        public const string General =  nameof(General);
-        public const string NewDocument =  nameof(NewDocument);
+        public const string General = nameof(General);
+        public const string NewDocument = nameof(NewDocument);
 
         public const string MainMessageParam = nameof(MainMessageParam);
 

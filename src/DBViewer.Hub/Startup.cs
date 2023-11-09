@@ -29,10 +29,10 @@ namespace DbViewer.Hub
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DbViewer.Hub", Version = "v1" });
             });
-            services.AddLogging(logs=>logs.AddConsole());
+            services.AddLogging(logs => logs.AddConsole());
 
-            services.AddSingleton<IDatabaseConnection,DatabaseConnection>();
-            services.AddSingleton<IHubService,HubService>();
+            services.AddSingleton<IDatabaseConnection, DatabaseConnection>();
+            services.AddSingleton<IHubService, HubService>();
             services.AddSingleton<IDatabaseProviderRepository, DatabaseProviderRepository>();
             services.AddTransient<StaticDirectoryDbProvider>();
             services.AddTransient<IOSSimulatorDbProvider>();
@@ -56,10 +56,7 @@ namespace DbViewer.Hub
 
             //app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

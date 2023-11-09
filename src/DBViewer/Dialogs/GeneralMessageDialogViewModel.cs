@@ -17,6 +17,7 @@ namespace DbViewer.Dialogs
         public DelegateCommand CloseCommand { get; }
 
         private string _mainBodyText;
+
         public string MainBodyText
         {
             get => _mainBodyText;

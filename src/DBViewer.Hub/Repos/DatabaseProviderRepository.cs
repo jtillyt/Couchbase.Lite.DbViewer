@@ -13,8 +13,8 @@ namespace DbViewer.Hub.Repos
         public DatabaseProviderRepository(IServiceProvider serviceProvider)
         {
             _serviceProvider = Guard.Argument(serviceProvider, nameof(serviceProvider))
-                                    .NotNull()
-                                    .Value;
+                .NotNull()
+                .Value;
         }
 
         private List<IDbProvider> _providers = new List<IDbProvider>();
@@ -29,7 +29,8 @@ namespace DbViewer.Hub.Repos
                 return existing;
             }
 
-            var serviceDefinition = hubInfo.ServiceDefinitions.FirstOrDefault(st => st.Id == providerInfo.ServiceTypeId);
+            var serviceDefinition =
+                hubInfo.ServiceDefinitions.FirstOrDefault(st => st.Id == providerInfo.ServiceTypeId);
             var serviceType = Type.GetType(serviceDefinition.FullyQualifiedAssemblyTypeName);
             var service = _serviceProvider.GetService(serviceType);
 

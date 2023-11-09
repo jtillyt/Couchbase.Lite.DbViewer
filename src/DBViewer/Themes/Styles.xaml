@@ -113,6 +113,24 @@
         <Setter Property="FontSize" Value="{StaticResource ButtonFontSize}" />
     </Style>
 
+    <Style x:Key="LigherColoredButton"
+           TargetType="Button">
+        <Setter Property="FontAttributes"
+                Value="Bold" />
+        <Setter Property="BackgroundColor"
+                Value="{StaticResource ColoredBackgroundLightColor}" />
+        <Setter Property="TextColor"
+                Value="White" />
+        <Setter Property="HeightRequest"
+                Value="50" />
+        <Setter Property="BorderRadius"
+                Value="20" />
+        <Setter Property="FontFamily"
+                Value="{StaticResource MediumFontFamily}" />
+        <Setter Property="FontSize"
+                Value="{StaticResource ButtonFontSize}" />
+    </Style>
+
     <Style x:Key="HeaderButton" TargetType="Button">
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="BackgroundColor" Value="{StaticResource ColoredBackgroundDarkColor}" />

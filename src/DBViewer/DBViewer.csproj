@@ -1,27 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="akavache" Version="7.2.1" />
     <PackageReference Include="Couchbase.Lite" Version="3.1.1" />
@@ -48,12 +43,14 @@
     <PackageReference Include="Xamarin.Essentials.Interfaces" Version="1.7.7" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2612" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DbViewer.Shared\DbViewer.Shared.csproj" />
   </ItemGroup>
-
   <ItemGroup>
+    <Compile Update="Dialogs\NewDocumentDialog.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>NewDocumentDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Dialogs\GeneralMessageDialog.xaml.cs">
       <DependentUpon>GeneralMessageDialog.xaml</DependentUpon>
     </Compile>
@@ -73,8 +70,11 @@
       <DependentUpon>HubDetailPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
+    <EmbeddedResource Update="Dialogs\NewDocumentDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Dialogs\GeneralMessageDialog.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -82,5 +82,4 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>

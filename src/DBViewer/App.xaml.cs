@@ -80,6 +80,7 @@ namespace DbViewer
             containerRegistry.RegisterForNavigation<ServiceSettingsPage, ServiceSettingsViewModel>();
 
             containerRegistry.RegisterDialog<GeneralMessageDialog, GeneralMessageDialogViewModel>(DialogNames.General);
+            containerRegistry.RegisterDialog<NewDocumentDialog, NewDocumentDialogViewModel>(DialogNames.NewDocument);
         }
     }
 }

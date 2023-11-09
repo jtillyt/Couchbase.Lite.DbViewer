@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Grid x:Class="DbViewer.Dialogs.NewDocumentDialog"
+      xmlns="http://xamarin.com/schemas/2014/forms"
+      xmlns:prism="http://prismlibrary.com"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+      xmlns:dialogs="clr-namespace:DbViewer.Dialogs"
+      Padding="10"
+      Margin="0"
+      HorizontalOptions="FillAndExpand"
+      VerticalOptions="FillAndExpand"
+      prism:DialogLayout.RelativeHeightRequest="0.8"
+      prism:DialogLayout.RelativeWidthRequest="0.8"
+      prism:DialogLayout.CloseOnBackgroundTapped="True"
+      x:DataType="dialogs:NewDocumentDialogViewModel"
+      BackgroundColor="#ffefefef"
+      mc:Ignorable="d">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="100" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="100" />
+    </Grid.RowDefinitions>
+    <StackLayout Grid.Row="0">
+        <Label Text="Document Key:" />
+        <Entry Text="{Binding DocumentKey}" />
+    </StackLayout>
+    <StackLayout Grid.Row="1">
+        <Label Text="Document Body:" />
+        <ScrollView Grid.Row="1"
+                    Margin="0"
+                    Padding="0"
+                    BackgroundColor="White"
+                    VerticalOptions="FillAndExpand">
+            <Editor Margin="0"
+                    AutoSize="TextChanges"
+                    BackgroundColor="White"
+                    IsReadOnly="False"
+                    Text="{Binding DocumentBody}"
+                    TextColor="Black"
+                    VerticalOptions="FillAndExpand" />
+        </ScrollView>
+    </StackLayout>
+    <StackLayout Grid.Row="2"
+                 Padding="10"
+                 Orientation="Horizontal"
+                 HorizontalOptions="FillAndExpand">
+        <Button Command="{Binding CloseCommand}"
+                Style="{DynamicResource LigherColoredButton}"
+                VerticalOptions="Center"
+                WidthRequest="100"
+                HeightRequest="50"
+                Text="Close" HorizontalOptions="StartAndExpand" />
+        <Button Command="{Binding CreateCommand}"
+                Style="{DynamicResource DarkColoredButton}"
+                VerticalOptions="Center"
+                HeightRequest="50"
+                WidthRequest="100"
+                Text="Create" 
+                HorizontalOptions="End" />
+    </StackLayout>
+</Grid>

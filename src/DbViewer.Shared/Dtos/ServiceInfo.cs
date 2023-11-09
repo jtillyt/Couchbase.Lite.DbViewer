@@ -11,7 +11,5 @@ namespace DbViewer.Shared.Dtos
         public string ServiceName { get; set; }
 
         public List<ServicePropertyInfo> Properties { get; set; } = new List<ServicePropertyInfo>();
-
-
     }
 }

@@ -38,6 +38,13 @@
 
                         <StackLayout Orientation="Horizontal"
                                      HorizontalOptions="End">
+                            <Button Command="{Binding AddDocumentCommand}"
+                                    HeightRequest="40"
+                                    HorizontalOptions="Start"
+                                    Style="{DynamicResource HeaderButton}"
+                                    Text="New Doc"
+                                    VerticalOptions="Center"
+                                    WidthRequest="120" />
                             <Button Command="{Binding RefreshCommand}"
                                     HeightRequest="40"
                                     HorizontalOptions="Start"

@@ -5,46 +5,50 @@
 @using CouchbaseLite.Browser.Data
 @inject DatabaseService DatabaseService
 
-<MudPaper class="p-3 p-md-3" style="margin:10px">
+<EditForm Model="@DbProps" OnValidSubmit="@LoadDatabase">
+	<MudPaper class="p-3 p-md-3" style="margin:10px; margin-bottom:30px">
 
-	<EditForm Model="@DbProps" OnValidSubmit="@LoadDatabase">
-		<div class="d-flex flex-grow-1 gap-4">
+		<MudTextField @bind-Value="DbProps.DatabasePath" HelperText="Database Path" Class="d-flex flex-fill" style="margin-left:10px" />
 
-			<MudTextField @bind-Value="DbProps.DatabasePath" HelperText="Database Path" Class="d-flex flex-fill" style="margin-left:10px" />
-			<MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit" style="margin:5px">(Re)Load Database</MudButton>
-		</div>
-	</EditForm>
+		<MudExpansionPanel Text="Query">
+			<MudTextField T="string" Label="Query" Variant="Variant.Outlined" @bind-Value="DbProps.DatabaseQuery" Class="d-flex flex-fill" Lines="50" />
+		</MudExpansionPanel>
 
-</MudPaper>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit" style="margin:5px; align-content:end">(Re)Load Database</MudButton>
+	</MudPaper>
+</EditForm>
 
-
-<MudPaper style="margin:10px">
+<MudPaper style="margin:10px; margin-bottom:30px">
 	<MudBlazor.MudList Clickable="true">
 		@if (CurrentDb?.DatabaseDocuments != null)
 		{
 			@foreach (var group in CurrentDb.DatabaseDocumentGroups)
 			{
-				<MudListItem Text=@group.GroupName Icon="@Icons.Material.Filled.FormatListBulleted" Style="background: #efefef">
+				<MudListItem Text=@(GetGroupLabel(group)) Icon="@Icons.Material.Filled.FormatListBulleted" Style="background: #efefef">
 					<NestedList>
 
-					@foreach (var doc in group.Documents)
-					{
-						<MudBlazor.MudListItem Text=@doc.DisplayName OnClick="@(()=>OnItemClicked(doc))">
+						@foreach (var doc in group.Documents)
+						{
+							<MudBlazor.MudListItem Text=@doc.DisplayName OnClick="@(()=>OnItemClicked(doc))">
 
-						</MudBlazor.MudListItem>
-					}
+							</MudBlazor.MudListItem>
+						}
 					</NestedList>
 				</MudListItem>
 			}
 		}
 		else
 		{
-			<MudText>No documents found</MudText>
+			<MudText style="margin-left:10px">No documents found</MudText>
 		}
 	</MudBlazor.MudList>
 </MudPaper>
 
-@code {
+<MudPaper style="margin:10px; margin-bottom:30px">
+	<MudText Style="margin-left:10px">Results: @(CurrentDb?.ResultCount??0)</MudText>
+</MudPaper>
+
+	@code {
 
 
 	public DatabaseViewerProperties? DbProps { get; set; }
@@ -62,6 +66,11 @@
 		CurrentDb = DatabaseService.LoadDb(DbProps);
 
 		StateHasChanged();
+	}
+
+	private string GetGroupLabel(DatabaseDocumentGroup group)
+	{
+		return group.GroupName + " (" + group.Documents.Count + ")";
 	}
 
 	private void OnItemClicked(DatabaseDocument databaseDocument)

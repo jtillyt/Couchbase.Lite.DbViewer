@@ -43,9 +43,9 @@ namespace CouchbaseLite.Browser.Data
 			return true;
 		}
 
-		public List<string> ListAllDocumentIds(bool sort = false)
+		public List<string> FindDocumentIds()
 		{
-			var documentIds = GetAllDocumentsIds(_database, sort);
+			var documentIds = GetAllDocumentsIds(_database);
 
 			if (documentIds == null)
 				return new List<string>();
@@ -53,9 +53,9 @@ namespace CouchbaseLite.Browser.Data
 			return documentIds.ToList();
 		}
 
-		private IEnumerable<string> GetAllDocumentsIds(Database db, bool sort = false)
+		private IEnumerable<string> GetAllDocumentsIds(Database db)
 		{
-			if (_database == null)
+			if (db == null)
 			{
 				return Enumerable.Empty<string>();
 			}
@@ -66,13 +66,10 @@ namespace CouchbaseLite.Browser.Data
 				.Select(i => i.GetString("id"))
 				.Where(docId => docId != null).ToList();
 
-			if (sort)
-			{
-				docIds.Sort();
-			}
-
 			return docIds;
 		}
+
+		public Database Database => _database;
 
 		public IDataSourceAs ActiveSource => DataSource.Database(_database);
 

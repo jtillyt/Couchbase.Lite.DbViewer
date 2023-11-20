@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace DbViewer.Hub.ApiControllers
 {
     [ApiController]
-    [Route("Hubs-Old")]
+    [Route("Hubs")]
     public class HubController : ControllerBase
     {
         private readonly ILogger<HubController> _logger;

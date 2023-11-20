@@ -13,7 +13,7 @@ using System.Linq;
 namespace DbViewer.Hub.ApiControllers
 {
     [ApiController]
-    [Route("Databases-Old")]
+    [Route("Databases")]
     public class DatabaseController : ControllerBase
     {
         private readonly ILogger<DatabaseController> _logger;

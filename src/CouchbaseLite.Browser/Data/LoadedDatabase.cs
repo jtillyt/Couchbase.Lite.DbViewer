@@ -7,5 +7,7 @@
 		public IReadOnlyList<DatabaseDocument> DatabaseDocuments { get; set; }
 
 		public string ErrorMessage {get; set; }
+
+		public int ResultCount = 0;
 	}
 }
